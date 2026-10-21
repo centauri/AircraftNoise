@@ -1,0 +1,34 @@
+# Runtime data and secrets stay out of git
+plane_noise.db
+*.db-wal
+*.db-shm
+*.db-journal
+.env
+credentials.json
+tls_certs/
+data/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS and editors
+.DS_Store
+.vscode/
+.idea/
+
+# Cleanup parking lot and runtime files
+to_be_deleted/
+events.jsonl
+events.db
+logs/
+
+# A rebuilt history waiting to be swapped in
+.git-fresh/
+
+# Derived brand exports and private planning notes
+static/brand/*.ai
+docs/plans/
+*.bak

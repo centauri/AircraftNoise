@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Logs - Aircraft Noise</title>
+    <link rel="stylesheet" href="/static/css/theme.css?v=9">
+    <script src="/static/js/themes.js?v=3"></script>
+    <script src="/static/js/theme.js?v=10"></script>
+    <link rel="stylesheet" href="/static/css/admin.css?v=7">
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Page-specific styles only */
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--theme-gradient);
+            color: white;
+            padding: 12px 0;
+            box-shadow: 0 4px 20px var(--theme-shadow);
+            border-bottom: none !important;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .card {
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            color: var(--theme-text-primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .log-filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .log-filters select,
+        .log-filters input {
+            padding: 8px 12px;
+            border: 2px solid #ecf0f1;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .log-filters select:focus,
+        .log-filters input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .log-container {
+            background: #0d1117;
+            color: #e6edf3;
+            border-radius: 8px;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            max-height: 600px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: 1px solid var(--theme-border);
+        }
+
+        .log-entry {
+            background: #161b22;
+            margin-bottom: 1px;
+            padding: 4px 8px;
+            border: 1px solid #21262d;
+            border-radius: 3px;
+            line-height: 1.3;
+            font-size: 0.75rem;
+        }
+
+        .log-entry:last-child {
+            margin-bottom: 0;
+        }
+
+        .log-entry:hover {
+            background: #1c2128;
+            border-color: #30363d;
+        }
+
+        .log-entry.new-log {
+            border-left: 3px solid var(--theme-accent);
+            background: #0d1117;
+        }
+
+        .log-timestamp {
+            color: #7c3aed;
+            font-weight: bold;
+        }
+
+        .log-level-info {
+            color: #10b981;
+        }
+
+        .log-level-warning {
+            color: #f59e0b;
+        }
+
+        .log-level-error {
+            color: #ef4444;
+        }
+
+        .log-level-debug {
+            color: #6b7280;
+        }
+
+        .log-source {
+            color: #8b5cf6;
+            font-weight: 500;
+        }
+
+        .log-message {
+            margin-left: 6px;
+            color: #e5e7eb;
+        }
+
+        .new-log-indicator {
+            background: #3b82f6;
+            color: #ffffff;
+            padding: 1px 4px;
+            border-radius: 2px;
+            font-size: 0.65rem;
+            font-weight: bold;
+            margin-right: 4px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Toast notifications */
+        .toast-container { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { min-width: 280px; max-width: 90vw; background: var(--theme-bg-card); color: var(--theme-text-primary); border: 1px solid var(--theme-border); border-radius: 8px; padding: 12px 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); pointer-events: auto; opacity: 0; transform: translateY(-12px); animation: toast-in 200ms ease-out forwards; }
+        .toast-success { border-left: 4px solid var(--theme-success); }
+        .toast-error { border-left: 4px solid var(--theme-error); }
+        .toast-warning { border-left: 4px solid var(--theme-warning); }
+        @keyframes toast-in { to { opacity: 1; transform: translateY(0); } }
+        @keyframes toast-out { to { opacity: 0; transform: translateY(-12px); } }
+
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .auto-refresh input[type="checkbox"] {
+            transform: scale(1.2);
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            background: var(--theme-bg-secondary);
+            border-radius: 6px;
+            border: 1px solid var(--theme-border);
+        }
+
+        .log-info {
+            color: var(--theme-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .log-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            background: var(--theme-accent);
+            color: var(--theme-bg-primary);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-small:hover {
+            background: var(--theme-accent-hover);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .log-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+    <div class="header">
+        <div class="header-content">
+            <h1>📋 System Logs</h1>
+            <div class="header-actions">
+                <div class="theme-controls" id="theme-controls-container">
+                    <!-- Theme controls will be injected here by theme.js -->
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <a href="/admin/dashboard" class="back-link">← Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>Log Viewer</h2>
+            
+            <div class="log-filters">
+                <select id="logLevel">
+                    <option value="all">All Levels</option>
+                    <option value="info">Info</option>
+                    <option value="warning">Warning</option>
+                    <option value="error">Error</option>
+                    <option value="debug">Debug</option>
+                </select>
+                
+                <select id="logSource">
+                    <option value="all">All Sources</option>
+                    <option value="auth">Authentication</option>
+                    <option value="api">API</option>
+                    <option value="sensor">Sensor</option>
+                    <option value="aircraft">Aircraft</option>
+                    <option value="system">System</option>
+                </select>
+                
+                <input type="number" id="logLimit" placeholder="Limit" value="100" min="10" max="1000">
+                
+                <div class="auto-refresh">
+                    <input type="checkbox" id="autoRefresh" checked>
+                    <label for="autoRefresh">Auto Refresh</label>
+                </div>
+                
+                <div class="auto-refresh">
+                    <input type="checkbox" id="autoScroll" checked>
+                    <label for="autoScroll">Auto Scroll to New</label>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn" onclick="loadLogs()">Refresh Logs</button>
+                <button class="btn btn-secondary" onclick="clearLogs()">Clear Display</button>
+                <button class="btn btn-danger" onclick="downloadLogs()">Download Logs</button>
+            </div>
+            
+            <div class="log-header">
+                <div class="log-info">
+                    <span>Newest lines are at the top. Lines that mention secrets are redacted.</span>
+                </div>
+                <div class="log-controls">
+                    <button class="btn btn-small" onclick="scrollToTop()">↑ Top</button>
+                    <button class="btn btn-small" onclick="scrollToBottom()">↓ Bottom</button>
+                </div>
+            </div>
+            <div id="logContainer" class="log-container">
+                <div class="loading">Loading logs...</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Log Statistics</h2>
+            <div id="logStats">
+                <div class="loading">Loading statistics...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        let autoRefreshInterval;
+        let allLogs = [];
+
+        // Check authentication on load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            loadLogs();
+            startAutoRefresh();
+        });
+
+        async function checkAuthStatus() {
+            // Server handles authentication via sessions, no client-side token checking needed
+            console.log('Using server-side session authentication');
+        }
+
+        function startAutoRefresh() {
+            const autoRefreshCheckbox = document.getElementById('autoRefresh');
+            
+            autoRefreshCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    autoRefreshInterval = setInterval(loadLogs, 5000);
+                } else {
+                    clearInterval(autoRefreshInterval);
+                }
+            });
+
+            if (autoRefreshCheckbox.checked) {
+                autoRefreshInterval = setInterval(loadLogs, 5000);
+            }
+        }
+
+        function escapeHtml(value) {
+            return String(value == null ? '' : value).replace(/[&<>"']/g, function (ch) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+            });
+        }
+
+        async function loadLogs() {
+            try {
+                const level = document.getElementById('logLevel').value;
+                const source = document.getElementById('logSource').value;
+                const limit = document.getElementById('logLimit').value;
+                const response = await fetch(`${API_BASE}/api/admin/logs?limit=${encodeURIComponent(limit)}&level=${encodeURIComponent(level)}&source=${encodeURIComponent(source)}`, { credentials: 'same-origin' });
+                if (!response.ok) {
+                    document.getElementById('logContainer').innerHTML = '<div class="error">Log feed unavailable</div>';
+                    return;
+                }
+                const data = await response.json();
+                allLogs = data.logs || [];
+                displayLogs(allLogs);
+                displayLogStats(data.counts || {}, data.total || allLogs.length);
+            } catch (error) {
+                document.getElementById('logContainer').innerHTML = '<div class="error">Failed to load logs</div>';
+            }
+        }
+
+        function displayLogs(logs) {
+            const container = document.getElementById('logContainer');
+            const level = document.getElementById('logLevel').value;
+            const source = document.getElementById('logSource').value;
+
+            // Filter logs
+            let filteredLogs = logs;
+            if (level !== 'all') {
+                filteredLogs = filteredLogs.filter(log => log.level === level);
+            }
+            if (source !== 'all') {
+                filteredLogs = filteredLogs.filter(log => log.source === source);
+            }
+
+            if (filteredLogs.length === 0) {
+                container.innerHTML = '<div class="loading">No logs found</div>';
+                return;
+            }
+
+            const logHtml = filteredLogs.map(log => createLogEntryHtml(log)).join('');
+            container.innerHTML = logHtml;
+        }
+
+        function createLogEntryHtml(log) {
+            const level = escapeHtml(log.level || 'info');
+            return `
+                <div class="log-entry">
+                    <span class="log-timestamp">[${escapeHtml(log.timestamp)}]</span>
+                    <span class="log-level-${level}">[${level.toUpperCase()}]</span>
+                    <span class="log-source">[${escapeHtml(log.source)}]</span>
+                    <span class="log-message">${escapeHtml(log.message)}</span>
+                </div>
+            `;
+        }
+
+        function scrollToTop() {
+            const container = document.getElementById('logContainer');
+            container.scrollTop = 0;
+        }
+
+        function scrollToBottom() {
+            const container = document.getElementById('logContainer');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function displayLogStats(counts, total) {
+            const container = document.getElementById('logStats');
+            const cells = [
+                ['Held', total || 0],
+                ['Info', counts.info || 0],
+                ['Warnings', counts.warning || 0],
+                ['Errors', counts.error || 0]
+            ];
+            container.innerHTML = `
+                <div class="stats-grid">
+                    ${cells.map(cell => `<div class="stat-card"><div class="stat-value">${cell[1]}</div><div class="stat-label">${cell[0]}</div></div>`).join('')}
+                </div>
+            `;
+        }
+
+        function clearLogs() {
+            allLogs = [];
+            document.getElementById('logContainer').innerHTML = '<div class="loading">Display cleared. Refresh to load the process log again.</div>';
+        }
+
+        function downloadLogs() {
+            const lines = allLogs.map(log => `[${log.timestamp}] ${String(log.level || '').toUpperCase()} ${log.source}: ${log.message}`);
+            const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'plane-noise-logs.txt';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Toast helpers
+        function pushToast(message, kind = 'success'){
+            const cont = document.getElementById('toastContainer');
+            const el = document.createElement('div');
+            el.className = `toast toast-${kind}`;
+            el.textContent = message;
+            cont.appendChild(el);
+            const timeout = setTimeout(() => {
+                el.style.animation = 'toast-out 180ms ease-in forwards';
+                setTimeout(() => el.remove(), 220);
+            }, 3500);
+            el.addEventListener('click', () => { clearTimeout(timeout); el.remove(); });
+        }
+        function showSuccess(message){ pushToast(message, 'success'); }
+        function showError(message){ pushToast(message, 'error'); }
+
+        // Clean up interval on page unload
+        window.addEventListener('beforeunload', function() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+        });
+
+        // Theme management is handled by centralized theme.js
+     </script>
+ <script src="/static/js/admin-shell.js?v=9"></script>
+</body>
+ </html>

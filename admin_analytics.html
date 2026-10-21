@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Aircraft Noise</title>
+    <link rel="stylesheet" href="/static/css/theme.css?v=9">
+    <script src="/static/js/themes.js?v=3"></script>
+    <script src="/static/js/theme.js?v=10"></script>
+    <link rel="stylesheet" href="/static/css/admin.css?v=7">
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+    <script src="/static/vendor/chartjs/chart.umd.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; }
+        .header { background: var(--theme-gradient); color: white; padding: 12px 0; box-shadow: 0 4px 20px var(--theme-shadow); }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .header-actions { display: flex; align-items: center; gap: 15px; }
+        .back-link { color: var(--theme-masthead-ink); text-decoration: none; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
+        .toolbar select { background: var(--theme-bg-tertiary); color: var(--theme-text-primary); border: 1px solid var(--theme-border); padding: 6px 8px; font: inherit; }
+        .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .tile { border: 1px solid var(--theme-border); border-left: 3px solid var(--theme-accent); padding: 12px 14px; background: var(--theme-bg-card); }
+        .tile .value { font-family: var(--font-mono); font-size: 1.6rem; line-height: 1.1; }
+        .tile .label { font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--theme-text-muted); margin-top: 4px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+        .card { margin-bottom: 16px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+        th { text-align: left; font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--theme-text-muted); padding: 6px 8px; border-bottom: 1px solid var(--theme-border); }
+        td { padding: 6px 8px; border-bottom: 1px solid var(--theme-border); }
+        td.num { text-align: right; font-family: var(--font-mono); white-space: nowrap; }
+        .bar { display: inline-block; height: 8px; background: var(--theme-accent); vertical-align: middle; margin-right: 6px; }
+        .muted { color: var(--theme-text-muted); font-size: 0.85rem; }
+        canvas { max-height: 260px; }
+        .note { font-size: 0.85rem; color: var(--theme-text-secondary); margin-top: 8px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>📊 Analytics</h1>
+            <div class="header-actions">
+                <div class="theme-controls" id="theme-controls-container"></div>
+                <a href="/admin/dashboard" class="back-link">← Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="toolbar">
+            <label>Period
+                <select id="days">
+                    <option value="7">7 days</option>
+                    <option value="30" selected>30 days</option>
+                    <option value="90">90 days</option>
+                    <option value="365">1 year</option>
+                </select>
+            </label>
+            <span class="muted" id="freshness"></span>
+        </div>
+
+        <div class="tiles">
+            <div class="tile"><div class="value" id="tOnline">–</div><div class="label">Online now</div></div>
+            <div class="tile"><div class="value" id="tToday">–</div><div class="label">Visitors today</div></div>
+            <div class="tile"><div class="value" id="tVisitors">–</div><div class="label">Visitors in period</div></div>
+            <div class="tile"><div class="value" id="tViews">–</div><div class="label">Page views</div></div>
+            <div class="tile"><div class="value" id="tApi">–</div><div class="label">JSON calls</div></div>
+            <div class="tile"><div class="value" id="tNoise">–</div><div class="label">Visits when loud</div></div>
+        </div>
+
+        <div class="card">
+            <h2>Visitors per day</h2>
+            <canvas id="timeline"></canvas>
+        </div>
+
+        <div class="card">
+            <h2>Do people look when it is loud?</h2>
+            <p class="muted" id="noiseText"></p>
+            <canvas id="noiseChart"></canvas>
+            <p class="note">Each hour of the period: page views against passes at or above 60 dB in that hour. The ratio in the tile compares views in hours with a loud pass to hours without, within the same hour of the day, so evenings are not compared with nights.</p>
+        </div>
+
+        <div class="grid">
+            <div class="card"><h2>Pages</h2><div id="dim-page"></div></div>
+            <div class="card"><h2>Referring sites</h2><div id="dim-referrer"></div></div>
+            <div class="card"><h2>Campaigns</h2><div id="dim-campaign"></div><p class="note">Links you post as <code>/?utm_source=forum&amp;utm_campaign=name</code> show up here by name, also where referrers are stripped.</p></div>
+            <div class="card"><h2>Languages</h2><div id="dim-language"></div></div>
+            <div class="card"><h2>Countries</h2><div id="dim-country"></div><p class="note" id="geoNote"></p></div>
+            <div class="card"><h2>Cities</h2><div id="dim-city"></div><p class="note" id="cityNote"></p></div>
+            <div class="card"><h2>Devices</h2><div id="dim-device"></div></div>
+            <div class="card"><h2>JSON endpoints called</h2><div id="dim-api"></div><p class="note">Calls by browsers and scripts alike, by endpoint. The live page itself is most of this.</p></div>
+            <div class="card"><h2>Bots and blocked</h2><div id="dim-bot"></div><div id="bans" class="note"></div></div>
+        </div>
+
+        <div class="card">
+            <h2>Storage</h2>
+            <p class="muted">No address and no identifier is stored. A visitor is a hash that changes every day and lives in memory for that day only. The tables hold one row per day for ever, and hour rows and per-kind rows for <span id="retainDays"></span> days, at most 100 keys per kind per day.</p>
+            <table style="max-width: 32rem; margin-top: 8px;"><tbody id="tables"></tbody></table>
+            <p class="note" id="geoStatus"></p>
+            <button type="button" class="btn btn-secondary" id="geoRefresh" style="margin-top: 6px;">Refresh the country table</button>
+            <div id="legacy" style="margin-top: 12px;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        let timeline = null, noiseChart = null;
+
+        function esc(v) { return String(v == null ? '' : v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+        function renderDim(id, rows) {
+            const host = document.getElementById(id);
+            if (!rows || !rows.length) { host.innerHTML = '<p class="muted">Nothing yet.</p>'; return; }
+            const max = Math.max(...rows.map(r => r.n));
+            host.innerHTML = '<table><tbody>' + rows.map(r =>
+                `<tr><td><span class="bar" style="width:${Math.max(2, Math.round(r.n / max * 80))}px"></span>${esc(r.key)}</td><td class="num">${r.n}</td></tr>`).join('') + '</tbody></table>';
+        }
+
+        function accent() { return getComputedStyle(document.documentElement).getPropertyValue('--theme-accent').trim() || '#e2a122'; }
+        function ink() { return getComputedStyle(document.documentElement).getPropertyValue('--theme-text-secondary').trim() || '#888'; }
+
+        async function load() {
+            const days = document.getElementById('days').value;
+            const response = await fetch(`${API_BASE}/api/admin/analytics/summary?days=${days}`, { credentials: 'same-origin' });
+            if (!response.ok) { document.getElementById('freshness').textContent = 'Could not load the statistics.'; return; }
+            const s = await response.json();
+            document.getElementById('tOnline').textContent = s.online;
+            document.getElementById('tToday').textContent = s.today.visitors;
+            document.getElementById('tVisitors').textContent = s.totals.visitors;
+            document.getElementById('tViews').textContent = s.totals.views;
+            document.getElementById('tApi').textContent = s.totals.api_views;
+            document.getElementById('tNoise').textContent = s.noise.ratio != null ? s.noise.ratio + '×' : '–';
+            document.getElementById('freshness').textContent = `${s.totals.days_with_data} days with data · counted on the server, nothing in the browser`;
+            document.getElementById('retainDays').textContent = s.retain_days;
+
+            if (timeline) timeline.destroy();
+            timeline = new Chart(document.getElementById('timeline'), {
+                type: 'bar',
+                data: { labels: s.timeline.map(d => d.day.slice(5)), datasets: [
+                    { label: 'Visitors', data: s.timeline.map(d => d.visitors), backgroundColor: accent() },
+                    { label: 'Page views', data: s.timeline.map(d => d.views), backgroundColor: ink() }
+                ] },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true } } }
+            });
+
+            const hours = s.hours;
+            document.getElementById('noiseText').textContent = s.noise.ratio == null
+                ? 'Not enough hours with and without loud passes yet to compare.'
+                : `Hours with a pass at or above 60 dB got ${s.noise.ratio}× the page views of quiet hours at the same time of day (${s.noise.loud_hours} loud hours against ${s.noise.quiet_hours} quiet hours).`;
+            if (noiseChart) noiseChart.destroy();
+            noiseChart = new Chart(document.getElementById('noiseChart'), {
+                type: 'bar',
+                data: { labels: hours.map(h => new Date(h.hour_ts * 1000).toLocaleString(undefined, { day: '2-digit', month: 'short', hour: '2-digit' })), datasets: [
+                    { label: 'Page views', data: hours.map(h => h.views), backgroundColor: accent(), yAxisID: 'y' },
+                    { label: 'Loud passes (≥ 60 dB)', data: hours.map(h => h.loud), type: 'line', borderColor: ink(), pointRadius: 0, borderWidth: 1.5, yAxisID: 'y1' }
+                ] },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } }, scales: { x: { ticks: { maxTicksLimit: 12 } }, y: { beginAtZero: true, position: 'left' }, y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false } } } }
+            });
+
+            for (const kind of ['page', 'referrer', 'campaign', 'language', 'country', 'city', 'device', 'api', 'bot']) renderDim('dim-' + kind, s.dims[kind]);
+            const geo = s.geo || {};
+            document.getElementById('geoNote').textContent = geo.rows
+                ? `From the Cloudflare header when there is one, else from the DB-IP country table of ${geo.month} (${geo.rows} ranges, refreshed monthly). ${geo.attribution}.`
+                : 'From the Cloudflare header when there is one. The DB-IP country table is not loaded yet; it downloads within the hour, or press Refresh below.';
+            document.getElementById('cityNote').textContent = geo.city_db
+                ? 'From the GeoLite2 city database in the data folder.'
+                : `Cities need MaxMind's free GeoLite2-City.mmdb (registration required) at ${geo.city_path || 'data/GeoLite2-City.mmdb'}; without it this card stays empty.`;
+            const geoRow = document.getElementById('geoStatus');
+            geoRow.textContent = geo.rows ? `Country table: ${geo.rows} ranges for ${geo.month}, ${(geo.file_bytes / 1048576).toFixed(1)} MB in its own file, refreshed ${geo.updated_at ? new Date(geo.updated_at).toLocaleString() : 'never'}.` : 'Country table: not loaded.';
+            const bans = document.getElementById('bans');
+            bans.textContent = s.bans.length ? `${s.bans.length} address${s.bans.length === 1 ? '' : 'es'} blocked by the guard right now; see Settings → Server.` : 'No address is blocked by the guard right now.';
+
+            const tables = document.getElementById('tables');
+            tables.innerHTML = Object.entries(s.tables).map(([t, n]) => `<tr><td>${esc(t)}</td><td class="num">${n} rows</td></tr>`).join('');
+            const legacy = (s.tables.visitor_sessions || 0) + (s.tables.page_views || 0) + (s.tables.visitor_interactions || 0) + (s.tables.daily_analytics || 0);
+            const host = document.getElementById('legacy');
+            if (legacy > 0) {
+                host.innerHTML = `<p class="note">The old tracker's tables still hold ${legacy} rows, including raw visitor addresses. They are no longer written. </p><button type="button" class="btn btn-secondary" id="dropLegacy">Delete the old visitor tables</button>`;
+                document.getElementById('dropLegacy').addEventListener('click', async () => {
+                    if (!confirm('Delete the old visitor tables and their rows? This cannot be undone.')) return;
+                    const r = await fetch(`${API_BASE}/api/admin/analytics/drop-legacy`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ confirm: 'delete' }), credentials: 'same-origin' });
+                    if (r.ok) load();
+                });
+            } else {
+                host.innerHTML = '';
+            }
+        }
+
+        document.getElementById('geoRefresh').addEventListener('click', async () => {
+            const btn = document.getElementById('geoRefresh'); btn.disabled = true; btn.textContent = 'Downloading…';
+            try {
+                const r = await fetch(`${API_BASE}/api/admin/analytics/geo-refresh`, { method: 'POST', credentials: 'same-origin' });
+                const body = await r.json().catch(() => ({}));
+                btn.textContent = r.ok ? `Loaded ${body.result.rows} ranges for ${body.result.month}` : ('Failed: ' + (body.error || r.status));
+            } catch (e) { btn.textContent = 'Failed'; }
+            btn.disabled = false; load();
+        });
+        document.getElementById('days').addEventListener('change', load);
+        load();
+    </script>
+    <script src="/static/js/admin-shell.js?v=9"></script>
+</body>
+</html>

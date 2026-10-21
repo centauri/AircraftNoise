@@ -1,0 +1,55 @@
+User-agent: *
+Allow: /
+
+# Main pages
+Allow: /
+Allow: /public/
+Allow: /community
+
+# Disallow old Dutch routes (now redirected)
+Disallow: /nl/
+Disallow: /nl/public/
+
+# Static resources
+Allow: /static/
+Allow: /favicon.ico
+Allow: /robots.txt
+Allow: /sitemap.xml
+
+# API endpoints (public data only)
+Allow: /api/noise/
+Allow: /api/stats/
+Allow: /recent_events
+Allow: /visitor/settings
+
+# A link people cannot see; following it blocks the client
+Disallow: /trap/
+
+# Disallow admin and sensitive areas
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /api/admin/
+Disallow: /api/auth/
+Disallow: /api/visitor/
+Disallow: /api/analytics/
+Disallow: /api/users/
+Disallow: /api/logs/
+Disallow: /api/database/
+
+# Disallow sensitive files
+Disallow: /*.db
+Disallow: /*.sqlite
+Disallow: /*.log
+Disallow: /config/
+Disallow: /deploy/
+Disallow: /venv/
+Disallow: /__pycache__/
+
+# Sitemap location
+Sitemap: https://station.example/sitemap.xml
+
+# Crawl delay (be respectful)
+Crawl-delay: 1
+
+# Host directive
+Host: https://station.example

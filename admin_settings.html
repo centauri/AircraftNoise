@@ -1,0 +1,3001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Settings - Aircraft Noise</title>
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/static/css/theme.css?v=9">
+    <script src="/static/js/themes.js?v=3"></script>
+    <script src="/static/js/theme.js?v=10"></script>
+    <link rel="stylesheet" href="/static/css/admin.css?v=7">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Page-specific styles only */
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--theme-gradient);
+            color: white;
+            padding: 12px 0;
+            box-shadow: 0 4px 20px var(--theme-shadow);
+            border-bottom: none !important;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .card {
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            color: var(--theme-text-primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--theme-text-primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--theme-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            background: var(--theme-bg-primary);
+            color: var(--theme-text-primary);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--theme-accent);
+        }
+
+        .form-group small {
+            color: var(--theme-text-muted);
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .info-box {
+            background: var(--theme-bg-secondary);
+            border: 1px solid var(--theme-border);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .info-box h4 {
+            margin: 0 0 10px 0;
+            color: var(--theme-text-primary);
+        }
+
+        .info-box p {
+            margin: 8px 0;
+            color: var(--theme-text-secondary);
+        }
+
+        .info-box ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .info-box li {
+            margin: 4px 0;
+            color: var(--theme-text-secondary);
+        }
+
+        .info-box a {
+            color: var(--theme-accent);
+            text-decoration: none;
+        }
+
+        .info-box a:hover {
+            text-decoration: underline;
+        }
+
+        .api-selection-container {
+            background: var(--theme-bg-tertiary);
+            border: 1px solid var(--theme-border);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .api-option {
+            background: var(--theme-bg-secondary);
+            border: 1px solid var(--theme-border);
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        .api-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .priority-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .priority-selector label {
+            font-size: 0.9rem;
+            color: var(--theme-text-secondary);
+            margin: 0;
+        }
+
+        .priority-selector select {
+            width: auto;
+            padding: 4px 8px;
+            border: 1px solid var(--theme-border);
+            border-radius: 4px;
+            background: var(--theme-bg-primary);
+            color: var(--theme-text-primary);
+            font-size: 0.9rem;
+        }
+
+        /* Checkbox alignment */
+        .checkbox-container {
+            margin-bottom: 5px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: auto;
+            padding: 0;
+            border: none;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .checkbox-container label {
+            display: inline;
+            margin-bottom: 0;
+            font-weight: 500;
+            color: var(--theme-text-primary);
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: var(--theme-bg-card);
+            border-radius: 4px;
+            border: 1px solid var(--theme-border);
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--theme-text-muted);
+        }
+
+        .status-dot.online {
+            background: var(--theme-success);
+        }
+
+        .status-dot.offline {
+            background: var(--theme-error);
+        }
+
+        .config-display {
+            background: var(--theme-bg-card);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid var(--theme-border);
+            font-family: monospace;
+            color: var(--theme-text-primary);
+        }
+
+        .config-display div {
+            margin-bottom: 5px;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+            border: 1px solid #ffc107;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+            border-color: #d39e00;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+
+        /* Toast notifications (viewport-fixed) */
+        .toast-container { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { min-width: 280px; max-width: 90vw; background: var(--theme-bg-card); color: var(--theme-text-primary); border: 1px solid var(--theme-border); border-radius: 8px; padding: 12px 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); pointer-events: auto; opacity: 0; transform: translateY(-12px); animation: toast-in 200ms ease-out forwards; }
+        .toast-success { border-left: 4px solid var(--theme-success); }
+        .toast-error { border-left: 4px solid var(--theme-error); }
+        .toast-warning { border-left: 4px solid var(--theme-warning); }
+        @keyframes toast-in { to { opacity: 1; transform: translateY(0); } }
+        @keyframes toast-out { to { opacity: 0; transform: translateY(-12px); } }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+
+        /* Settings sections: one group of cards at a time, with a search across all of them */
+        .settings-tabs { position: sticky; top: 0; z-index: 5; display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+            padding: 10px 0; margin-bottom: 8px; background: var(--theme-bg-primary); border-bottom: 1px solid var(--theme-border); }
+        .settings-tabs button { background: transparent; color: var(--theme-text-primary); border: 1px solid var(--theme-border);
+            padding: 7px 14px; cursor: pointer; font: inherit; font-size: 0.85rem; letter-spacing: 0.02em; }
+        .settings-tabs button[aria-pressed="true"] { border-color: var(--theme-accent); color: var(--theme-accent); }
+        .settings-tabs input { margin-left: auto; min-width: 200px; padding: 7px 10px; font: inherit; font-size: 0.85rem;
+            background: var(--theme-bg-tertiary); color: var(--theme-text-primary); border: 1px solid var(--theme-border); }
+        .settings-intro { color: var(--theme-text-secondary); margin: 0 0 16px; font-size: 0.9rem; }
+        .card[data-group][hidden] { display: none; }
+        .card-match { outline: 1px solid var(--theme-accent); }
+        @media (max-width: 700px) { .settings-tabs input { margin-left: 0; width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+    <div class="header">
+        <div class="header-content">
+            <h1>Settings</h1>
+            <div class="header-actions">
+                <div class="theme-controls" id="theme-controls-container">
+                    <!-- Theme controls will be injected here by theme.js -->
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <a href="/admin/dashboard" class="back-link">← Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <nav class="settings-tabs" aria-label="Settings sections">
+            <button type="button" data-tab="station" aria-pressed="true">Station</button>
+            <button type="button" data-tab="detection">Detection</button>
+            <button type="button" data-tab="public">Public page</button>
+            <button type="button" data-tab="data">Data</button>
+            <button type="button" data-tab="alerts">Alerts</button>
+            <button type="button" data-tab="server">Server</button>
+            <input type="search" id="settingsSearch" placeholder="Find a setting…" aria-label="Find a setting">
+        </nav>
+        <p class="settings-intro" id="settingsIntro"></p>
+
+        <!-- System Settings -->
+        <div class="card" data-group="station" data-title="System Settings">
+            <h2>System Settings</h2>
+            <form id="systemForm">
+                
+                <div class="form-group">
+                    <label for="sensorLat">Sensor Latitude</label>
+                    <input type="number" id="sensorLat" name="sensorLat" step="0.000001" value="" placeholder="52.000000">
+                    <small>Latitude of the noise sensor</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sensorLon">Sensor Longitude</label>
+                    <input type="number" id="sensorLon" name="sensorLon" step="0.000001" value="" placeholder="4.000000">
+                    <small>Longitude of the noise sensor</small>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="weatherAdviceEnabled" checked>
+                        <label for="weatherAdviceEnabled">Weather notes on passes</label>
+                    </div>
+                    <small>A new pass keeps the wind, rain, and temperature at the sensor. The public list shows a note when that weather can change how the pass is heard. Off stops those calls and hides the notes. The decibel stays as recorded.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="sitePlaceName">Place name</label>
+                    <input type="text" id="sitePlaceName" name="sitePlaceName" maxlength="80" value="Netherlands">
+                    <small>Shown on the public clock, for example Netherlands or Los Angeles</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="siteCountry">Country flag</label>
+                    <select id="siteCountry" name="siteCountry">
+                        <option value="nl">Netherlands</option>
+                    </select>
+                    <small>Flag next to the clock. The visitor’s browser language does not change this.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="siteTimezone">Timezone</label>
+                    <input type="text" id="siteTimezone" name="siteTimezone" value="Europe/Amsterdam" spellcheck="false">
+                    <small>IANA timezone used for the clock and event times, for example Europe/Amsterdam or America/Los_Angeles</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="externalAccess">External Access</label>
+                    <select id="externalAccess" name="externalAccess" onchange="toggleExternalAccessWarning()">
+                        <option value="false">Local Only (127.0.0.1)</option>
+                        <option value="true">Allow External Access (0.0.0.0)</option>
+                    </select>
+                    <small>Allow access from other devices on your network</small>
+                    <div id="externalAccessWarning" class="warning" style="display: none; margin-top: 10px; padding: 10px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; color: #856404;">
+                        <strong>⚠️ Security Warning:</strong> Enabling external access allows other devices on your network to access Aircraft Noise. Make sure your network is secure and consider using a firewall.
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="serverPort">Server Port</label>
+                    <input type="number" id="serverPort" name="serverPort" min="1000" max="65535" value="8787">
+                    <small>Port number for the web server</small>
+                </div>
+                
+                <!-- TLS/HTTPS Settings -->
+                <div class="form-group">
+                    <label for="enableHttps">Enable HTTPS/TLS</label>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="enableHttps" name="enableHttps" onchange="toggleTlsSettings()">
+                        <label for="enableHttps">Enable HTTPS with TLS encryption</label>
+                    </div>
+                    <small>Encrypt all web traffic with TLS certificates</small>
+                </div>
+                
+                <div id="tlsSettings" style="display: none;">
+                    <div class="form-group">
+                        <label for="tlsMode">Certificate Type</label>
+                        <select id="tlsMode" name="tlsMode" onchange="toggleTlsMode()">
+                            <option value="self-signed">Self-Signed (Development)</option>
+                            <option value="letsencrypt">Let's Encrypt (Production)</option>
+                            <option value="auto">Auto (Let's Encrypt if domain available)</option>
+                        </select>
+                        <small>Choose certificate type for TLS encryption</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tlsDomain">Domain Name</label>
+                        <input type="text" id="tlsDomain" name="tlsDomain" value="localhost" placeholder="your-domain.com">
+                        <small>Domain name for the certificate (use localhost for development)</small>
+                    </div>
+                    
+                    <div class="form-group" id="letsencryptEmailGroup" style="display: none;">
+                        <label for="tlsEmail">Email Address</label>
+                        <input type="email" id="tlsEmail" name="tlsEmail" value="admin@localhost" placeholder="your-email@example.com">
+                        <small>Email for Let's Encrypt certificate registration</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="forceHttps">Force HTTPS Redirect</label>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="forceHttps" name="forceHttps" checked>
+                            <label for="forceHttps">Redirect all HTTP traffic to HTTPS</label>
+                        </div>
+                        <small>Automatically redirect HTTP requests to HTTPS</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>TLS Status</label>
+                        <div id="tlsStatus" class="status-indicator">
+                            <span class="status-dot" id="tlsStatusDot"></span>
+                            <span id="tlsStatusText">Checking...</span>
+                        </div>
+                        <small>Current TLS certificate status</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>TLS Actions</label>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-warning" onclick="generateCertificate()">Generate Certificate</button>
+                            <button type="button" class="btn btn-secondary" onclick="testTlsConfig()">Test TLS</button>
+                            <button type="button" class="btn btn-secondary" onclick="checkTlsStatus()">Check Status</button>
+                        </div>
+                        <small>Manage TLS certificates and test configuration</small>
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn">Save System Settings</button>
+                    <button type="button" class="btn btn-secondary" onclick="loadSystemSettings()">Reset</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card" data-group="station" data-title="Appearance">
+            <h2>Appearance</h2>
+            <form id="appearanceForm">
+                <div class="form-group">
+                    <label for="siteTheme">Site theme</label>
+                    <select id="siteTheme" name="siteTheme">
+                        <option value="instrument">Instrument</option>
+                        <option value="early">Early Flight</option>
+                    </select>
+                    <small>The named look visitors see when they have not chosen, or when choice is turned off.</small>
+                </div>
+                <div class="form-group">
+                    <label for="siteAppearance">Default light or dark</label>
+                    <select id="siteAppearance" name="siteAppearance">
+                        <option value="system">Follow system</option>
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                        <option value="contrast">Contrast</option>
+                    </select>
+                    <small>Follow system uses the visitor’s light or dark setting. Contrast stays a separate appearance.</small>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="visitorThemeChoice" checked> Let visitors choose a theme</label>
+                    <div id="visitorThemeList" style="margin-top: 8px;"></div>
+                    <small>Uncheck a name to hide it from the public toolbar. The site theme above stays available.</small>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="visitorAppearanceChoice" checked> Let visitors switch light and dark</label>
+                    <small>When this is off, everyone gets the default light or dark above.</small>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn">Save Appearance</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card" data-group="station" data-title="Station information">
+            <h2>Station information</h2>
+            <p class="small" style="color: var(--theme-text-muted); margin-bottom: 1rem;">Shown on the public page. The first heading is the station name: it appears in the page title, quietly in the header, and on the map card. Later sections stay in About this station. The page stays unchanged when this list is empty. Markup is not accepted.</p>
+            <div id="stationNotesList"></div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" id="addStationNote">Add section</button>
+                <button type="button" class="btn" id="saveStationNotes">Save station information</button>
+            </div>
+        </div>
+
+        <div class="card" data-group="public" data-title="Community monitors">
+            <h2>Community monitors</h2>
+            <p class="small" style="color: var(--theme-text-muted); margin-bottom: 1rem;">Share this station with the worldwide database at <a href="https://data.aircraftnoise.eu/" target="_blank" rel="noopener">data.aircraftnoise.eu</a> and on every install's community page. The shared point is the public decoy position, moved by the privacy radius (200 m by default). The sensor id, the raw noise samples and the exact coordinates stay on this server.</p>
+            <form id="communityForm">
+                <div class="form-group">
+                    <label><input type="checkbox" id="communityEnabled"> Share this station</label>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="communitySharePasses" checked> Share the passes</label>
+                    <small>Every ten minutes the in-zone passes since the last confirmed send are sent, with two hours of overlap, so an outage of up to a week loses nothing: time, aircraft type, operator, runway and route, peak and LAmax, and the distance to the aircraft. Never the aircraft position or the sensor id. This is what makes the worldwide statistics possible.</small>
+                </div>
+                <div class="form-group">
+                    <label for="communityPublicUrl">Public URL</label>
+                    <input type="url" id="communityPublicUrl" placeholder="https://example.com" spellcheck="false">
+                    <small>The address visitors should open. A LAN address is listed as local only.</small>
+                </div>
+                <div class="form-group">
+                    <label for="communityAggregatorUrl">Data service</label>
+                    <input type="url" id="communityAggregatorUrl" spellcheck="false">
+                    <small>Receives the record and the passes and serves the station list. The default is data.aircraftnoise.eu; only change it for a private network.</small>
+                </div>
+                <p class="small" id="communityKeyHint" style="color: var(--theme-text-muted);"></p>
+                <p class="small" id="communityPassesStatus" style="color: var(--theme-text-muted);"></p>
+                <p class="small" id="communityBackfillStatus" style="color: var(--theme-text-muted);"></p>
+                <div class="btn-group" style="margin-bottom: 1rem;">
+                    <button type="button" class="btn btn-secondary" id="communityBackfillBtn">Send full history</button>
+                    <button type="button" class="btn btn-secondary" id="communityBackfillStopBtn" style="display:none">Stop</button>
+                </div>
+                <small style="display:block; margin: -0.5rem 0 1rem; color: var(--theme-text-muted);">Every in-zone pass this station ever recorded goes to the data service, a week at a time, in the background. Safe to repeat: the service keeps one copy of each pass. A changed address keeps the station id, so nothing is lost or doubled.</small>
+                <div class="form-group">
+                    <label for="communityStationKey">Station key (only after a rotation)</label>
+                    <input type="password" id="communityStationKey" autocomplete="new-password" spellcheck="false" placeholder="leave blank to keep the current key">
+                    <small>The install makes its own key on the first share. Paste a new one here only when you rotated it on your account page at the data service.</small>
+                </div>
+                <pre id="communityPreview" style="white-space: pre-wrap; font-family: var(--font-mono); font-size: 0.85rem; color: var(--theme-text-secondary);"></pre>
+                <div class="btn-group">
+                    <button type="submit" class="btn">Save community settings</button>
+                    <button type="button" class="btn btn-secondary" id="communityUpdateNow">Update now</button>
+                </div>
+            </form>
+            <h3 style="margin-top: 1.25rem;">Claim this station</h3>
+            <p class="small" style="color: var(--theme-text-muted);">An account at <a href="https://data.aircraftnoise.eu/account" target="_blank" rel="noopener">data.aircraftnoise.eu</a> lets you rotate the key, unlink the station, search every stored pass, or ask for the station's data to be removed. Make a claim code there and enter it here; the install sends it with its station key.</p>
+            <div class="form-group">
+                <label for="communityClaimCode">Claim code</label>
+                <input type="text" id="communityClaimCode" spellcheck="false" autocomplete="off" placeholder="8 characters from the account page" maxlength="12">
+            </div>
+            <p class="small" id="communityClaimStatus" style="color: var(--theme-text-muted);"></p>
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" id="communityClaimBtn">Claim</button>
+            </div>
+        </div>
+
+        <div class="card" data-group="detection" data-title="Detection Settings">
+            <h2>Detection Settings</h2>
+            <form id="detectionForm">
+                <div class="form-group">
+                    <label for="radiusKm">Detection Radius (km)</label>
+                    <input type="number" id="radiusKm" name="radiusKm" min="1" max="50" step="0.1" value="8">
+                    <small>A pass is stored when the aircraft is inside this circle, measured over the ground.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="altitudeMaxM">Detection Max Altitude (m)</label>
+                    <input type="number" id="altitudeMaxM" name="altitudeMaxM" min="100" max="10000" step="100" value="2000">
+                    <small>Aircraft above this height are ignored. The slant note below uses this as the top height.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="noiseAssociationInnerKm">Noise slant range (km)</label>
+                    <input type="number" id="noiseAssociationInnerKm" name="noiseAssociationInnerKm" min="0.5" max="10" step="0.1" value="2.5">
+                    <small id="slantExplain">A decibel uses the straight line through the air, √(ground km² + height km²). Height in metres is divided by 1,000 first. The plane qualifies when that line is within this number, plus 0.2 km. The drawn polygon does not change it.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="privacyJitterM">Public position privacy (m)</label>
+                    <input type="number" id="privacyJitterM" name="privacyJitterM" min="0" max="5000" step="10" value="200">
+                    <small>The public page and API never show the exact sensor spot: they get one fixed decoy point up to this far away, and the map marker wanders around it on every zoom. 0 shows the exact position. The recorder keeps using the real one.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="publicMapZoom">Public map zoom</label>
+                    <select id="publicMapZoom" name="publicMapZoom">
+                        <option value="">Automatic: fit the detection zone</option>
+                        <option value="13">13 · the neighbourhood</option>
+                        <option value="12">12 · the town</option>
+                        <option value="11">11 · town and surroundings</option>
+                        <option value="10">10 · the region</option>
+                        <option value="9">9 · wide region</option>
+                        <option value="8">8 · the whole airport area</option>
+                        <option value="7">7 · far out</option>
+                    </select>
+                    <small>How far the map on the public page starts zoomed out. Automatic fits the zone; a fixed level shows more of the approach and departure paths around it. Visitors can still zoom themselves.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Custom Detection Zone</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <a href="/admin/detection-zone" class="btn btn-primary" style="text-decoration: none;">
+                            🗺️ Draw Custom Polygon Zone
+                        </a>
+                        <small style="color: var(--theme-text-secondary);">
+                            The shape on the map. It does not assign the decibel. The slant range above does.
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn">Save Detection Settings</button>
+                    <button type="button" class="btn btn-secondary" onclick="loadDetectionSettings()">Reset</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Notifications -->
+        <div class="card" data-group="alerts" data-title="Notifications">
+            <h2>Notifications</h2>
+            <p style="color: var(--theme-text-secondary); margin-bottom: 1rem;">
+                Alerts when the noise sensor or the aircraft feed stops, when the recorder stalls, and when the OpenSky
+                allowance runs low. One message when a problem starts, one when it clears, and a reminder after a day.
+            </p>
+            <form id="notificationsForm">
+                <div class="form-group checkbox-container">
+                    <input type="checkbox" id="notifyEnabled">
+                    <label for="notifyEnabled">Enable notifications</label>
+                </div>
+                <div class="form-group">
+                    <label for="notifyMethod">Send by</label>
+                    <select id="notifyMethod">
+                        <option value="ntfy">ntfy</option>
+                        <option value="email">Email</option>
+                        <option value="both">Both</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="notifyNtfyUrl">ntfy topic URL</label>
+                    <input type="url" id="notifyNtfyUrl" placeholder="https://ntfy.sh/your-private-topic">
+                    <small>Install the ntfy app, subscribe to a topic nobody can guess, and paste its URL here.</small>
+                </div>
+                <div class="form-group">
+                    <label for="notifyNtfyToken">ntfy access token (optional)</label>
+                    <input type="password" id="notifyNtfyToken" autocomplete="off" placeholder="tk_...">
+                    <small>Only for protected topics or a self-hosted server with auth.</small>
+                </div>
+                <div class="form-group">
+                    <label for="notifyEmail">Email address</label>
+                    <input type="email" id="notifyEmail" placeholder="you@example.com">
+                    <small>Where the alerts go.</small>
+                </div>
+                <h3 style="margin: 1.2rem 0 0.4rem;">Mail server</h3>
+                <p class="small" style="color: var(--theme-text-muted); margin: 0 0 0.8rem;">Used for the alerts by email and for the "forgot your password" link on the login page. Any SMTP relay works: your provider's, Brevo (smtp-relay.brevo.com, port 587, STARTTLS, your login and an SMTP key), Gmail with an app password. Leave empty to use the MAIL_* variables from the environment, if any.</p>
+                <div class="form-group">
+                    <label for="mailHost">SMTP host</label>
+                    <input type="text" id="mailHost" placeholder="smtp-relay.brevo.com" autocomplete="off" spellcheck="false">
+                </div>
+                <div class="form-group" style="display: flex; gap: 1rem;">
+                    <div style="flex: 1;">
+                        <label for="mailPort">Port</label>
+                        <input type="number" id="mailPort" min="1" max="65535" value="587">
+                    </div>
+                    <div style="flex: 2;">
+                        <label for="mailSecurity">Encryption</label>
+                        <select id="mailSecurity">
+                            <option value="starttls">STARTTLS (port 587)</option>
+                            <option value="ssl">SSL/TLS (port 465)</option>
+                            <option value="none">None (local relay only)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mailUsername">Username</label>
+                    <input type="text" id="mailUsername" autocomplete="off" spellcheck="false" placeholder="the relay's login; empty for a relay without authentication">
+                </div>
+                <div class="form-group">
+                    <label for="mailPassword">Password</label>
+                    <input type="password" id="mailPassword" autocomplete="new-password" placeholder="">
+                    <small id="mailPasswordHint">Stored like the feed keys; never shown again. Leave empty to keep the stored one.</small>
+                </div>
+                <div class="form-group">
+                    <label for="mailFrom">From address</label>
+                    <input type="text" id="mailFrom" placeholder="Aircraft Noise <station@example.com>" autocomplete="off" spellcheck="false">
+                    <small>A sender the relay allows; most providers require a verified address.</small>
+                </div>
+                <div class="btn-group" style="margin-bottom: 1rem;">
+                    <button type="button" class="btn btn-secondary" onclick="testMailServer()">Send a test mail</button>
+                    <span class="small" id="mailTestResult" style="color: var(--theme-text-muted); align-self: center;"></span>
+                </div>
+                <div class="form-group">
+                    <label for="notifyNoiseStaleMin">Noise sensor offline after (minutes)</label>
+                    <input type="number" id="notifyNoiseStaleMin" min="5" max="1440" step="1" value="15">
+                </div>
+                <div class="form-group">
+                    <label for="notifyAircraftStaleMin">Aircraft feed failing after (minutes)</label>
+                    <input type="number" id="notifyAircraftStaleMin" min="5" max="1440" step="1" value="30">
+                    <small>Counted from the last poll that came back without the feed failing. Quiet skies do not count as a failure.</small>
+                </div>
+                <div class="form-group">
+                    <label for="notifyQuotaPercent">OpenSky allowance warning at (%)</label>
+                    <input type="number" id="notifyQuotaPercent" min="50" max="100" step="1" value="90">
+                </div>
+                <div class="form-group">
+                    <label>What to notify about</label>
+                    <div class="checkbox-container"><input type="checkbox" id="notifyNoiseStale" checked><label for="notifyNoiseStale">Noise sensor offline</label></div>
+                    <div class="checkbox-container"><input type="checkbox" id="notifyAircraftStale" checked><label for="notifyAircraftStale">Aircraft feed failing</label></div>
+                    <div class="checkbox-container"><input type="checkbox" id="notifyRecorder" checked><label for="notifyRecorder">Recorder stopped or database error</label></div>
+                    <div class="checkbox-container"><input type="checkbox" id="notifyQuota" checked><label for="notifyQuota">OpenSky allowance nearly used</label></div>
+                    <div class="checkbox-container"><input type="checkbox" id="notifyRecovery" checked><label for="notifyRecovery">Back-to-normal messages</label></div>
+                </div>
+                <div class="form-group">
+                    <label>Current state</label>
+                    <div id="healthSummary" style="color: var(--theme-text-secondary); font-family: var(--font-mono, monospace); font-size: 0.85rem; white-space: pre-line;">Loading…</div>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn">Save Notifications</button>
+                    <button type="button" class="btn btn-secondary" onclick="testNotification()">Send test</button>
+                    <button type="button" class="btn btn-secondary" onclick="loadNotificationSettings()">Reset</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Visitor Page Settings -->
+        <div class="card" data-group="public" data-title="Visitor Page Settings">
+            <h2>Visitor Page Settings</h2>
+            <form id="visitorForm">
+                <div class="form-group">
+                    <label for="visitorRadiusKm">Display Radius (km)</label>
+                    <input type="number" id="visitorRadiusKm" name="visitorRadiusKm" min="1" max="50" step="0.1" value="8">
+                    <small>Radius shown to visitors on the public page</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="visitorAltitudeMaxM">Display Altitude (m)</label>
+                    <input type="number" id="visitorAltitudeMaxM" name="visitorAltitudeMaxM" min="100" max="10000" step="100" value="2000">
+                    <small>Maximum altitude shown to visitors</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="publicEventsView">Events table shows</label>
+                    <select id="publicEventsView" name="publicEventsView">
+                        <option value="zone">In the zone: passes that crossed the drawn zone, plus any measured pass</option>
+                        <option value="measured">Measured only: passes with a decibel</option>
+                        <option value="all">All within range: every pass inside the detection circle</option>
+                    </select>
+                    <small>The default for every visitor. A visitor can switch the view for one page visit; it is not remembered.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="visitorUpdateInterval">Refresh Interval (seconds)</label>
+                    <input type="number" id="visitorUpdateInterval" name="visitorUpdateInterval" min="5" max="300" step="5" value="10">
+                    <small>How often the visitor page refreshes data</small>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn">Save Visitor Settings</button>
+                    <button type="button" class="btn btn-secondary" onclick="loadVisitorSettings()">Reset</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Feeds live with usage on the API page -->
+        <div class="card" data-group="server" data-title="Feeds">
+            <h2>Feeds</h2>
+            <p>Noise feeds, aircraft feeds, credentials, and the request budget are on the API page.</p>
+            <p><a href="/admin/api-usage">Open the API page</a></p>
+        </div>
+
+        <!-- Aircraft registry -->
+        <div class="card" data-group="data" data-title="Aircraft registry">
+            <h2>Aircraft registry</h2>
+            <p style="color: var(--theme-text-secondary); margin-bottom: 1rem;">
+                Make, model, registration and operator for some 620,000 aircraft, looked up by hex code inside this
+                server with no API calls. Downloaded on its own when missing and refreshed weekly; unknown passes are filled in
+                as it loads. Airline names for every ICAO designator worldwide come from Wikidata. Sources: the Mictronics aircraft
+                database via tar1090-db, and Wikidata (CC0).
+            </p>
+            <div id="registryStatus" style="color: var(--theme-text-secondary); font-family: var(--font-mono, monospace); font-size: 0.85rem; margin-bottom: 0.75rem;">…</div>
+            <div class="btn-group">
+                <button type="button" class="btn" onclick="refreshRegistry()">Download now and fill in unknown passes</button>
+            </div>
+        </div>
+
+        <!-- Airports, routes and reports -->
+        <div class="card" data-group="detection" data-title="Airports and routes">
+            <h2>Airports and routes</h2>
+            <p style="color: var(--theme-text-secondary); margin-bottom: 1rem;">
+                Runways come from OurAirports, a public-domain list of every airport. With the runways known, each pass is
+                labelled as an arrival on a runway, a departure from one, or an overflight. Nothing here is tied to one airport.
+            </p>
+            <div class="form-group" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+                <div>
+                    <label for="airportRadius">Search radius (km)</label>
+                    <input type="number" id="airportRadius" min="5" max="200" step="5" value="60" style="width:120px">
+                </div>
+                <button type="button" class="btn" onclick="discoverAirports()">Find airports near the sensor</button>
+                <button type="button" class="btn btn-secondary" onclick="relabelRoutes()">Label the last 30 days</button>
+            </div>
+            <div id="airportList" style="color: var(--theme-text-secondary);">No airports loaded yet.</div>
+            <form id="complaintForm" style="margin-top:1.25rem;">
+                <label style="font-weight:600;">Where noise reports go</label>
+                <p style="color: var(--theme-text-secondary); margin-bottom: 0.75rem;">
+                    Shown on the "Report this pass" button on the public page. Leave empty to offer only the copied text.
+                    <span id="complaintSuggestion"></span>
+                </p>
+                <div class="form-group" style="display:grid;grid-template-columns:1fr 2fr;gap:12px;">
+                    <div>
+                        <label for="complaintName">Name</label>
+                        <input type="text" id="complaintName" maxlength="80" placeholder="e.g. the airport's noise office">
+                    </div>
+                    <div>
+                        <label for="complaintUrl">Link to the report form</label>
+                        <input type="url" id="complaintUrl" placeholder="https://">
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn">Save report destination</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Polling schedule -->
+        <div class="card" data-group="detection" data-title="Polling schedule">
+            <h2>Polling schedule</h2>
+            <p style="color: var(--theme-text-secondary); margin-bottom: 1rem;">
+                OpenSky allows about 4,000 calls a day. Polling slower in the quiet hours pays for faster polls when the traffic is.
+                Applies to the OpenSky feed; other feeds keep their own interval.
+            </p>
+            <form id="pollForm">
+                <div class="form-group" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;">
+                    <div>
+                        <label for="pollDayInterval">Daytime interval (s)</label>
+                        <input type="number" id="pollDayInterval" min="20" max="600" step="5" value="30">
+                    </div>
+                    <div>
+                        <label for="pollQuietStart">Quiet from</label>
+                        <input type="time" id="pollQuietStart" value="01:00">
+                    </div>
+                    <div>
+                        <label for="pollQuietEnd">Quiet until</label>
+                        <input type="time" id="pollQuietEnd" value="05:00">
+                    </div>
+                    <div>
+                        <label for="pollQuietInterval">Quiet interval (s)</label>
+                        <input type="number" id="pollQuietInterval" min="30" max="900" step="10" value="60">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="pollEstimate" style="color: var(--theme-text-secondary); font-family: var(--font-mono, monospace); font-size: 0.85rem;">…</div>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn">Save schedule</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Data and backups -->
+        <div class="card" data-group="data" data-title="Data and backups">
+            <h2>Data and backups</h2>
+            <form id="dataForm">
+                <div class="form-group" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;">
+                    <div>
+                        <label for="retentionSamples">Keep flight paths (days)</label>
+                        <input type="number" id="retentionSamples" min="1" max="3650" step="1" value="30">
+                        <small>Position samples for the map. Passes are not affected.</small>
+                    </div>
+                    <div>
+                        <label for="retentionEvents">Keep passes (days, 0 = forever)</label>
+                        <input type="number" id="retentionEvents" min="0" max="36500" step="1" value="0">
+                        <small>Below 30 counts as 30.</small>
+                    </div>
+                    <div>
+                        <label for="backupKeep">Backups to keep</label>
+                        <input type="number" id="backupKeep" min="1" max="365" step="1" value="7">
+                        <small>One per night after 03:00, in the data folder.</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="backupStatus" style="color: var(--theme-text-secondary); font-family: var(--font-mono, monospace); font-size: 0.85rem;">…</div>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn">Save</button>
+                    <button type="button" class="btn btn-secondary" onclick="backupNow()">Back up now</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Server Management -->
+        <div class="card" data-group="server" data-title="Server Management">
+            <h2>Server Management</h2>
+            <form id="serverForm">
+                <div class="form-group">
+                    <label>Server Status</label>
+                    <div id="serverStatus" class="status-indicator">
+                        <span class="status-dot" id="statusDot"></span>
+                        <span id="statusText">Checking...</span>
+                    </div>
+                    <small>Current server status and configuration</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Server Actions</label>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-warning" onclick="restartServer()">Restart Server</button>
+                        <button type="button" class="btn btn-secondary" onclick="checkServerStatus()">Check Status</button>
+                    </div>
+                    <small>Restart the server to apply configuration changes</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Current Configuration</label>
+                    <div id="serverConfig" class="config-display">
+                        <div><strong>Host:</strong> <span id="currentHost">127.0.0.1</span></div>
+                        <div><strong>Port:</strong> <span id="currentPort">8787</span></div>
+                        <div><strong>External Access:</strong> <span id="currentExternal">Disabled</span></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="card" data-group="server" data-title="Security Settings">
+            <h2>Security Settings</h2>
+            <form id="securityForm">
+                <div class="form-group">
+                    <label for="maxLoginAttempts">Max Login Attempts</label>
+                    <input type="number" id="maxLoginAttempts" name="maxLoginAttempts" min="3" max="20" value="5">
+                    <small>Maximum failed login attempts before lockout</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lockoutDuration">Lockout Duration (minutes)</label>
+                    <input type="number" id="lockoutDuration" name="lockoutDuration" min="5" max="60" value="15">
+                    <small>How long to lock account after max attempts</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="rateLimit">Rate Limit (requests per minute)</label>
+                    <input type="number" id="rateLimit" name="rateLimit" min="10" max="1000" value="60">
+                    <small>API rate limit per IP address</small>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn">Save Security Settings</button>
+                    <button type="button" class="btn btn-secondary" onclick="loadSecuritySettings()">Reset</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card" data-group="server" data-title="Scraper guard">
+            <h2>Scraper guard</h2>
+            <p class="small" style="color: var(--theme-text-muted); margin-bottom: 1rem;">Every address gets a budget of pages and JSON calls per minute and hour; past it the answer is a 429 with Retry-After. An address that keeps going, follows the hidden trap link, reads pages with a script, or keeps collecting refused answers is blocked for 15 minutes, then an hour, 6 hours, a day, a week. Verified search engines get ten times the page budget. The admin pages, logins, the setup and this machine are never judged.</p>
+            <form id="guardForm">
+                <div class="form-group">
+                    <label><input type="checkbox" id="guardEnabled" checked> Guard the public pages and JSON</label>
+                </div>
+                <p class="small" id="guardLimits" style="color: var(--theme-text-muted);"></p>
+                <div class="btn-group">
+                    <button type="submit" class="btn">Save guard settings</button>
+                </div>
+            </form>
+            <h3 style="margin-top: 1rem;">Blocked addresses</h3>
+            <div id="guardBans" class="small" style="color: var(--theme-text-secondary);">Loading…</div>
+            <p class="small" style="color: var(--theme-text-muted); margin-top: 0.75rem;">Behind Cloudflare, nginx or a tunnel the visitor's address comes from CF-Connecting-IP, X-Forwarded-For or X-Real-IP. For a flood from many addresses the guard is not enough; see docs/SCRAPERS.md for the Cloudflare setup.</p>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="card" data-group="server" data-title="Danger Zone">
+            <h2 style="color: #dc3545;">Danger Zone</h2>
+            <div class="btn-group">
+                <button type="button" class="btn btn-danger" onclick="clearAllData()">Clear All Data</button>
+                <button type="button" class="btn btn-danger" onclick="resetSystem()">Reset System</button>
+            </div>
+            <small style="display: block; margin-top: 10px;">
+                Clear All Data deletes stored passes, visitor stats, and API usage counts. Accounts and settings stay.
+                Reset System does that and restores detection, visitor, and zone settings to their defaults. Accounts and API credentials stay.
+            </small>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+
+        // Check authentication on load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            loadAllSettings();
+        });
+
+        async function checkAuthStatus() {
+            // Since we're using server sessions, no need to check tokens
+            // The server will redirect if not authenticated
+            console.log('Auth check: Using server sessions');
+        }
+
+        async function loadAllSettings() {
+            await Promise.all([
+                loadSystemSettings(),
+                loadCommunitySettings(),
+                loadAppearanceSettings(),
+                loadStationNotes(),
+                loadDetectionSettings(),
+                loadVisitorSettings(),
+                loadSecuritySettings()
+            ]);
+            
+            // Check server status and TLS status
+            await checkServerStatus();
+            await checkTlsStatus();
+        }
+
+
+        async function loadSystemSettings() {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/settings`);
+                if (response.ok) {
+                    const settings = await response.json();
+                    
+                    // Load system settings
+                    if (settings.sensor_lat) document.getElementById('sensorLat').value = settings.sensor_lat;
+                    if (settings.sensor_lon) document.getElementById('sensorLon').value = settings.sensor_lon;
+                    if (settings.external_access !== undefined) {
+                        document.getElementById('externalAccess').value = settings.external_access ? 'true' : 'false';
+                    }
+                if (settings.server_port) document.getElementById('serverPort').value = settings.server_port;
+                    toggleExternalAccessWarning(); // Call to update warning visibility
+                } else {
+                    showError('Failed to load system settings');
+                }
+            } catch (error) {
+                console.error('Failed to load system settings:', error);
+                showError('Failed to load system settings');
+            }
+        }
+
+        function groundReachKm(limitKm, altitudeM) {
+            const gate = limitKm + 0.2;
+            const altKm = altitudeM / 1000;
+            const inside = gate * gate - altKm * altKm;
+            return inside > 0 ? Math.sqrt(inside) : 0;
+        }
+
+        function explainSlant() {
+            const el = document.getElementById('slantExplain');
+            const limitInput = document.getElementById('noiseAssociationInnerKm');
+            const capInput = document.getElementById('altitudeMaxM');
+            if (!el || !limitInput) return;
+            const base = 'A decibel uses the straight line through the air, √(ground km² + height km²). Height in metres is divided by 1,000 first. The plane qualifies when that line is within this number, plus 0.2 km. The drawn polygon does not change it.';
+            const limit = parseFloat(limitInput.value);
+            if (!isFinite(limit)) {
+                el.textContent = base;
+                return;
+            }
+            const gate = (limit + 0.2).toFixed(1);
+            const at = (label, altitudeM) => {
+                const km = groundReachKm(limit, altitudeM);
+                if (km <= 0) return `${label} the height alone is already past this line.`;
+                return `${label} the plane must be within ${km.toFixed(1)} km over the ground.`;
+            };
+            let reach = ` With ${limit} km the line can be ${gate} km. ${at('At 2000 m', 2000)}`;
+            const cap = capInput ? parseFloat(capInput.value) : NaN;
+            if (isFinite(cap) && Math.round(cap) !== 2000) {
+                reach += ` ${at(`At the ${Math.round(cap)} m cap,`, cap)}`;
+            }
+            el.textContent = base + reach;
+        }
+
+        async function loadDetectionSettings() {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/settings`);
+                if (response.ok) {
+                    const settings = await response.json();
+                    
+                    // Load detection settings
+                    const radius = settings.radius_km || settings.detection_radius_km;
+                    const altitude = settings.altitude_max_m || settings.max_altitude_m;
+                    if (radius) document.getElementById('radiusKm').value = radius;
+                    if (altitude) document.getElementById('altitudeMaxM').value = altitude;
+                    if (settings.noise_assoc_inner_km) document.getElementById('noiseAssociationInnerKm').value = settings.noise_assoc_inner_km;
+                    if (settings.privacy_jitter_m !== undefined && settings.privacy_jitter_m !== '') document.getElementById('privacyJitterM').value = settings.privacy_jitter_m;
+                    document.getElementById('publicMapZoom').value = settings.public_map_zoom || '';
+                    explainSlant();
+                } else {
+                    showError('Failed to load detection settings');
+                }
+            } catch (error) {
+                console.error('Failed to load detection settings:', error);
+                showError('Failed to load detection settings');
+            }
+            explainSlant();
+        }
+
+        const NOTIFY_FIELDS = {
+            notify_method: 'notifyMethod', notify_ntfy_url: 'notifyNtfyUrl', notify_ntfy_token: 'notifyNtfyToken',
+            notify_email: 'notifyEmail', notify_noise_stale_min: 'notifyNoiseStaleMin',
+            mail_host: 'mailHost', mail_port: 'mailPort', mail_security: 'mailSecurity', mail_username: 'mailUsername', mail_from: 'mailFrom',
+            notify_aircraft_stale_min: 'notifyAircraftStaleMin', notify_quota_percent: 'notifyQuotaPercent',
+        };
+        const NOTIFY_FLAGS = {
+            notify_enabled: 'notifyEnabled', notify_noise_stale: 'notifyNoiseStale', notify_aircraft_stale: 'notifyAircraftStale',
+            notify_recorder: 'notifyRecorder', notify_quota: 'notifyQuota', notify_recovery: 'notifyRecovery',
+        };
+        const NOTIFY_FLAG_DEFAULTS = { notify_enabled: false };
+
+        function ageText(seconds) {
+            if (seconds == null) return 'never';
+            const m = Math.floor(seconds / 60);
+            return m < 60 ? `${m} min ago` : `${Math.floor(m / 60)} h ${m % 60} min ago`;
+        }
+
+        async function loadNotificationSettings() {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/settings`);
+                if (response.ok) {
+                    const settings = await response.json();
+                    for (const [key, id] of Object.entries(NOTIFY_FIELDS)) {
+                        if (settings[key] !== undefined && settings[key] !== null) document.getElementById(id).value = settings[key];
+                    }
+                    for (const [key, id] of Object.entries(NOTIFY_FLAGS)) {
+                        const raw = settings[key];
+                        const fallback = NOTIFY_FLAG_DEFAULTS[key] !== undefined ? NOTIFY_FLAG_DEFAULTS[key] : true;
+                        document.getElementById(id).checked = (raw === undefined || raw === null || raw === '')
+                            ? fallback : ['1', 'true', 'yes', 'on'].includes(String(raw).toLowerCase());
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load notification settings:', error);
+            }
+            try {
+                const r = await fetch(`${API_BASE}/api/credentials`);
+                const c = r.ok ? await r.json() : { set: {} };
+                document.getElementById('mailPassword').placeholder = (c.set && c.set.mail_password) ? 'set; leave empty to keep it' : 'not set';
+            } catch (error) {}
+            loadHealthSummary();
+        }
+
+        async function testMailServer() {
+            const el = document.getElementById('mailTestResult');
+            el.textContent = 'Saving and sending…';
+            await saveNotificationSettings(true);
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/notifications/test`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ method: 'email' })
+                });
+                const result = await response.json();
+                el.textContent = result.ok ? `Sent: ${result.detail}` : `Not delivered: ${result.detail}`;
+            } catch (error) {
+                el.textContent = 'The test request failed.';
+            }
+        }
+
+        async function loadHealthSummary() {
+            const el = document.getElementById('healthSummary');
+            try {
+                const r = await fetch(`${API_BASE}/api/health`, { cache: 'no-cache' });
+                const h = await r.json();
+                const lines = [
+                    `Noise sample: ${ageText(h.noise_age_s)} (${h.noise_feed || '?'})`,
+                    `Aircraft poll ok: ${ageText(h.aircraft_ok_age_s)} (${h.aircraft_feed || '?'}, every ${h.aircraft_interval_s}s)`,
+                    `Polling loop: ${ageText(h.loop_age_s)} · last pass: ${ageText(h.last_pass_age_s)}`,
+                    `OpenSky today: ${h.opensky_daily_requests ?? '?'} of ${h.opensky_daily_limit ?? '?'}`,
+                    `Database: ${h.db_ok ? 'ok' : (h.db_error || 'error')}`,
+                    `Failing now: ${(h.failing && h.failing.length) ? h.failing.join(', ') : 'nothing'}`,
+                ];
+                el.textContent = lines.join('\n');
+            } catch (error) {
+                el.textContent = 'Health endpoint not reachable.';
+            }
+        }
+
+        async function saveNotificationSettings(quiet) {
+            const data = {};
+            for (const [key, id] of Object.entries(NOTIFY_FIELDS)) data[key] = document.getElementById(id).value.trim();
+            for (const [key, id] of Object.entries(NOTIFY_FLAGS)) data[key] = document.getElementById(id).checked ? 'true' : 'false';
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/settings`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+                });
+                const pw = document.getElementById('mailPassword');
+                if (pw.value) {  // the password travels with the other secrets, never with the settings
+                    const r2 = await fetch(`${API_BASE}/api/credentials`, {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mail_password: pw.value })
+                    });
+                    if (r2.ok) { pw.value = ''; pw.placeholder = 'set; leave empty to keep it'; }
+                }
+                if (response.ok) { if (!quiet) showSuccess('Notification settings saved'); }
+                else showError('Failed to save notification settings');
+            } catch (error) {
+                showError('Failed to save notification settings');
+            }
+        }
+
+        async function testNotification() {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/notifications/test`, { method: 'POST' });
+                const result = await response.json();
+                if (result.ok) showSuccess(`Test sent: ${result.detail}`);
+                else showError(`Test not delivered: ${result.detail}`);
+            } catch (error) {
+                showError('Test request failed');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('notificationsForm');
+            if (form) form.addEventListener('submit', async (e) => { e.preventDefault(); await saveNotificationSettings(); });
+            loadNotificationSettings();
+        });
+
+        function renderAirports(list, suggestion) {
+            const el = document.getElementById('airportList');
+            if (!list || !list.length) { el.textContent = 'No airports loaded yet.'; return; }
+            el.innerHTML = list.map(a => `
+                <div class="checkbox-container" style="margin-bottom:6px;">
+                    <input type="checkbox" id="ap_${a.icao}" ${a.enabled ? 'checked' : ''} onchange="toggleAirport('${a.icao}', this.checked)">
+                    <label for="ap_${a.icao}"><strong>${a.icao}</strong> ${a.name || ''} · ${a.distance_km} km · runways ${(a.runways || []).join(', ') || 'none'}</label>
+                </div>`).join('');
+            const hint = document.getElementById('complaintSuggestion');
+            hint.textContent = suggestion ? `Suggestion for ${suggestion.airport}: ${suggestion.name} (${suggestion.url}); it is used while the fields are empty.` : '';
+        }
+
+        async function loadRegistryStatus() {
+            const el = document.getElementById('registryStatus');
+            try {
+                const r = await fetch(`${API_BASE}/api/admin/aircraft_registry`);
+                const j = await r.json();
+                if (!j.size) { el.textContent = 'Not loaded yet. The server downloads it within the hour, or press the button.'; return; }
+                const mb = j.bytes ? `${(j.bytes / 1048576).toFixed(1)} MB` : 'size unknown';
+                const published = j.source_modified ? new Date(j.source_modified).toLocaleDateString() : 'unknown date';
+                const nextIn = j.next_refresh_ts ? Math.max(0, Math.round((j.next_refresh_ts - Date.now() / 1000) / 86400)) : null;
+                el.textContent = `${j.size.toLocaleString()} aircraft (${mb}, published ${published}) and ${(j.airlines || 0).toLocaleString()} airlines. ` +
+                    `Loaded ${j.updated_ts ? ageText((Date.now() / 1000) - j.updated_ts) : 'unknown'}; refreshed every ${j.refresh_days} days` +
+                    (nextIn === null ? '.' : `, next in ${nextIn} day${nextIn === 1 ? '' : 's'}.`);
+            } catch (error) { el.textContent = 'Status not available.'; }
+        }
+
+        async function refreshRegistry() {
+            const el = document.getElementById('registryStatus');
+            el.textContent = 'Downloading about 8 MB…';
+            try {
+                const r = await fetch(`${API_BASE}/api/admin/aircraft_registry/refresh`, { method: 'POST' });
+                const j = await r.json();
+                if (j.ok) showSuccess(`${(j.aircraft || j.size || 0).toLocaleString()} aircraft loaded, ${j.filled || 0} passes filled in`);
+                else showError(`Download failed: ${j.error}`);
+            } catch (error) { showError('Download failed'); }
+            loadRegistryStatus();
+        }
+
+        async function loadAirports() {
+            try {
+                const r = await fetch(`${API_BASE}/api/admin/airports`);
+                if (!r.ok) return;
+                const j = await r.json();
+                if (j.radius_km) document.getElementById('airportRadius').value = Math.round(j.radius_km);
+                renderAirports(j.airports, j.complaint_suggestion);
+                const s = await (await fetch(`${API_BASE}/api/admin/settings`)).json();
+                if (s.complaint_name) document.getElementById('complaintName').value = s.complaint_name;
+                if (s.complaint_url) document.getElementById('complaintUrl').value = s.complaint_url;
+            } catch (error) { /* keep the placeholder */ }
+        }
+
+        async function discoverAirports() {
+            const el = document.getElementById('airportList');
+            el.textContent = 'Downloading the airport list…';
+            try {
+                const r = await fetch(`${API_BASE}/api/admin/airports/discover`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ radius_km: Number(document.getElementById('airportRadius').value) || 60 }) });
+                const j = await r.json();
+                if (!r.ok) { showError(`Download failed: ${j.details || j.error}`); el.textContent = 'Download failed.'; return; }
+                showSuccess(`${j.airports.length} airports within ${j.radius_km} km`);
+                loadAirports();
+            } catch (error) { showError('Download failed'); }
+        }
+
+        async function toggleAirport(icao, enabled) {
+            try {
+                await fetch(`${API_BASE}/api/admin/airports/${icao}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ enabled }) });
+                loadAirports();
+            } catch (error) { showError('Could not change the airport'); }
+        }
+
+        async function relabelRoutes() {
+            try {
+                const r = await fetch(`${API_BASE}/api/admin/routes/relabel`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ days: 30 }) });
+                const j = await r.json();
+                showSuccess(`Labelled ${j.labelled} of ${j.passes} passes`);
+            } catch (error) { showError('Labelling failed'); }
+        }
+
+        async function loadPollSchedule() {
+            try {
+                const r = await fetch(`${API_BASE}/api/admin/settings`);
+                const s = r.ok ? await r.json() : {};
+                if (s.poll_day_interval_s) document.getElementById('pollDayInterval').value = s.poll_day_interval_s;
+                if (s.poll_quiet_start) document.getElementById('pollQuietStart').value = s.poll_quiet_start;
+                if (s.poll_quiet_end) document.getElementById('pollQuietEnd').value = s.poll_quiet_end;
+                if (s.poll_quiet_interval_s) document.getElementById('pollQuietInterval').value = s.poll_quiet_interval_s;
+                if (s.retention_samples_days) document.getElementById('retentionSamples').value = s.retention_samples_days;
+                if (s.retention_events_days !== undefined && s.retention_events_days !== '') document.getElementById('retentionEvents').value = s.retention_events_days;
+                if (s.backup_keep) document.getElementById('backupKeep').value = s.backup_keep;
+            } catch (error) { /* defaults stay */ }
+            refreshPollEstimate();
+            refreshBackupStatus();
+        }
+
+        async function refreshPollEstimate() {
+            const el = document.getElementById('pollEstimate');
+            try {
+                const r = await fetch(`${API_BASE}/api/admin/poll_schedule`, { cache: 'no-cache' });
+                const p = await r.json();
+                el.textContent = `About ${p.calls_per_day} OpenSky calls a day (allowance ${p.allowance}). Quiet ${p.quiet_start}–${p.quiet_end} at ${p.quiet_interval_s} s, otherwise ${p.day_interval_s} s. Right now: ${p.interval_now_s} s.` + (p.within_allowance ? '' : ' Over the allowance: the flat 30 s floor is used until this fits.');
+                el.style.color = p.within_allowance ? '' : '#d9534f';
+            } catch (error) { el.textContent = 'Schedule not available.'; }
+        }
+
+        async function refreshBackupStatus() {
+            const el = document.getElementById('backupStatus');
+            try {
+                const r = await fetch(`${API_BASE}/api/health`, { cache: 'no-cache' });
+                const h = await r.json();
+                el.textContent = h.last_backup_ts ? `Last backup ${ageText((Date.now() / 1000) - h.last_backup_ts)}.` : 'No backup since this server started.';
+                if (h.last_backup_error) el.textContent += ` Last error: ${h.last_backup_error}`;
+            } catch (error) { el.textContent = 'Backup status not available.'; }
+        }
+
+        async function backupNow() {
+            try {
+                const r = await fetch(`${API_BASE}/api/admin/backup`, { method: 'POST' });
+                const j = await r.json();
+                if (j.ok) showSuccess(`Backup written: ${j.path} (${j.size_mb} MB)`); else showError(`Backup failed: ${j.error}`);
+            } catch (error) { showError('Backup request failed'); }
+            refreshBackupStatus();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const poll = document.getElementById('pollForm');
+            if (poll) poll.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const data = {
+                    poll_day_interval_s: document.getElementById('pollDayInterval').value,
+                    poll_quiet_start: document.getElementById('pollQuietStart').value,
+                    poll_quiet_end: document.getElementById('pollQuietEnd').value,
+                    poll_quiet_interval_s: document.getElementById('pollQuietInterval').value,
+                };
+                const r = await fetch(`${API_BASE}/api/admin/settings`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                if (r.ok) { showSuccess('Polling schedule saved'); refreshPollEstimate(); } else showError('Failed to save the schedule');
+            });
+            const dataForm = document.getElementById('dataForm');
+            if (dataForm) dataForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const data = {
+                    retention_samples_days: document.getElementById('retentionSamples').value,
+                    retention_events_days: document.getElementById('retentionEvents').value,
+                    backup_keep: document.getElementById('backupKeep').value,
+                };
+                const r = await fetch(`${API_BASE}/api/admin/settings`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                if (r.ok) showSuccess('Data settings saved'); else showError('Failed to save data settings');
+            });
+            loadPollSchedule();
+            loadAirports();
+            loadRegistryStatus();
+            const complaint = document.getElementById('complaintForm');
+            if (complaint) complaint.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const data = { complaint_name: document.getElementById('complaintName').value.trim(), complaint_url: document.getElementById('complaintUrl').value.trim() };
+                const r = await fetch(`${API_BASE}/api/admin/settings`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                if (r.ok) showSuccess('Report destination saved'); else showError('Failed to save');
+            });
+        });
+
+        async function loadVisitorSettings() {
+            try {
+                const response = await fetch(`${API_BASE}/visitor/settings`);
+                if (response.ok) {
+                    const settings = await response.json();
+                    
+                    // Load visitor settings
+                    if (settings.radius_km) document.getElementById('visitorRadiusKm').value = settings.radius_km;
+                    if (settings.altitude_max_m) document.getElementById('visitorAltitudeMaxM').value = settings.altitude_max_m;
+                    if (settings.update_interval_seconds) document.getElementById('visitorUpdateInterval').value = settings.update_interval_seconds;
+                    if (settings.events_view) document.getElementById('publicEventsView').value = settings.events_view;
+                } else {
+                    showError('Failed to load visitor settings');
+                }
+            } catch (error) {
+                console.error('Failed to load visitor settings:', error);
+                showError('Failed to load visitor settings');
+            }
+        }
+
+
+        async function loadNoiseApiSettings() {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/settings`);
+                if (response.ok) {
+                    const settings = await response.json();
+                    
+                    // Load noise API settings from admin settings
+                    document.getElementById('noiseApiPoll').value = settings.noise_poll_interval_seconds || 300;
+                    document.getElementById('noiseApiRateLimit').value = settings.noise_rate_limit || 60;
+                    document.getElementById('noiseApiCacheTimeout').value = settings.noise_cache_timeout || 120;
+                    document.getElementById('noiseApiTimeout').value = settings.noise_timeout || 30;
+                    document.getElementById('noiseApiUrl').value = settings.noise_base_url || 'https://data.sensor.community/airrohr/v1/sensor';
+                    document.getElementById('noiseApiSensorId').value = settings.noise_sensor_id || '69616';
+                    
+                    // Determine provider based on URL
+                    let provider = 'custom';
+                    if (settings.noise_base_url && settings.noise_base_url.includes('sensor.community')) {
+                        provider = 'sensor_community';
+                    } else if (settings.noise_base_url && settings.noise_base_url.includes('samenmeten.rivm.nl')) {
+                        provider = 'rivm';
+                    }
+                    document.getElementById('noiseApiProvider').value = provider;
+                    
+                    // Update form based on provider
+                    loadNoiseApiProvider();
+                } else {
+                    console.warn('Failed to load noise API settings, using defaults');
+                    loadNoiseApiProvider();
+                }
+            } catch (error) {
+                console.error('Failed to load noise API settings:', error);
+                showError('Failed to load noise API settings');
+            }
+        }
+
+        function loadNoiseApiProvider() {
+            const provider = document.getElementById('noiseApiProvider').value;
+            const urlField = document.getElementById('noiseApiUrl');
+            const rateLimitField = document.getElementById('noiseApiRateLimit');
+            const cacheTimeoutField = document.getElementById('noiseApiCacheTimeout');
+            const timeoutField = document.getElementById('noiseApiTimeout');
+            const rivmInfo = document.getElementById('rivmInfo');
+            
+            // Get field groups
+            const sensorCommunityGroup = document.getElementById('sensorCommunityIdGroup');
+            const rivmIdGroup = document.getElementById('rivmIdGroup');
+            const rivmLocationGroup = document.getElementById('rivmLocationGroup');
+            const rivmLocationGroup2 = document.getElementById('rivmLocationGroup2');
+            
+            // Show/hide RIVM info box
+            if (provider === 'rivm') {
+                rivmInfo.style.display = 'block';
+            } else {
+                rivmInfo.style.display = 'none';
+            }
+            
+            // Show/hide appropriate ID fields
+            if (provider === 'sensor_community') {
+                sensorCommunityGroup.style.display = 'block';
+                rivmIdGroup.style.display = 'none';
+                rivmLocationGroup.style.display = 'none';
+                rivmLocationGroup2.style.display = 'none';
+            } else if (provider === 'rivm') {
+                sensorCommunityGroup.style.display = 'none';
+                rivmIdGroup.style.display = 'block';
+                rivmLocationGroup.style.display = 'block';
+                rivmLocationGroup2.style.display = 'block';
+            } else {
+                // Custom - show sensor community fields as default
+                sensorCommunityGroup.style.display = 'block';
+                rivmIdGroup.style.display = 'none';
+                rivmLocationGroup.style.display = 'none';
+                rivmLocationGroup2.style.display = 'none';
+            }
+            
+            switch (provider) {
+                case 'sensor_community':
+                    urlField.value = 'https://data.sensor.community/airrohr/v1/sensor';
+                    rateLimitField.value = 60;
+                    cacheTimeoutField.value = 30;
+                    timeoutField.value = 30;
+                    break;
+                case 'rivm':
+                    urlField.value = 'https://api-samenmeten.rivm.nl/v1.0';
+                    rateLimitField.value = 120;
+                    cacheTimeoutField.value = 300;
+                    timeoutField.value = 30;
+                    break;
+                case 'custom':
+                    // Keep current values or set defaults
+                    if (!urlField.value) {
+                        urlField.value = 'https://data.sensor.community/airrohr/v1/sensor';
+                    }
+                    if (!rateLimitField.value) {
+                        rateLimitField.value = 60;
+                    }
+                    if (!cacheTimeoutField.value) {
+                        cacheTimeoutField.value = 30;
+                    }
+                    if (!timeoutField.value) {
+                        timeoutField.value = 30;
+                    }
+                    break;
+            }
+        }
+
+        async function loadPlaneApiSettings() {
+            try {
+                console.log('Loading plane API settings...');
+                const response = await fetch(`${API_BASE}/api/configs/aircraft`);
+                console.log('Response status:', response.status);
+                
+                if (response.ok) {
+                    const config = await response.json();
+                    console.log('Loaded config:', config);
+                    
+                    // Determine which provider is currently configured
+                    let provider = 'custom';
+                    if (config.base_url && config.base_url.includes('opensky-network.org')) {
+                        provider = 'opensky';
+                    } else if (config.base_url && config.base_url.includes('aeroapi.flightaware.com')) {
+                        provider = 'flightaware';
+                    } else if (config.multi_api) {
+                        provider = 'multi';
+                    }
+                    
+                    document.getElementById('planeApiProvider').value = provider;
+                    document.getElementById('planeApiUrl').value = config.base_url || 'https://opensky-network.org/api';
+                    document.getElementById('planeApiFlightawareUrl').value = config.flightaware_url || 'https://aeroapi.flightaware.com/aeroapi';
+                    document.getElementById('planeApiRateLimit').value = config.rate_limit || 30;
+                    document.getElementById('planeApiCacheTimeout').value = config.cache_timeout || 120;
+                    document.getElementById('planeApiTimeout').value = config.timeout || 20;
+                    document.getElementById('planeApiPoll').value = config.poll_interval_seconds || 300;
+                    document.getElementById('planeApiAuthRequired').checked = config.auth_required || true;
+                    document.getElementById('enableOpenSky').checked = config.enable_opensky !== false;
+                    document.getElementById('enableFlightAware').checked = config.enable_flightaware !== false;
+                    
+                    // Load priority settings for multi-API
+                    if (provider === 'multi') {
+                        document.getElementById('openskyPriority').value = config.opensky_priority || '1';
+                        document.getElementById('flightawarePriority').value = config.flightaware_priority || '2';
+                    }
+                    
+                    // Update form based on provider
+                    loadPlaneApiProvider();
+                } else {
+                    const errorText = await response.text();
+                    console.error('Failed to load plane API settings:', response.status, response.statusText, errorText);
+                    alert(`Failed to load plane API settings: ${response.status} ${response.statusText}\n\n${errorText}`);
+                    loadPlaneApiProvider();
+                }
+                
+                // Load credentials
+                await loadPlaneApiCredentials();
+            } catch (error) {
+                console.error('Failed to load plane API settings:', error);
+                alert(`Error loading plane API settings: ${error.message}`);
+                showError('Failed to load plane API settings');
+            }
+        }
+
+        function loadPlaneApiProvider() {
+            const provider = document.getElementById('planeApiProvider').value;
+            const openskyGroup = document.getElementById('openskyGroup');
+            const flightawareGroup = document.getElementById('flightawareGroup');
+            const multiApiGroup = document.getElementById('multiApiGroup');
+            const flightawareInfo = document.getElementById('flightawareInfo');
+            const multiApiInfo = document.getElementById('multiApiInfo');
+            const rateLimitField = document.getElementById('planeApiRateLimit');
+            const cacheTimeoutField = document.getElementById('planeApiCacheTimeout');
+            const airplanesLiveInfo = document.getElementById('airplanesLiveInfo');
+            
+            // Credential sections
+            const openskyCredentials = document.getElementById('openskyCredentials');
+            const flightawareCredentials = document.getElementById('flightawareCredentials');
+            const multiApiCredentials = document.getElementById('multiApiCredentials');
+            
+            // Individual API settings sections
+            const individualApiSettings = document.getElementById('individualApiSettings');
+            const individualApiSettings2 = document.getElementById('individualApiSettings2');
+            const individualApiSettings3 = document.getElementById('individualApiSettings3');
+            const individualApiSettings4 = document.getElementById('individualApiSettings4');
+            
+            // Debug: Check for missing elements
+            const missingElements = [];
+            if (!openskyGroup) missingElements.push('openskyGroup');
+            if (!flightawareGroup) missingElements.push('flightawareGroup');
+            if (!multiApiGroup) missingElements.push('multiApiGroup');
+            if (!flightawareInfo) missingElements.push('flightawareInfo');
+            if (!multiApiInfo) missingElements.push('multiApiInfo');
+            if (!rateLimitField) missingElements.push('planeApiRateLimit');
+            if (!cacheTimeoutField) missingElements.push('planeApiCacheTimeout');
+            if (!openskyCredentials) missingElements.push('openskyCredentials');
+            if (!flightawareCredentials) missingElements.push('flightawareCredentials');
+            if (!multiApiCredentials) missingElements.push('multiApiCredentials');
+            if (!individualApiSettings) missingElements.push('individualApiSettings');
+            if (!individualApiSettings2) missingElements.push('individualApiSettings2');
+            if (!individualApiSettings3) missingElements.push('individualApiSettings3');
+            if (!individualApiSettings4) missingElements.push('individualApiSettings4');
+            
+            if (missingElements.length > 0) {
+                console.warn('Missing DOM elements:', missingElements);
+            }
+            
+            // Hide all groups first
+            if (openskyGroup) openskyGroup.style.display = 'none';
+            if (flightawareGroup) flightawareGroup.style.display = 'none';
+            if (multiApiGroup) multiApiGroup.style.display = 'none';
+            if (flightawareInfo) flightawareInfo.style.display = 'none';
+            if (multiApiInfo) multiApiInfo.style.display = 'none';
+            if (airplanesLiveInfo) airplanesLiveInfo.style.display = 'none';
+            
+            // Hide all credential sections
+            if (openskyCredentials) openskyCredentials.style.display = 'none';
+            if (flightawareCredentials) flightawareCredentials.style.display = 'none';
+            if (multiApiCredentials) multiApiCredentials.style.display = 'none';
+            
+            // Hide individual API settings sections
+            if (individualApiSettings) individualApiSettings.style.display = 'none';
+            if (individualApiSettings2) individualApiSettings2.style.display = 'none';
+            if (individualApiSettings3) individualApiSettings3.style.display = 'none';
+            if (individualApiSettings4) individualApiSettings4.style.display = 'none';
+            
+            // Show appropriate groups and info
+            if (provider === 'opensky') {
+                if (openskyGroup) openskyGroup.style.display = 'block';
+                if (openskyCredentials) openskyCredentials.style.display = 'block';
+                // Show individual API settings for single API mode
+                if (individualApiSettings) individualApiSettings.style.display = 'block';
+                if (individualApiSettings2) individualApiSettings2.style.display = 'block';
+                if (individualApiSettings3) individualApiSettings3.style.display = 'block';
+                if (individualApiSettings4) individualApiSettings4.style.display = 'block';
+                // Set OpenSky URL
+                const urlField = document.getElementById('planeApiUrl');
+                if (urlField) urlField.value = 'https://opensky-network.org/api';
+            } else if (provider === 'airplanes_live') {
+                const group = document.getElementById('airplanesLiveGroup');
+                if (group) group.style.display = 'block';
+                if (individualApiSettings) individualApiSettings.style.display = 'block';
+                if (individualApiSettings2) individualApiSettings2.style.display = 'block';
+                if (individualApiSettings3) individualApiSettings3.style.display = 'block';
+                if (individualApiSettings4) individualApiSettings4.style.display = 'block';
+                if (airplanesLiveInfo) airplanesLiveInfo.style.display = 'block';
+            } else if (provider === 'flightaware') {
+                if (flightawareGroup) flightawareGroup.style.display = 'block';
+                if (flightawareInfo) flightawareInfo.style.display = 'block';
+                if (flightawareCredentials) flightawareCredentials.style.display = 'block';
+                // Show individual API settings for single API mode
+                if (individualApiSettings) individualApiSettings.style.display = 'block';
+                if (individualApiSettings2) individualApiSettings2.style.display = 'block';
+                if (individualApiSettings3) individualApiSettings3.style.display = 'block';
+                if (individualApiSettings4) individualApiSettings4.style.display = 'block';
+                // Set defaults for FlightAware free tier
+                if (rateLimitField) rateLimitField.value = 10;  // Free tier: 10 queries per minute
+                if (cacheTimeoutField) cacheTimeoutField.value = 300;  // 5 minutes cache to stay within free limits
+            } else if (provider === 'multi') {
+                // For multi-API mode, only show the multi-API configuration group
+                // Individual API groups and settings should be hidden as they use their own settings
+                if (multiApiGroup) multiApiGroup.style.display = 'block';
+                if (multiApiCredentials) multiApiCredentials.style.display = 'block';
+                // Individual API settings remain hidden for multi-API mode
+                
+                // Set default priorities
+                const openskyPriority = document.getElementById('openskyPriority');
+                const flightawarePriority = document.getElementById('flightawarePriority');
+                if (openskyPriority) openskyPriority.value = '1';
+                if (flightawarePriority) flightawarePriority.value = '2';
+            } else {
+                // Custom
+                if (openskyGroup) openskyGroup.style.display = 'block';
+                if (openskyCredentials) openskyCredentials.style.display = 'block';
+                // Show individual API settings for single API mode
+                if (individualApiSettings) individualApiSettings.style.display = 'block';
+                if (individualApiSettings2) individualApiSettings2.style.display = 'block';
+                if (individualApiSettings3) individualApiSettings3.style.display = 'block';
+                if (individualApiSettings4) individualApiSettings4.style.display = 'block';
+            }
+        }
+
+        async function loadPlaneApiCredentials() {
+            try {
+                const response = await fetch(`${API_BASE}/api/credentials`);
+                if (response.ok) {
+                    const credentials = await response.json();
+                    
+                    // OpenSky credentials (only set if elements exist)
+                    const usernameField = document.getElementById('planeApiUsername');
+                    const passwordField = document.getElementById('planeApiPassword');
+                    const clientIdField = document.getElementById('planeApiClientId');
+                    const clientSecretField = document.getElementById('planeApiClientSecret');
+                    
+                    if (usernameField) usernameField.value = credentials.username || '';
+                    if (passwordField) passwordField.value = credentials.password || '';
+                    if (clientIdField) clientIdField.value = credentials.clientId || '';
+                    if (clientSecretField) clientSecretField.value = credentials.clientSecret || '';
+                    
+                    // FlightAware credentials (only set if element exists)
+                    const flightawareKeyField = document.getElementById('planeApiFlightawareKey');
+                    if (flightawareKeyField) flightawareKeyField.value = credentials.flightaware_key || '';
+                }
+            } catch (error) {
+                console.error('Failed to load plane API credentials:', error);
+            }
+        }
+
+        async function saveNoiseApiSettings() {
+            try {
+                const provider = document.getElementById('noiseApiProvider').value;
+                let config;
+                
+                if (provider === 'rivm') {
+                    config = {
+                        name: 'RIVM Samen Meten',
+                        base_url: document.getElementById('noiseApiUrl').value,
+                        rate_limit: parseInt(document.getElementById('noiseApiRateLimit').value),
+                        cache_timeout: parseInt(document.getElementById('noiseApiCacheTimeout').value),
+                        timeout: parseInt(document.getElementById('noiseApiTimeout').value),
+                        poll_interval_seconds: parseInt(document.getElementById('noiseApiPoll').value),
+                        auth_required: false,
+                        thing_id: document.getElementById('noiseApiThingId').value,
+                        latitude: parseFloat(document.getElementById('noiseApiLatitude').value),
+                        longitude: parseFloat(document.getElementById('noiseApiLongitude').value),
+                        headers: {
+                            'User-Agent': 'plane-noise-dashboard/1.0',
+                            'Accept': 'application/json'
+                        },
+                        endpoints: {
+                            'things': '/Things',
+                            'sensors': '/Sensors',
+                            'observations': '/Datastreams({datastream_id})/Observations',
+                            'locations': '/Locations',
+                            'filtered_things': '/Things?$filter=startswith(name,\'{filter}\')',
+                            'nearby_locations': '/Locations?$filter=geo.distance(location,geography\'SRID=4326;POINT({lon} {lat})\') le {distance}'
+                        }
+                    };
+                } else if (provider === 'sensor_community') {
+                    config = {
+                        name: 'Sensor.Community Airrohr',
+                        base_url: document.getElementById('noiseApiUrl').value,
+                        rate_limit: parseInt(document.getElementById('noiseApiRateLimit').value),
+                        cache_timeout: parseInt(document.getElementById('noiseApiCacheTimeout').value),
+                        timeout: parseInt(document.getElementById('noiseApiTimeout').value),
+                        poll_interval_seconds: parseInt(document.getElementById('noiseApiPoll').value),
+                        auth_required: false,
+                        sensor_id: document.getElementById('noiseApiSensorId').value,
+                        headers: {
+                            'User-Agent': 'plane-noise-dashboard/1.0',
+                            'Accept': 'application/json'
+                        },
+                        endpoints: {
+                            'sensor_data': '/{sensor_id}/?limit={limit}',
+                            'inspect': 'https://maps.sensor.community/airrohr/{sensor_id}',
+                            'csv': 'https://api-rrd.madavi.de/airrohr/csv/{sensor_id}'
+                        }
+                    };
+                } else {
+                    // Custom API
+                    config = {
+                        name: 'Custom Noise API',
+                        base_url: document.getElementById('noiseApiUrl').value,
+                        rate_limit: parseInt(document.getElementById('noiseApiRateLimit').value),
+                        cache_timeout: parseInt(document.getElementById('noiseApiCacheTimeout').value),
+                        timeout: parseInt(document.getElementById('noiseApiTimeout').value),
+                        poll_interval_seconds: parseInt(document.getElementById('noiseApiPoll').value),
+                        auth_required: false,
+                        sensor_id: document.getElementById('noiseApiSensorId').value,
+                        headers: {
+                            'User-Agent': 'plane-noise-dashboard/1.0',
+                            'Accept': 'application/json'
+                        },
+                        endpoints: {
+                            'sensor_data': '/{sensor_id}/?limit={limit}'
+                        }
+                    };
+                }
+
+                const response = await fetch(`${API_BASE}/api/admin/settings`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        noise_poll_interval_seconds: parseInt(document.getElementById('noiseApiPoll').value),
+                        noise_rate_limit: parseInt(document.getElementById('noiseApiRateLimit').value),
+                        noise_cache_timeout: parseInt(document.getElementById('noiseApiCacheTimeout').value),
+                        noise_timeout: parseInt(document.getElementById('noiseApiTimeout').value),
+                        noise_base_url: document.getElementById('noiseApiUrl').value,
+                        noise_sensor_id: document.getElementById('noiseApiSensorId').value
+                    })
+                });
+
+                if (response.ok) {
+                    showSuccess('Noise API settings saved successfully!');
+                } else {
+                    showError('Failed to save noise API settings');
+                }
+            } catch (error) {
+                console.error('Failed to save noise API settings:', error);
+                showError('Failed to save noise API settings');
+            }
+        }
+
+        async function savePlaneApiSettings() {
+            try {
+                const provider = document.getElementById('planeApiProvider').value;
+                let config;
+                
+                if (provider === 'multi') {
+                    // Get priority settings
+                    const openskyPriority = parseInt(document.getElementById('openskyPriority').value);
+                    const flightawarePriority = parseInt(document.getElementById('flightawarePriority').value);
+                    
+                    // Determine primary API based on priority
+                    let primaryApi = 'opensky';
+                    if (flightawarePriority < openskyPriority) {
+                        primaryApi = 'flightaware';
+                    }
+                    
+                    // Save multi-API configuration to a separate endpoint
+                    const multiApiConfig = {
+                        name: 'Multiple APIs',
+                        multi_api: true,
+                        primary_api: primaryApi,
+                        enable_opensky: document.getElementById('enableOpenSky').checked,
+                        enable_flightaware: document.getElementById('enableFlightAware').checked,
+                        opensky_priority: openskyPriority,
+                        flightaware_priority: flightawarePriority
+                    };
+                    
+                    // Save multi-API configuration separately
+                    try {
+                        await fetch(`${API_BASE}/api/configs/multi-api`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(multiApiConfig)
+                        });
+                    } catch (error) {
+                        console.error('Failed to save multi-API configuration:', error);
+                    }
+                    
+                    // For multi-API mode, don't save individual API settings here
+                    // The multi-API system will use the individual API configurations
+                    // Just save a minimal aircraft configuration to indicate multi-API mode
+                    config = {
+                        name: 'Multiple APIs',
+                        multi_api: true,
+                        auth_required: true,
+                        headers: {
+                            'User-Agent': 'plane-noise-dashboard/1.0'
+                        }
+                    };
+                } else if (provider === 'opensky') {
+                    // Clear multi-API configuration when switching to single API
+                    try {
+                        await fetch(`${API_BASE}/api/configs/multi-api`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ multi_api: false })
+                        });
+                    } catch (error) {
+                        console.error('Failed to clear multi-API configuration:', error);
+                    }
+                    
+                    config = {
+                        name: 'OpenSky Network',
+                        base_url: 'https://opensky-network.org/api',
+                        rate_limit: parseInt(document.getElementById('planeApiRateLimit').value),
+                        cache_timeout: parseInt(document.getElementById('planeApiCacheTimeout').value),
+                        timeout: parseInt(document.getElementById('planeApiTimeout').value),
+                        poll_interval_seconds: parseInt(document.getElementById('planeApiPoll').value),
+                        auth_required: document.getElementById('planeApiAuthRequired').checked,
+                        multi_api: false,
+                        headers: {
+                            'User-Agent': 'plane-noise-dashboard/1.0'
+                        },
+                        endpoints: {
+                            'states_all': '/states/all',
+                            'flight_track': '/tracks/all'
+                        }
+                    };
+                } else if (provider === 'airplanes_live') {
+                    // Clear multi-API configuration when switching to single API
+                    try {
+                        await fetch(`${API_BASE}/api/configs/multi-api`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ multi_api: false })
+                        });
+                    } catch (error) {
+                        console.error('Failed to clear multi-API configuration:', error);
+                    }
+
+                    const airliveUrl = document.getElementById('planeApiAirplanesLiveUrl').value || 'https://api.airplanes.live/v2';
+                    config = {
+                        name: 'Airplanes.live',
+                        base_url: airliveUrl,
+                        rate_limit: parseInt(document.getElementById('planeApiRateLimit').value),
+                        cache_timeout: parseInt(document.getElementById('planeApiCacheTimeout').value),
+                        timeout: parseInt(document.getElementById('planeApiTimeout').value),
+                        poll_interval_seconds: parseInt(document.getElementById('planeApiPoll').value),
+                        auth_required: false,
+                        multi_api: false,
+                        headers: {
+                            'User-Agent': 'plane-noise-dashboard/1.0'
+                        },
+                        endpoints: {
+                            'point': '/point'
+                        }
+                    };
+                } else if (provider === 'flightaware') {
+                    // Clear multi-API configuration when switching to single API
+                    try {
+                        await fetch(`${API_BASE}/api/configs/multi-api`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ multi_api: false })
+                        });
+                    } catch (error) {
+                        console.error('Failed to clear multi-API configuration:', error);
+                    }
+                    
+                    config = {
+                        name: 'FlightAware AeroAPI',
+                        base_url: 'https://aeroapi.flightaware.com/aeroapi',
+                        rate_limit: parseInt(document.getElementById('planeApiRateLimit').value),
+                        cache_timeout: parseInt(document.getElementById('planeApiCacheTimeout').value),
+                        timeout: parseInt(document.getElementById('planeApiTimeout').value),
+                        poll_interval_seconds: parseInt(document.getElementById('planeApiPoll').value),
+                        auth_required: true,
+                        multi_api: false,
+                        headers: {
+                            'User-Agent': 'plane-noise-dashboard/1.0',
+                            'Accept': 'application/json'
+                        },
+                        endpoints: {
+                            'flights_search': '/flights/search',
+                            'flight_info': '/flights/{fa_flight_id}',
+                            'aircraft_info': '/aircraft/{ident}',
+                            'airport_info': '/airports/{airport_code}',
+                            'positions': '/flights/{fa_flight_id}/positions',
+                            'track': '/flights/{fa_flight_id}/track'
+                        }
+                    };
+                } else {
+                    // Custom API
+                    config = {
+                        name: 'Custom Aircraft API',
+                        base_url: document.getElementById('planeApiUrl').value,
+                        rate_limit: parseInt(document.getElementById('planeApiRateLimit').value),
+                        cache_timeout: parseInt(document.getElementById('planeApiCacheTimeout').value),
+                        timeout: parseInt(document.getElementById('planeApiTimeout').value),
+                        poll_interval_seconds: parseInt(document.getElementById('planeApiPoll').value),
+                        auth_required: document.getElementById('planeApiAuthRequired').checked,
+                        headers: {
+                            'User-Agent': 'plane-noise-dashboard/1.0'
+                        },
+                        endpoints: {
+                            'states_all': '/states/all',
+                            'flight_track': '/tracks/all'
+                        }
+                    };
+                }
+
+                const response = await fetch(`${API_BASE}/api/configs/aircraft`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(config)
+                });
+
+                if (response.ok) {
+                    showSuccess('Plane API settings saved successfully!');
+                    
+                    // Save credentials
+                    await savePlaneApiCredentials();
+                } else {
+                    showError('Failed to save plane API settings');
+                }
+            } catch (error) {
+                console.error('Failed to save plane API settings:', error);
+                showError('Failed to save plane API settings');
+            }
+        }
+
+        async function savePlaneApiCredentials() {
+            try {
+                const credentials = {};
+                
+                // Only include credentials if the fields exist
+                const usernameField = null;
+                const passwordField = null;
+                const clientIdField = null;
+                const clientSecretField = null;
+                const flightawareKeyField = document.getElementById('planeApiFlightawareKey');
+                
+                // OpenSky uses no Basic credentials in this setup; do not include
+                if (flightawareKeyField) credentials.flightaware_key = flightawareKeyField.value;
+
+                const response = await fetch(`${API_BASE}/api/credentials`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(credentials)
+                });
+
+                if (response.ok) {
+                    showSuccess('Plane API credentials saved successfully!');
+                } else {
+                    showError('Failed to save plane API credentials');
+                }
+            } catch (error) {
+                console.error('Failed to save plane API credentials:', error);
+                showError('Failed to save plane API credentials');
+            }
+        }
+
+        async function loadSecuritySettings() {
+            // Load security settings from your API
+            // This would typically come from your configuration system
+        }
+
+        function themeCatalog() {
+            if (window.PlaneNoiseThemes && window.PlaneNoiseThemes.length) return window.PlaneNoiseThemes;
+            return [
+                { id: 'instrument', name: 'Instrument' },
+                { id: 'early', name: 'Early Flight' }
+            ];
+        }
+
+        function paintThemeChoices(offered) {
+            const choice = document.getElementById('visitorThemeChoice').checked;
+            const list = document.getElementById('visitorThemeList');
+            list.innerHTML = themeCatalog().map(function(item) {
+                const checked = offered.indexOf(item.id) !== -1 ? 'checked' : '';
+                const disabled = choice ? '' : 'disabled';
+                return '<label style="display:block; margin: 4px 0;"><input type="checkbox" class="visitor-theme" value="' + item.id + '" ' + checked + ' ' + disabled + '> ' + item.name + '</label>';
+            }).join('');
+        }
+
+        async function loadAppearanceSettings() {
+            try {
+                const response = await fetch(`${API_BASE}/visitor/theme`);
+                if (!response.ok) return;
+                const policy = await response.json();
+                document.getElementById('siteTheme').value = policy.theme || 'instrument';
+                document.getElementById('siteAppearance').value = policy.appearance || 'dark';
+                document.getElementById('visitorThemeChoice').checked = policy.choice !== false;
+                document.getElementById('visitorAppearanceChoice').checked = policy.appearance_choice !== false;
+                window._themeOffered = policy.offered || policy.themes || ['instrument', 'early'];
+                paintThemeChoices(window._themeOffered);
+            } catch (error) {
+                console.error('Failed to load appearance settings:', error);
+            }
+        }
+
+        async function saveAppearanceSettings() {
+            const themes = Array.from(document.querySelectorAll('.visitor-theme:checked')).map(function(box) { return box.value; });
+            const data = {
+                theme: document.getElementById('siteTheme').value,
+                appearance: document.getElementById('siteAppearance').value,
+                choice: document.getElementById('visitorThemeChoice').checked,
+                appearance_choice: document.getElementById('visitorAppearanceChoice').checked,
+                themes: themes
+            };
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/theme`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) {
+                    showError('Failed to save appearance');
+                    return;
+                }
+                const policy = await response.json();
+                document.getElementById('siteTheme').value = policy.theme || 'instrument';
+                document.getElementById('siteAppearance').value = policy.appearance || 'dark';
+                window._themeOffered = policy.offered || themes;
+                paintThemeChoices(window._themeOffered);
+                if (window.themeManager) await window.themeManager.loadPolicy();
+                if (window.parent && window.parent.themeManager && window.parent !== window) {
+                    await window.parent.themeManager.loadPolicy();
+                }
+                showSuccess('Appearance saved');
+            } catch (error) {
+                console.error('Failed to save appearance:', error);
+                showError('Failed to save appearance');
+            }
+        }
+
+        // Form submission handlers
+
+        document.getElementById('systemForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            await saveSystemSettings();
+        });
+
+        document.getElementById('appearanceForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            await saveAppearanceSettings();
+        });
+
+        document.getElementById('visitorThemeChoice').addEventListener('change', function() {
+            paintThemeChoices(window._themeOffered || ['instrument', 'early']);
+        });
+
+        document.getElementById('detectionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            await saveDetectionSettings();
+        });
+        document.getElementById('noiseAssociationInnerKm').addEventListener('input', explainSlant);
+        document.getElementById('altitudeMaxM').addEventListener('input', explainSlant);
+        explainSlant();
+
+        document.getElementById('visitorForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            await saveVisitorSettings();
+        });
+
+
+        document.getElementById('securityForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            await saveSecuritySettings();
+        });
+
+
+        async function saveSystemSettings() {
+            try {
+                const data = {
+                    sensor_lat: parseFloat(document.getElementById('sensorLat').value),
+                    sensor_lon: parseFloat(document.getElementById('sensorLon').value),
+                    external_access: document.getElementById('externalAccess').value === 'true',
+                    server_port: parseInt(document.getElementById('serverPort').value),
+                    
+                };
+
+                const response = await fetch(`${API_BASE}/api/admin/settings`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    showSuccess('System settings saved successfully! Note: Server restart required for external access changes.');
+                } else {
+                    showError('Failed to save system settings');
+                }
+            } catch (error) {
+                showError('Failed to save system settings');
+            }
+        }
+
+        async function saveDetectionSettings() {
+            try {
+                const radius = parseFloat(document.getElementById('radiusKm').value);
+                const altitude = parseInt(document.getElementById('altitudeMaxM').value, 10);
+                const data = {
+                    radius_km: radius,
+                    detection_radius_km: radius,
+                    altitude_max_m: altitude,
+                    max_altitude_m: altitude,
+                    noise_assoc_inner_km: parseFloat(document.getElementById('noiseAssociationInnerKm').value),
+                    privacy_jitter_m: parseInt(document.getElementById('privacyJitterM').value, 10) || 0,
+                    public_map_zoom: document.getElementById('publicMapZoom').value
+                };
+
+                const response = await fetch(`${API_BASE}/api/admin/settings`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    showSuccess('Detection settings saved successfully!');
+                } else {
+                    showError('Failed to save detection settings');
+                }
+            } catch (error) {
+                console.error('Failed to save detection settings:', error);
+                showError('Failed to save detection settings');
+            }
+        }
+
+        async function saveVisitorSettings() {
+            try {
+                const data = {
+                    radius_km: parseFloat(document.getElementById('visitorRadiusKm').value),
+                    altitude_max_m: parseInt(document.getElementById('visitorAltitudeMaxM').value),
+                    update_interval_seconds: parseInt(document.getElementById('visitorUpdateInterval').value),
+                    events_view: document.getElementById('publicEventsView').value
+                };
+
+                const response = await fetch(`${API_BASE}/visitor/settings`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    showSuccess('Visitor settings saved successfully!');
+                } else {
+                    showError('Failed to save visitor settings');
+                }
+            } catch (error) {
+                console.error('Failed to save visitor settings:', error);
+                showError('Failed to save visitor settings');
+            }
+        }
+
+
+        async function saveSecuritySettings() {
+            showSuccess('Security settings saved successfully!');
+        }
+
+        async function clearAllData() {
+            const message = 'Delete stored aircraft passes, visitor stats, and API usage counts? Accounts and settings stay. This cannot be undone.';
+            if (!confirm(message)) return;
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/clear-data`, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ confirm: 'clear-events' })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'clear_failed');
+                const removed = data.removed || {};
+                showSuccess(`Cleared ${removed.aircraft_events || 0} passes`);
+            } catch (error) {
+                showError('Could not clear recorded data');
+            }
+        }
+
+        async function resetSystem() {
+            const message = 'Delete recorded data and restore detection, visitor, and zone settings to their defaults? Accounts and API credentials stay. This cannot be undone.';
+            if (!confirm(message)) return;
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/reset-system`, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ confirm: 'reset-settings' })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'reset_failed');
+                showSuccess('Recorded data cleared and defaults restored');
+                loadAllSettings();
+            } catch (error) {
+                showError('Could not reset the system');
+            }
+        }
+
+        // Toast helpers (viewport-fixed, follows scroll)
+        function pushToast(message, kind = 'success'){
+            const cont = document.getElementById('toastContainer');
+            const el = document.createElement('div');
+            el.className = `toast toast-${kind}`;
+            el.textContent = message;
+            cont.appendChild(el);
+            const timeout = setTimeout(() => {
+                el.style.animation = 'toast-out 180ms ease-in forwards';
+                setTimeout(() => el.remove(), 220);
+            }, 3500);
+            // click to dismiss
+            el.addEventListener('click', () => { clearTimeout(timeout); el.remove(); });
+        }
+        function showSuccess(message){ pushToast(message, 'success'); }
+        function showError(message){ pushToast(message, 'error'); }
+
+        function toggleExternalAccessWarning() {
+            const externalAccess = document.getElementById('externalAccess').value;
+            const warning = document.getElementById('externalAccessWarning');
+            
+            if (externalAccess === 'true') {
+                warning.style.display = 'block';
+            } else {
+                warning.style.display = 'none';
+            }
+        }
+
+        async function checkServerStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                if (response.ok) {
+                    updateServerStatus(true, 'Online');
+                    await loadServerConfig();
+                } else {
+                    updateServerStatus(false, 'Offline');
+                }
+            } catch (error) {
+                updateServerStatus(false, 'Offline');
+            }
+        }
+
+        function updateServerStatus(isOnline, text) {
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            
+            statusDot.className = `status-dot ${isOnline ? 'online' : 'offline'}`;
+            statusText.textContent = text;
+        }
+
+        async function loadServerConfig() {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/settings`);
+                if (response.ok) {
+                    const settings = await response.json();
+                    
+                    // Handle both string and boolean values for external_access (case insensitive)
+                    const isExternalAccess = String(settings.external_access).toLowerCase() === 'true' || settings.external_access === true;
+                    
+                    document.getElementById('currentHost').textContent = isExternalAccess ? '0.0.0.0' : '127.0.0.1';
+                    document.getElementById('currentPort').textContent = settings.server_port || '8787';
+                    document.getElementById('currentExternal').textContent = isExternalAccess ? 'Enabled' : 'Disabled';
+                }
+            } catch (error) {
+                console.error('Failed to load server config:', error);
+            }
+        }
+
+        async function restartServer() {
+            if (!confirm('Are you sure you want to restart the server? This will temporarily disconnect all users.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/restart`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    showSuccess(result.message);
+                    
+                    // Wait a moment then check if server is back up
+                    setTimeout(async () => {
+                        await checkServerStatus();
+                    }, 5000);
+                } else {
+                    showError('Failed to restart server');
+                }
+                
+            } catch (error) {
+                showError('Failed to restart server: ' + error.message);
+            }
+        }
+
+        // TLS Management Functions
+        function toggleTlsSettings() {
+            const enableHttps = document.getElementById('enableHttps').checked;
+            const tlsSettings = document.getElementById('tlsSettings');
+            
+            if (enableHttps) {
+                tlsSettings.style.display = 'block';
+                checkTlsStatus();
+            } else {
+                tlsSettings.style.display = 'none';
+            }
+        }
+
+        function toggleTlsMode() {
+            const tlsMode = document.getElementById('tlsMode').value;
+            const letsencryptEmailGroup = document.getElementById('letsencryptEmailGroup');
+            
+            if (tlsMode === 'letsencrypt') {
+                letsencryptEmailGroup.style.display = 'block';
+            } else {
+                letsencryptEmailGroup.style.display = 'none';
+            }
+        }
+
+        async function checkTlsStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/api/tls/status`);
+                if (response.ok) {
+                    const status = await response.json();
+                    updateTlsStatus(status.enabled, status.status, status.message);
+                } else {
+                    updateTlsStatus(false, 'error', 'Failed to check TLS status');
+                }
+            } catch (error) {
+                updateTlsStatus(false, 'error', 'TLS check failed');
+            }
+        }
+
+        function updateTlsStatus(enabled, status, message) {
+            const statusDot = document.getElementById('tlsStatusDot');
+            const statusText = document.getElementById('tlsStatusText');
+            
+            statusDot.className = `status-dot ${status}`;
+            statusText.textContent = message || status;
+        }
+
+        async function generateCertificate() {
+            const tlsMode = document.getElementById('tlsMode').value;
+            const domain = document.getElementById('tlsDomain').value;
+            const email = document.getElementById('tlsEmail').value;
+            
+            if (!domain) {
+                showError('Please enter a domain name');
+                return;
+            }
+            
+            if (tlsMode === 'letsencrypt' && !email) {
+                showError('Please enter an email address for Let\'s Encrypt');
+                return;
+            }
+            
+            try {
+                showSuccess('Generating certificate... This may take a moment.');
+                
+                const response = await fetch(`${API_BASE}/api/tls/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        mode: tlsMode,
+                        domain: domain,
+                        email: email
+                    })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    showSuccess(result.message || 'Certificate generated successfully!');
+                    await checkTlsStatus();
+                } else {
+                    const error = await response.json();
+                    showError(error.message || 'Failed to generate certificate');
+                }
+            } catch (error) {
+                showError('Failed to generate certificate: ' + error.message);
+            }
+        }
+
+        async function testTlsConfig() {
+            try {
+                showSuccess('Testing TLS configuration...');
+                
+                const response = await fetch(`${API_BASE}/api/tls/test`);
+                if (response.ok) {
+                    const result = await response.json();
+                    showSuccess(result.message || 'TLS test completed successfully!');
+                } else {
+                    const error = await response.json();
+                    showError(error.message || 'TLS test failed');
+                }
+            } catch (error) {
+                showError('TLS test failed: ' + error.message);
+            }
+        }
+
+        async function fillCountrySelect() {
+            const select = document.getElementById('siteCountry');
+            if (!select || select.dataset.ready === '1') return;
+            const response = await fetch('/static/flags/countries.json');
+            if (!response.ok) return;
+            const list = await response.json();
+            select.replaceChildren();
+            list.forEach(function (item) {
+                const option = document.createElement('option');
+                option.value = item.code;
+                option.textContent = item.name;
+                select.appendChild(option);
+            });
+            select.dataset.ready = '1';
+        }
+
+        function weatherAdviceOn(value) {
+            if (value === undefined || value === null || value === '') return true;
+            return value === true || String(value).toLowerCase() === 'true' || value === 1 || value === '1';
+        }
+
+        // Update loadSystemSettings to include TLS settings
+        async function loadSystemSettings() {
+            try {
+                await fillCountrySelect();
+                const response = await fetch(`${API_BASE}/api/admin/settings`);
+                if (response.ok) {
+                    const settings = await response.json();
+                    
+                    // Load system settings
+                    if (settings.sensor_lat) document.getElementById('sensorLat').value = settings.sensor_lat;
+                    if (settings.sensor_lon) document.getElementById('sensorLon').value = settings.sensor_lon;
+                    document.getElementById('weatherAdviceEnabled').checked = weatherAdviceOn(settings.weather_advice_enabled);
+                    if (settings.external_access !== undefined) {
+                        document.getElementById('externalAccess').value = settings.external_access ? 'true' : 'false';
+                    }
+                    if (settings.server_port) document.getElementById('serverPort').value = settings.server_port;
+                    document.getElementById('sitePlaceName').value = settings.site_place_name || 'Netherlands';
+                    document.getElementById('siteCountry').value = (settings.site_country || 'nl').toLowerCase();
+                    document.getElementById('siteTimezone').value = settings.site_timezone || 'Europe/Amsterdam';
+                    
+                    // Load TLS settings
+                    if (settings.tls_enabled !== undefined) {
+                        document.getElementById('enableHttps').checked = settings.tls_enabled;
+                        toggleTlsSettings();
+                    }
+                    if (settings.tls_mode) {
+                        document.getElementById('tlsMode').value = settings.tls_mode;
+                        toggleTlsMode();
+                    }
+                    if (settings.tls_domain) {
+                        document.getElementById('tlsDomain').value = settings.tls_domain;
+                    }
+                    if (settings.tls_email) {
+                        document.getElementById('tlsEmail').value = settings.tls_email;
+                    }
+                    if (settings.force_https !== undefined) {
+                        document.getElementById('forceHttps').checked = settings.force_https;
+                    }
+                    
+                    toggleExternalAccessWarning(); // Call to update warning visibility
+                } else {
+                    showError('Failed to load system settings');
+                }
+            } catch (error) {
+                console.error('Failed to load system settings:', error);
+                showError('Failed to load system settings');
+            }
+        }
+
+        // Update saveSystemSettings to include TLS settings
+        async function saveSystemSettings() {
+            try {
+                const data = {
+                    sensor_lat: parseFloat(document.getElementById('sensorLat').value),
+                    sensor_lon: parseFloat(document.getElementById('sensorLon').value),
+                    external_access: document.getElementById('externalAccess').value === 'true',
+                    server_port: parseInt(document.getElementById('serverPort').value),
+                    tls_enabled: document.getElementById('enableHttps').checked,
+                    tls_mode: document.getElementById('tlsMode').value,
+                    tls_domain: document.getElementById('tlsDomain').value,
+                    tls_email: document.getElementById('tlsEmail').value,
+                    force_https: document.getElementById('forceHttps').checked,
+                    site_place_name: document.getElementById('sitePlaceName').value.trim(),
+                    site_country: document.getElementById('siteCountry').value,
+                    site_timezone: document.getElementById('siteTimezone').value.trim(),
+                    weather_advice_enabled: document.getElementById('weatherAdviceEnabled').checked ? 'true' : 'false'
+                };
+
+                const response = await fetch(`${API_BASE}/api/admin/settings`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    showSuccess('System settings saved successfully! Note: Server restart required for external access and TLS changes.');
+                } else {
+                    const body = await response.json().catch(function () { return {}; });
+                    if (body.error === 'invalid_timezone') showError('That timezone is not a known IANA name.');
+                    else if (body.error === 'invalid_country') showError('Choose a country from the list.');
+                    else if (body.error === 'invalid_place') showError('Enter a place name.');
+                    else showError('Failed to save system settings');
+                }
+            } catch (error) {
+                showError('Failed to save system settings');
+            }
+        }
+
+        function readStationEditors() {
+            return Array.from(document.querySelectorAll('#stationNotesList .station-editor')).map(function (row) {
+                return {
+                    title: row.querySelector('.station-title').value,
+                    body: row.querySelector('.station-body').value
+                };
+            });
+        }
+
+        function renderStationEditors(notes) {
+            const list = document.getElementById('stationNotesList');
+            list.replaceChildren();
+            (notes || []).forEach(function (note, index) {
+                const row = document.createElement('div');
+                row.className = 'station-editor';
+                row.style.marginBottom = '16px';
+                row.style.paddingBottom = '12px';
+                row.style.borderBottom = '1px solid var(--theme-border)';
+                const titleGroup = document.createElement('div');
+                titleGroup.className = 'form-group';
+                const titleLabel = document.createElement('label');
+                titleLabel.textContent = 'Heading';
+                const titleInput = document.createElement('input');
+                titleInput.type = 'text';
+                titleInput.className = 'station-title';
+                titleInput.maxLength = 80;
+                titleInput.value = note.title || '';
+                titleInput.placeholder = index === 0 ? 'Location' : 'Heading';
+                titleGroup.appendChild(titleLabel);
+                titleGroup.appendChild(titleInput);
+                const bodyGroup = document.createElement('div');
+                bodyGroup.className = 'form-group';
+                const bodyLabel = document.createElement('label');
+                bodyLabel.textContent = 'Text';
+                const bodyInput = document.createElement('textarea');
+                bodyInput.className = 'station-body';
+                bodyInput.maxLength = 1500;
+                bodyInput.rows = 4;
+                bodyInput.value = note.body || '';
+                bodyInput.placeholder = 'Where the sensor sits, or why you record aircraft noise.';
+                bodyGroup.appendChild(bodyLabel);
+                bodyGroup.appendChild(bodyInput);
+                const actions = document.createElement('div');
+                actions.className = 'btn-group';
+                [['Up', 'up'], ['Down', 'down'], ['Remove', 'remove']].forEach(function (item) {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'btn btn-secondary';
+                    button.dataset.stationAction = item[1];
+                    button.textContent = item[0];
+                    actions.appendChild(button);
+                });
+                row.appendChild(titleGroup);
+                row.appendChild(bodyGroup);
+                row.appendChild(actions);
+                list.appendChild(row);
+            });
+        }
+
+        async function loadStationNotes() {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/settings`);
+                if (!response.ok) return;
+                const settings = await response.json();
+                let notes = [];
+                if (settings.station_notes) {
+                    notes = typeof settings.station_notes === 'string' ? JSON.parse(settings.station_notes) : settings.station_notes;
+                }
+                renderStationEditors(Array.isArray(notes) ? notes : []);
+            } catch (error) {
+                renderStationEditors([]);
+            }
+        }
+
+        async function saveStationNotes() {
+            const notes = readStationEditors().map(function (note) {
+                return { title: note.title.trim(), body: note.body.trim() };
+            }).filter(function (note) {
+                return note.title || note.body;
+            });
+            const response = await fetch(`${API_BASE}/api/admin/settings`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ station_notes: notes })
+            });
+            if (response.ok) {
+                renderStationEditors(notes);
+                showSuccess('Station information saved.');
+                return;
+            }
+            const body = await response.json().catch(function () { return {}; });
+            if (body.error === 'invalid_station_notes') showError('Each section needs a heading, without markup, and at most 12 sections.');
+            else showError('Failed to save station information');
+        }
+
+        document.getElementById('addStationNote').addEventListener('click', function () {
+            const notes = readStationEditors();
+            if (notes.length >= 12) {
+                showError('Twelve sections is the limit.');
+                return;
+            }
+            notes.push({ title: '', body: '' });
+            renderStationEditors(notes);
+        });
+
+        document.getElementById('saveStationNotes').addEventListener('click', function () {
+            saveStationNotes().catch(function () { showError('Failed to save station information'); });
+        });
+
+        document.getElementById('stationNotesList').addEventListener('click', function (event) {
+            const button = event.target.closest('[data-station-action]');
+            if (!button) return;
+            const row = button.closest('.station-editor');
+            const notes = readStationEditors();
+            const index = Array.from(row.parentElement.children).indexOf(row);
+            const action = button.dataset.stationAction;
+            if (action === 'remove') notes.splice(index, 1);
+            if (action === 'up' && index > 0) notes.splice(index - 1, 0, notes.splice(index, 1)[0]);
+            if (action === 'down' && index < notes.length - 1) notes.splice(index + 1, 0, notes.splice(index, 1)[0]);
+            renderStationEditors(notes);
+        });
+
+        function renderCommunityPreview(status) {
+            const preview = document.getElementById('communityPreview');
+            if (!status || !status.preview) {
+                const reason = status && status.preview_error;
+                if (reason === 'missing_url') preview.textContent = 'Add the public URL to see what would be shared.';
+                else if (reason === 'missing_location') preview.textContent = 'Set the sensor latitude and longitude first.';
+                else if (reason === 'missing_name') preview.textContent = 'Set a place name first.';
+                else preview.textContent = '';
+                return;
+            }
+            const row = status.preview;
+            const lines = [
+                row.name,
+                row.country_code || '',
+                row.feed || '',
+                row.local_only ? 'Local only' : (row.url || ''),
+                row.latitude + ', ' + row.longitude,
+                'Shifted by the privacy radius. Sensor id is not included.'
+            ];
+            preview.textContent = lines.filter(Boolean).join('\n');
+        }
+
+        async function loadCommunitySettings() {
+            const response = await fetch(`${API_BASE}/api/admin/community`);
+            if (!response.ok) return;
+            const status = await response.json();
+            document.getElementById('communityEnabled').checked = !!status.enabled;
+            document.getElementById('communitySharePasses').checked = status.share_passes !== false;
+            document.getElementById('communityPublicUrl').value = status.public_url || '';
+            document.getElementById('communityAggregatorUrl').value = status.aggregator_url || '';
+            document.getElementById('communityKeyHint').textContent = status.station_key_set
+                ? 'Station key: set on this server (the first post fixed it at the data service).' + (status.station_id ? ' Station id ' + status.station_id + '.' : '')
+                : 'Station key: made on the first share.';
+            var passes = document.getElementById('communityPassesStatus');
+            if (!status.enabled) passes.textContent = '';
+            else if (status.passes_last_error) passes.textContent = 'Last pass batch failed: ' + status.passes_last_error;
+            else if (status.passes_last_sent) passes.textContent = 'Last pass batch: ' + status.passes_last_count + ' passes at ' + new Date(status.passes_last_sent).toLocaleString() + '.';
+            else passes.textContent = 'No passes sent yet.';
+            document.getElementById('communityStationKey').value = '';
+            renderBackfill(status.backfill || {});
+            document.getElementById('communityClaimStatus').textContent = status.claimed_at
+                ? 'Claimed on ' + new Date(status.claimed_at).toLocaleString() + '.'
+                : (status.enabled ? 'Not claimed yet.' : '');
+            renderCommunityPreview(status);
+        }
+
+        async function claimCommunityStation() {
+            const code = document.getElementById('communityClaimCode').value.trim();
+            const response = await fetch(`${API_BASE}/api/admin/community/claim`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code })
+            });
+            const body = await response.json().catch(function () { return {}; });
+            if (response.ok) { showSuccess(body.message || 'Claimed.'); document.getElementById('communityClaimCode').value = ''; }
+            else showError(body.message || 'The claim failed.');
+            await loadCommunitySettings();
+        }
+
+        async function saveCommunitySettings(event) {
+            event.preventDefault();
+            const response = await fetch(`${API_BASE}/api/admin/community`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    enabled: document.getElementById('communityEnabled').checked,
+                    share_passes: document.getElementById('communitySharePasses').checked,
+                    public_url: document.getElementById('communityPublicUrl').value.trim(),
+                    aggregator_url: document.getElementById('communityAggregatorUrl').value.trim(),
+                    station_key: document.getElementById('communityStationKey').value
+                })
+            });
+            const body = await response.json().catch(function () { return {}; });
+            if (!response.ok) {
+                if (body.error === 'invalid_url') showError('Enter a public URL starting with http:// or https://.');
+                else if (body.error === 'invalid_station_key') showError('A station key is 32 to 128 printable characters.');
+                else if (body.error === 'missing_url') showError('Enter the public URL before sharing.');
+                else if (body.error === 'missing_location') showError('Set the sensor latitude and longitude first.');
+                else showError(body.message || 'Could not save community settings.');
+                return;
+            }
+            showSuccess(body.message || 'Community settings saved.');
+            await loadCommunitySettings();
+        }
+
+        async function updateCommunityNow() {
+            const response = await fetch(`${API_BASE}/api/admin/community/update`, { method: 'POST' });
+            const body = await response.json().catch(function () { return {}; });
+            if (!response.ok) {
+                showError(body.error === 'disabled' ? 'Turn sharing on and save it first.' : (body.message || 'Update failed.'));
+                return;
+            }
+            showSuccess(body.message || 'Update sent.');
+            await loadCommunitySettings();
+        }
+
+        document.getElementById('communityForm').addEventListener('submit', function (event) {
+            saveCommunitySettings(event).catch(function () { showError('Could not save community settings.'); });
+        });
+        async function loadGuard() {
+            const response = await fetch(`${API_BASE}/api/admin/guard`);
+            if (!response.ok) return;
+            const status = await response.json();
+            document.getElementById('guardEnabled').checked = status.enabled !== false;
+            const l = status.limits || {};
+            document.getElementById('guardLimits').textContent = `Budgets per address: ${l.pages_per_minute} pages a minute and ${l.pages_per_hour} an hour; ${l.api_per_minute} JSON calls a minute and ${l.api_per_hour} an hour.`;
+            const host = document.getElementById('guardBans');
+            host.replaceChildren();
+            if (!status.bans || !status.bans.length) { host.textContent = 'No address is blocked.'; return; }
+            status.bans.forEach(function (b) {
+                const row = document.createElement('div');
+                row.style.cssText = 'display:flex;gap:0.75rem;align-items:center;margin:0.3rem 0;';
+                const text = document.createElement('span');
+                text.textContent = `${b.ip} · until ${new Date(b.until * 1000).toLocaleString()} · ban ${b.bans}`;
+                const btn = document.createElement('button');
+                btn.type = 'button'; btn.className = 'btn btn-secondary'; btn.textContent = 'Unban'; btn.style.padding = '0.2rem 0.6rem';
+                btn.addEventListener('click', async function () {
+                    await fetch(`${API_BASE}/api/admin/guard/unban`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ip: b.ip }) });
+                    loadGuard();
+                });
+                row.appendChild(text); row.appendChild(btn); host.appendChild(row);
+            });
+        }
+        document.getElementById('guardForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const response = await fetch(`${API_BASE}/api/admin/guard`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ enabled: document.getElementById('guardEnabled').checked }) });
+            if (response.ok) showSuccess('Guard settings saved.'); else showError('Could not save the guard settings.');
+        });
+        loadGuard();
+        document.getElementById('communityClaimBtn').addEventListener('click', function () {
+            claimCommunityStation().catch(function () { showError('The claim failed.'); });
+        });
+        let backfillTimer = null;
+        function renderBackfill(b) {
+            const el = document.getElementById('communityBackfillStatus');
+            const stop = document.getElementById('communityBackfillStopBtn');
+            const start = document.getElementById('communityBackfillBtn');
+            const avail = (b.available || 0);
+            const have = b.first ? ('This station holds ' + avail + ' in-zone passes older than a week, since ' + b.first + '.') : 'This station has no in-zone passes older than a week.';
+            const judge = b.unflagged ? (' ' + b.unflagged + ' stored passes were never judged against the zone; sending judges them first.') : '';
+            let text = '';
+            if (b.state === 'running') text = (b.total ? 'Sending history: ' + b.sent + ' of about ' + b.total + ' passes' + (b.reached ? ', up to ' + b.reached : '') + (b.skipped ? '; ' + b.skipped + ' refused by the service so far' : '') + '.' : 'Preparing: judging stored passes against the zone…');
+            else if (b.state === 'done') text = (b.sent ? 'History sent: ' + b.sent + ' passes' + (b.reached ? ', up to ' + b.reached : '') + (b.stored || b.skipped ? '; the service stored ' + b.stored + (b.skipped ? ' and refused ' + b.skipped : '') : '') + '. The last week goes with the regular batches.' : 'Nothing older than a week to send. ' + have + judge);
+            else if (b.state === 'stopped') text = 'History send stopped at ' + (b.reached || 'the start') + '; press again to continue. ' + have;
+            else if (b.state === 'failed') text = 'History send failed: ' + (b.error || 'see the log') + '. Press again to continue from ' + (b.reached || 'the start') + '.';
+            else text = have + judge;
+            el.textContent = text;
+            stop.style.display = b.state === 'running' ? '' : 'none';
+            start.textContent = (b.state === 'stopped' || b.state === 'failed') ? 'Continue sending history' : 'Send full history';
+            if (b.state === 'running' && !backfillTimer) backfillTimer = setInterval(loadCommunitySettings, 4000);
+            if (b.state !== 'running' && backfillTimer) { clearInterval(backfillTimer); backfillTimer = null; }
+        }
+        document.getElementById('communityBackfillBtn').addEventListener('click', async function () {
+            const response = await fetch(`${API_BASE}/api/admin/community/backfill`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+            const result = await response.json().catch(() => ({}));
+            if (!result.ok) document.getElementById('communityBackfillStatus').textContent = result.message || ('Could not start: ' + (result.error || 'unknown'));
+            else renderBackfill(result.backfill || { state: 'running', sent: 0, total: 0 });
+        });
+        document.getElementById('communityBackfillStopBtn').addEventListener('click', async function () {
+            await fetch(`${API_BASE}/api/admin/community/backfill`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'stop' }) });
+            setTimeout(loadCommunitySettings, 1500);
+        });
+        document.getElementById('communityUpdateNow').addEventListener('click', function () {
+            updateCommunityNow().catch(function () { showError('Update failed.'); });
+        });
+
+        // Theme management is handled by centralized theme.js
+     </script>
+ <script src="/static/js/admin-shell.js?v=9"></script>
+
+    <script>
+    (function () {
+        const INTRO = {
+            station: 'Where the sensor is, how the site presents itself, and the station text visitors read.',
+            detection: 'What counts as a pass: the circle, the drawn zone, the noise range, the runways, and how often positions are polled.',
+            public: 'What visitors see on the public page and on the community map.',
+            data: 'The aircraft registry that identifies flights, retention of history, and backups.',
+            alerts: 'Who is told when the sensor, a feed or the recorder stops.',
+            server: 'Feeds and credentials, restart, security, and the dangerous buttons.',
+        };
+        const tabs = Array.from(document.querySelectorAll('.settings-tabs button'));
+        const cards = Array.from(document.querySelectorAll('.card[data-group]'));
+        const search = document.getElementById('settingsSearch');
+        const intro = document.getElementById('settingsIntro');
+        let active = 'station';
+
+        function show(group) {
+            active = group;
+            tabs.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tab === group)));
+            const q = (search.value || '').trim().toLowerCase();
+            cards.forEach(c => {
+                const match = q && c.textContent.toLowerCase().includes(q);
+                c.hidden = q ? !match : c.dataset.group !== group;
+                c.classList.toggle('card-match', !!(q && match));
+            });
+            intro.textContent = q ? `Settings matching "${q}" from every section.` : (INTRO[group] || '');
+            if (!q && history.replaceState) history.replaceState(null, '', '#' + group);
+        }
+        tabs.forEach(b => b.addEventListener('click', () => { search.value = ''; show(b.dataset.tab); }));
+        search.addEventListener('input', () => show(active));
+
+        // The shell's "on this page" links target card headings: switch to that card's section, then scroll.
+        function reveal(hash) {
+            const target = document.getElementById((hash || '').replace('#', ''));
+            const card = target && target.closest('.card[data-group]');
+            if (!card) return false;
+            search.value = '';
+            show(card.dataset.group);
+            target.scrollIntoView({ block: 'start' });
+            return true;
+        }
+        function placeJump() {
+            const jump = document.querySelector('.admin-jump');
+            if (jump && intro && jump.nextElementSibling !== intro.nextElementSibling) intro.insertAdjacentElement('afterend', jump);
+        }
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('.admin-jump a');
+            if (link && reveal(link.getAttribute('href'))) e.preventDefault();
+        });
+        // The shell builds that row after this script runs; try at each later moment.
+        document.addEventListener('admin-page-ready', placeJump);
+        document.addEventListener('DOMContentLoaded', placeJump);
+        window.addEventListener('load', placeJump);
+        setTimeout(placeJump, 300);
+        placeJump();
+
+        const fromHash = (location.hash || '').replace('#', '');
+        if (INTRO[fromHash]) show(fromHash); else if (!reveal(fromHash)) show('station');
+        window.addEventListener('hashchange', () => {
+            const g = (location.hash || '').replace('#', '');
+            if (INTRO[g]) { search.value = ''; show(g); } else reveal(g);
+        });
+    })();
+    </script>
+</body>
+
+ </html>

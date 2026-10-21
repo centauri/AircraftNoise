@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Aircraft Noise</title>
+    <link rel="stylesheet" href="/static/css/theme.css?v=9">
+    <script src="/static/js/themes.js?v=3"></script>
+    <script src="/static/js/theme.js?v=10"></script>
+    <script src="/static/js/sortable.js?v=1" defer></script>
+    <link rel="stylesheet" href="/static/css/admin.css?v=7">
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Page-specific styles only */
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--theme-gradient);
+            color: white;
+            padding: 12px 0;
+            box-shadow: 0 4px 20px var(--theme-shadow);
+            border-bottom: none !important;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .card {
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-active {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .status-inactive {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .status-admin {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Toast notifications */
+        .toast-container { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { min-width: 280px; max-width: 90vw; background: var(--theme-bg-card); color: var(--theme-text-primary); border: 1px solid var(--theme-border); border-radius: 8px; padding: 12px 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); pointer-events: auto; opacity: 0; transform: translateY(-12px); animation: toast-in 200ms ease-out forwards; }
+        .toast-success { border-left: 4px solid var(--theme-success); }
+        .toast-error { border-left: 4px solid var(--theme-error); }
+        .toast-warning { border-left: 4px solid var(--theme-warning); }
+        @keyframes toast-in { to { opacity: 1; transform: translateY(0); } }
+        @keyframes toast-out { to { opacity: 0; transform: translateY(-12px); } }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .table {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+    <div class="header">
+        <div class="header-content">
+            <h1>👥 User Management</h1>
+            <div class="header-actions">
+                <div class="theme-controls" id="theme-controls-container">
+                    <!-- Theme controls will be injected here by theme.js -->
+                </div>
+                <a href="/admin/dashboard" class="back-link">← Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>Users</h2>
+            <div class="btn-group">
+                <button class="btn" onclick="showAddUserModal()">Add New User</button>
+                <button class="btn btn-secondary" onclick="loadUsers()">Refresh</button>
+            </div>
+            
+            <div id="usersTable">
+                <div class="loading">Loading users...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div id="addUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addUserModal')">&times;</span>
+            <h2>Add New User</h2>
+            <form id="addUserForm">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="isAdmin">Role</label>
+                    <select id="isAdmin">
+                        <option value="false">User</option>
+                        <option value="true">Admin</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn">Add User</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addUserModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editUserModal')">&times;</span>
+            <h2>Edit User</h2>
+            <form id="editUserForm">
+                <div class="form-group">
+                    <label for="editFirstName">First Name</label>
+                    <input type="text" id="editFirstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editLastName">Last Name</label>
+                    <input type="text" id="editLastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="editPassword">New Password (leave empty to keep)</label>
+                    <input type="password" id="editPassword" placeholder="••••••••">
+                </div>
+                <div class="form-group">
+                    <label for="editIsAdmin">Role</label>
+                    <select id="editIsAdmin">
+                        <option value="false">User</option>
+                        <option value="true">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editIsActive">Status</label>
+                    <select id="editIsActive">
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editUserModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+
+        // Check authentication on load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            loadUsers();
+        });
+
+        async function checkAuthStatus() {
+            // Server handles authentication via sessions, no client-side token checking needed
+            console.log('Using server-side session authentication');
+        }
+
+        async function loadUsers() {
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/users`);
+                if(!res.ok) throw new Error('Failed to fetch users');
+                const data = await res.json();
+                displayUsers(data.users || []);
+            } catch (error) {
+                document.getElementById('usersTable').innerHTML = '<div class="error">Failed to load users</div>';
+            }
+        }
+
+        function displayUsers(users) {
+            const container = document.getElementById('usersTable');
+            
+            if (users.length === 0) {
+                container.innerHTML = '<div class="loading">No users found</div>';
+                return;
+            }
+
+            const table = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Last Login</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${users.map(user => `
+                            <tr>
+                                <td>${user.first_name} ${user.last_name}</td>
+                                <td>${user.email}</td>
+                                <td>
+                                    <span class="${user.is_admin ? 'status-admin' : ''}">
+                                        ${user.is_admin ? 'Admin' : 'User'}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="${user.is_active ? 'status-active' : 'status-inactive'}">
+                                        ${user.is_active ? 'Active' : 'Inactive'}
+                                    </span>
+                                </td>
+                                <td>${user.last_login ? new Date(user.last_login).toLocaleString() : 'Never'}</td>
+                                <td>
+                                    <button class="btn btn-small btn-secondary" onclick="openEdit(${user.id}, '${encodeURIComponent(user.first_name||'')}', '${encodeURIComponent(user.last_name||'')}', '${encodeURIComponent(user.email||'')}', ${user.is_admin ? 'true':'false'}, ${user.is_active ? 'true':'false'})">Edit</button>
+                                    <button class="btn btn-small btn-danger" onclick="deleteUser(${user.id})">Delete</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = table;
+        }
+
+        function showAddUserModal() {
+            document.getElementById('addUserModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        document.getElementById('addUserForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const userData = {
+                first_name: document.getElementById('firstName').value,
+                last_name: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                is_admin: document.getElementById('isAdmin').value === 'true'
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/users`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(userData) });
+
+                if (response.ok) {
+                    showSuccess('User added successfully!');
+                    closeModal('addUserModal');
+                    loadUsers();
+                } else {
+                    const data = await response.json();
+                    showError(data.error || 'Failed to add user');
+                }
+            } catch (error) {
+                showError('Failed to add user');
+            }
+        });
+
+        async function editUser(userId) {
+            // replaced by openEdit modal
+        }
+
+        function openEdit(id, firstEnc, lastEnc, emailEnc, isAdmin, isActive){
+            const first = decodeURIComponent(firstEnc);
+            const last = decodeURIComponent(lastEnc);
+            const email = decodeURIComponent(emailEnc);
+            document.getElementById('editFirstName').value = first;
+            document.getElementById('editLastName').value = last;
+            document.getElementById('editEmail').value = email;
+            document.getElementById('editIsAdmin').value = isAdmin ? 'true' : 'false';
+            document.getElementById('editIsActive').value = isActive ? 'true' : 'false';
+            document.getElementById('editPassword').value = '';
+            document.getElementById('editUserForm').dataset.userId = String(id);
+            document.getElementById('editUserModal').style.display = 'block';
+        }
+
+        document.getElementById('editUserForm').addEventListener('submit', async function(e){
+            e.preventDefault();
+            const id = this.dataset.userId;
+            const payload = {
+                first_name: document.getElementById('editFirstName').value,
+                last_name: document.getElementById('editLastName').value,
+                email: document.getElementById('editEmail').value,
+                is_admin: document.getElementById('editIsAdmin').value === 'true',
+                is_active: document.getElementById('editIsActive').value === 'true'
+            };
+            const pw = document.getElementById('editPassword').value;
+            if(pw && pw.trim().length > 0){ payload.password = pw; }
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/users/${id}`, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+                if(!res.ok){ const j = await res.json().catch(()=>({})); throw new Error(j.error || 'Update failed'); }
+                showSuccess('User updated');
+                closeModal('editUserModal');
+                await loadUsers();
+            } catch(err){ showError(err.message); }
+        });
+
+        async function deleteUser(userId) {
+            if (!confirm('Are you sure you want to delete this user?')) return;
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/users/${userId}`, { method:'DELETE' });
+                if(!res.ok){ const j = await res.json().catch(()=>({})); throw new Error(j.error || 'Delete failed'); }
+                showSuccess('User deleted');
+                await loadUsers();
+            } catch(err){ showError(err.message); }
+        }
+
+        // Toast helpers
+        function pushToast(message, kind = 'success'){
+            const cont = document.getElementById('toastContainer');
+            const el = document.createElement('div');
+            el.className = `toast toast-${kind}`;
+            el.textContent = message;
+            cont.appendChild(el);
+            const timeout = setTimeout(() => {
+                el.style.animation = 'toast-out 180ms ease-in forwards';
+                setTimeout(() => el.remove(), 220);
+            }, 3500);
+            el.addEventListener('click', () => { clearTimeout(timeout); el.remove(); });
+        }
+        function showSuccess(message){ pushToast(message, 'success'); }
+        function showError(message){ pushToast(message, 'error'); }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+     </script>
+ <script src="/static/js/admin-shell.js?v=9"></script>
+</body>
+ </html>

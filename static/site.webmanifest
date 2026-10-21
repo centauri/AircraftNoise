@@ -1,0 +1,65 @@
+{
+  "name": "Aircraft Noise",
+  "short_name": "aircraftnoise",
+  "description": "Real aircraft noise, measured on local sensors and matched to the flights overhead.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#14160f",
+  "theme_color": "#14160f",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["environment", "utilities", "productivity"],
+  "icons": [
+    {
+      "src": "/static/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/static/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Aircraft Noise"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Live Tracking",
+      "short_name": "Live",
+      "description": "View real-time aircraft tracking",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/static/favicon-32x32.png",
+          "sizes": "32x32"
+        }
+      ]
+    },
+    {
+      "name": "Public View",
+      "short_name": "Public",
+      "description": "Public aircraft monitoring",
+      "url": "/public/",
+      "icons": [
+        {
+          "src": "/static/favicon-32x32.png",
+          "sizes": "32x32"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

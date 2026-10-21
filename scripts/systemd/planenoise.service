@@ -1,0 +1,18 @@
+[Unit]
+Description=Aircraft Noise recorder and web server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=__USER__
+WorkingDirectory=__DIR__
+EnvironmentFile=-__DIR__/.env
+ExecStart=__PYTHON__ -m gunicorn -c __DIR__/deploy/gunicorn.conf.py proxy_server:app
+Restart=always
+RestartSec=5
+# Give a stuck process a hard stop instead of waiting forever.
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

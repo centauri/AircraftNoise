@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First-run setup - Aircraft Noise</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/static/css/theme.css?v=9" />
+    <link rel="stylesheet" href="/static/vendor/leaflet/leaflet.css" />
+    <script src="/static/js/themes.js?v=3"></script>
+    <script src="/static/js/theme.js?v=10"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: var(--theme-bg-primary);
+            color: var(--theme-text-primary);
+            min-height: 100vh;
+            padding: 24px 16px 48px;
+        }
+        .setup {
+            max-width: 720px;
+            margin: 0 auto;
+            background: var(--theme-bg-card);
+            border: 1px solid var(--theme-border);
+            padding: 28px 28px 32px;
+        }
+        .logo { text-align: center; margin-bottom: 18px; }
+        .logo img { height: 44px; }
+        .logo-on-light { display: none; }
+        [data-theme="light"] .logo-on-dark { display: none; }
+        [data-theme="light"] .logo-on-light { display: inline; }
+        h1 { font-size: 1.5rem; margin-bottom: 4px; }
+        .subtitle { color: var(--theme-text-secondary); margin-bottom: 20px; }
+        .progress { display: flex; gap: 6px; margin-bottom: 24px; }
+        .progress span {
+            flex: 1; text-align: center; padding: 6px 4px; font-size: 0.72rem; letter-spacing: 0.08em;
+            text-transform: uppercase; font-family: var(--font-mono, monospace);
+            border-bottom: 3px solid var(--theme-border); color: var(--theme-text-secondary);
+        }
+        .progress span.active { border-color: var(--theme-accent); color: var(--theme-text-primary); }
+        .progress span.done { border-color: var(--theme-success, #8fb56a); }
+        .step { display: none; }
+        .step.active { display: block; }
+        .step h2 { font-size: 1.15rem; margin-bottom: 6px; }
+        .step > p { color: var(--theme-text-secondary); margin-bottom: 18px; line-height: 1.5; }
+        .form-group { margin-bottom: 16px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        label { display: block; font-size: 0.8rem; letter-spacing: 0.04em; margin-bottom: 6px; color: var(--theme-text-secondary); }
+        input, select {
+            width: 100%; padding: 10px 12px; font-size: 1rem; font-family: inherit;
+            background: var(--theme-bg-primary); color: var(--theme-text-primary);
+            border: 1px solid var(--theme-border); border-radius: 4px;
+        }
+        input:focus, select:focus { outline: none; border-color: var(--theme-accent); }
+        small { display: block; color: var(--theme-text-secondary); font-size: 0.78rem; margin-top: 5px; line-height: 1.4; }
+        .choice { border: 1px solid var(--theme-border); padding: 12px; margin-bottom: 10px; cursor: pointer; }
+        .choice.selected { border-color: var(--theme-accent); }
+        .choice input[type="radio"] { width: auto; margin-right: 8px; }
+        .choice .fields { margin-top: 10px; display: none; }
+        .choice.selected .fields { display: block; }
+        #map { height: 320px; border: 1px solid var(--theme-border); margin-bottom: 12px; }
+        .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 22px; }
+        .btn {
+            padding: 11px 18px; font-size: 0.95rem; font-weight: 600; border: 1px solid var(--theme-accent);
+            background: var(--theme-accent); color: var(--theme-accent-ink, #14160f); cursor: pointer; border-radius: 4px;
+        }
+        .btn:disabled { opacity: 0.6; cursor: wait; }
+        .btn-secondary { background: transparent; color: var(--theme-text-primary); border-color: var(--theme-border); }
+        .btn-link { background: none; border: none; color: var(--theme-text-secondary); cursor: pointer; text-decoration: underline; margin-left: auto; }
+        .message { padding: 10px 12px; margin-bottom: 14px; border-radius: 4px; display: none; font-size: 0.9rem; }
+        .message.error { display: block; background: rgba(217, 83, 79, 0.12); color: #d9534f; }
+        .message.ok { display: block; background: var(--theme-success-bg, rgba(143,181,106,0.12)); color: var(--theme-success, #8fb56a); }
+        .checkbox { display: flex; align-items: center; gap: 8px; }
+        .checkbox input { width: auto; }
+        .checkbox label { margin: 0; color: var(--theme-text-primary); }
+        .done-links a { display: inline-block; margin: 6px 12px 0 0; color: var(--theme-accent); }
+        @media (max-width: 560px) { .form-row, .form-row-3 { grid-template-columns: 1fr; } .progress span { font-size: 0.6rem; } }
+    </style>
+</head>
+<body>
+<div class="setup">
+    <div class="logo">
+        <img class="logo-on-dark" src="/static/brand/planenoise-logo-reversed.svg?v=2" alt="Aircraft Noise">
+        <img class="logo-on-light" src="/static/brand/planenoise-logo.svg?v=2" alt="">
+    </div>
+    <h1>Welcome to Aircraft Noise</h1>
+    <div class="subtitle">A few steps and the recorder is running. Everything here can be changed later under Settings.</div>
+
+    <div class="progress" id="progress">
+        <span data-step="account">1 Account</span>
+        <span data-step="station">2 Station</span>
+        <span data-step="feeds">3 Feeds</span>
+        <span data-step="alerts">4 Alerts</span>
+        <span data-step="done">Done</span>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <!-- 1 Account -->
+    <section class="step" data-step="account">
+        <h2>Create the administrator account</h2>
+        <p>This page only works while no account exists. The account you create here signs in to the admin pages.</p>
+        <form id="accountForm">
+            <div class="form-group">
+                <label for="accName">Name</label>
+                <input type="text" id="accName" autocomplete="name" required>
+            </div>
+            <div class="form-group">
+                <label for="accEmail">Email address</label>
+                <input type="email" id="accEmail" autocomplete="username" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="accPassword">Password</label>
+                    <input type="password" id="accPassword" autocomplete="new-password" minlength="10" required>
+                    <small>At least 10 characters.</small>
+                </div>
+                <div class="form-group">
+                    <label for="accConfirm">Confirm password</label>
+                    <input type="password" id="accConfirm" autocomplete="new-password" minlength="10" required>
+                </div>
+            </div>
+            <div class="actions">
+                <button type="submit" class="btn">Create account and continue</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- 2 Station -->
+    <section class="step" data-step="station">
+        <h2>Where is the microphone?</h2>
+        <p>Click the map or drag the marker to the sensor. Distances, the detection circle and the noise range all start from this point.</p>
+        <form id="stationForm">
+            <div id="map"></div>
+            <div class="form-row-3">
+                <div class="form-group">
+                    <label for="stLat">Latitude</label>
+                    <input type="number" id="stLat" step="0.000001" min="-90" max="90" required>
+                </div>
+                <div class="form-group">
+                    <label for="stLon">Longitude</label>
+                    <input type="number" id="stLon" step="0.000001" min="-180" max="180" required>
+                </div>
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button type="button" class="btn btn-secondary" id="useLocation" style="width:100%">Use my location</button>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="stPlace">Place</label>
+                    <input type="text" id="stPlace" maxlength="80" placeholder="Castricum" required>
+                    <small>Shown in the header. The town or area, written the way you would say it.</small>
+                </div>
+                <div class="form-group">
+                    <label for="stCountry">Country</label>
+                    <select id="stCountry"></select>
+                    <small>Flag next to the clock.</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stTimezone">Timezone</label>
+                <select id="stTimezone"></select>
+                <small>Every time on the site is shown in this zone.</small>
+            </div>
+            <div class="form-row-3">
+                <div class="form-group">
+                    <label for="stRadius">Detection radius (km)</label>
+                    <input type="number" id="stRadius" min="1" max="50" step="0.5" value="8">
+                    <small>A pass is stored inside this circle over the ground.</small>
+                </div>
+                <div class="form-group">
+                    <label for="stAltitude">Altitude cap (m)</label>
+                    <input type="number" id="stAltitude" min="100" max="10000" step="100" value="3200">
+                    <small>Higher aircraft are ignored.</small>
+                </div>
+                <div class="form-group">
+                    <label for="stSlant">Noise range (km)</label>
+                    <input type="number" id="stSlant" min="0.5" max="10" step="0.1" value="3.5">
+                    <small>A decibel is assigned when the straight line to the microphone is within this, plus 0.2 km.</small>
+                </div>
+            </div>
+            <div class="actions">
+                <button type="submit" class="btn">Save and continue</button>
+                <button type="button" class="btn-link" data-skip>I will do this later</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- 3 Feeds -->
+    <section class="step" data-step="feeds">
+        <h2>Where do the readings come from?</h2>
+        <p>The noise sensor and one source of aircraft positions. Keys are stored on the server and never shown again.</p>
+        <form id="feedsForm">
+            <div class="form-group">
+                <label for="sensorId">Sensor.Community sensor ID</label>
+                <input type="text" id="sensorId" inputmode="numeric" pattern="[0-9]*" placeholder="69616">
+                <small>The number in the sensor's URL on sensor.community. The DNMS noise sensor, not the particulate one.</small>
+            </div>
+            <div class="form-group">
+                <label>Aircraft positions</label>
+                <div id="feedChoices"></div>
+            </div>
+            <div class="actions">
+                <button type="submit" class="btn">Save and continue</button>
+                <button type="button" class="btn btn-secondary" data-next="alerts">Skip for now</button>
+                <button type="button" class="btn-link" data-skip>I will do this later</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- 4 Alerts -->
+    <section class="step" data-step="alerts">
+        <h2>Want to know when something stops?</h2>
+        <p>One message when the sensor goes quiet, the aircraft feed fails or the recorder stalls, and one when it is back. Optional.</p>
+        <form id="alertsForm">
+            <div class="form-group checkbox">
+                <input type="checkbox" id="alEnabled">
+                <label for="alEnabled">Enable notifications</label>
+            </div>
+            <div class="form-group">
+                <label for="alMethod">Send by</label>
+                <select id="alMethod">
+                    <option value="ntfy">ntfy</option>
+                    <option value="email">Email</option>
+                    <option value="both">Both</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="alNtfy">ntfy topic URL</label>
+                <input type="url" id="alNtfy" placeholder="https://ntfy.sh/your-private-topic">
+                <small>Install the ntfy app, subscribe to a topic nobody can guess, paste its URL.</small>
+            </div>
+            <div class="form-group">
+                <label for="alEmail">Email address</label>
+                <input type="email" id="alEmail" placeholder="you@example.com">
+                <small>Needs MAIL_SERVER, MAIL_USERNAME, MAIL_PASSWORD and MAIL_DEFAULT_SENDER in the server environment.</small>
+            </div>
+            <div class="actions">
+                <button type="submit" class="btn">Save and finish</button>
+                <button type="button" class="btn btn-secondary" id="alTest">Send test</button>
+                <button type="button" class="btn btn-secondary" data-next="done">Skip</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- 5 Done -->
+    <section class="step" data-step="done">
+        <h2>The recorder is running</h2>
+        <p>Positions are polled every 30 s and matched to the noise sensor. The first passes appear within minutes, depending on traffic.</p>
+        <div class="done-links">
+            <a href="/admin/dashboard">Open the admin dashboard</a>
+            <a href="/">See the public page</a>
+            <a href="/admin/detection-zone">Draw the detection zone on the map</a>
+            <a href="/admin/settings">Find the airports near the sensor, so passes get a runway label</a>
+            <a href="/admin/settings">All settings</a>
+        </div>
+    </section>
+</div>
+
+<script src="/static/vendor/leaflet/leaflet.js"></script>
+<script>
+(function () {
+    'use strict';
+    const $ = (id) => document.getElementById(id);
+    const ORDER = ['account', 'station', 'feeds', 'alerts', 'done'];
+    let options = null;
+    let map = null, marker = null;
+
+    function say(text, kind) {
+        const el = $('message');
+        el.textContent = text || '';
+        el.className = 'message' + (text ? ' ' + (kind || 'error') : '');
+        if (text) window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function api(method, url, body) {
+        const r = await fetch(url, {
+            method, headers: body ? { 'Content-Type': 'application/json' } : {},
+            body: body ? JSON.stringify(body) : undefined, credentials: 'same-origin',
+        });
+        let data = null;
+        try { data = await r.json(); } catch (e) { data = null; }
+        if (!r.ok) {
+            const err = new Error((data && (data.detail || data.error)) || `Request failed (${r.status})`);
+            err.status = r.status;
+            throw err;
+        }
+        return data;
+    }
+
+    function show(step) {
+        if (step === 'skipped') step = 'station';
+        document.querySelectorAll('.step').forEach(s => s.classList.toggle('active', s.dataset.step === step));
+        const idx = ORDER.indexOf(step);
+        document.querySelectorAll('#progress span').forEach(s => {
+            const i = ORDER.indexOf(s.dataset.step);
+            s.classList.toggle('active', i === idx);
+            s.classList.toggle('done', i < idx);
+        });
+        say('');
+        if (step === 'station') loadStation();
+        if (step === 'feeds') loadFeeds();
+        if (step === 'alerts') loadAlerts();
+    }
+
+    async function advance(to) {
+        await api('POST', '/api/setup/advance', { to });
+        if (to === 'skipped') { window.location.href = '/admin/dashboard'; return; }
+        show(to);
+    }
+
+    async function loadOptions() {
+        if (!options) options = await api('GET', '/api/setup/options');
+        return options;
+    }
+
+    // ---- 1 account
+    $('accountForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button'); btn.disabled = true;
+        try {
+            await api('POST', '/setup/account', {
+                name: $('accName').value, email: $('accEmail').value,
+                password: $('accPassword').value, confirm: $('accConfirm').value,
+            });
+            show('station');
+        } catch (err) {
+            say(err.message === 'password_mismatch' ? 'The passwords do not match.' :
+                err.message === 'invalid_email' ? 'That email address does not look right.' :
+                err.message === 'account_exists' ? 'An account already exists. Sign in instead.' : err.message);
+        } finally { btn.disabled = false; }
+    });
+
+    // ---- 2 station
+    function setPosition(lat, lon) {
+        $('stLat').value = Number(lat).toFixed(6);
+        $('stLon').value = Number(lon).toFixed(6);
+        if (marker) marker.setLatLng([lat, lon]);
+    }
+    async function loadStation() {
+        const o = await loadOptions();
+        const v = o.values || {};
+        $('stPlace').value = v.site_place_name || '';
+        $('stRadius').value = v.radius_km || 8;
+        $('stAltitude').value = v.altitude_max_m || 3200;
+        $('stSlant').value = v.noise_assoc_inner_km || 3.5;
+        const names = (typeof Intl !== 'undefined' && Intl.DisplayNames) ? new Intl.DisplayNames(['en'], { type: 'region' }) : null;
+        const country = $('stCountry'); country.innerHTML = '';
+        (o.countries || ['nl']).forEach(code => {
+            let label = code.toUpperCase();
+            try { label = names ? `${names.of(code.toUpperCase())} (${code.toUpperCase()})` : label; } catch (e) { /* unknown code */ }
+            const opt = new Option(label, code); country.add(opt);
+        });
+        country.value = v.site_country || 'nl';
+        const tz = $('stTimezone'); tz.innerHTML = '';
+        (o.timezones || []).forEach(z => tz.add(new Option(z, z)));
+        const guess = (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Europe/Amsterdam';
+        tz.value = v.site_timezone || guess;
+        if (!tz.value) tz.value = 'Europe/Amsterdam';
+        const lat = Number(o.latitude) || 52.2, lon = Number(o.longitude) || 4.9;
+        setPosition(lat, lon);
+        if (!map) {
+            map = L.map('map').setView([lat, lon], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors' }).addTo(map);
+            marker = L.marker([lat, lon], { draggable: true }).addTo(map);
+            marker.on('dragend', () => { const p = marker.getLatLng(); setPosition(p.lat, p.lng); });
+            map.on('click', (ev) => setPosition(ev.latlng.lat, ev.latlng.lng));
+        }
+        setTimeout(() => map.invalidateSize(), 50);
+    }
+    ['stLat', 'stLon'].forEach(id => $(id).addEventListener('change', () => {
+        const lat = Number($('stLat').value), lon = Number($('stLon').value);
+        if (Number.isFinite(lat) && Number.isFinite(lon) && marker) { marker.setLatLng([lat, lon]); map.panTo([lat, lon]); }
+    }));
+    $('useLocation').addEventListener('click', () => {
+        if (!navigator.geolocation) { say('Your browser would not share a location. Drag the marker instead.'); return; }
+        navigator.geolocation.getCurrentPosition(
+            (pos) => { setPosition(pos.coords.latitude, pos.coords.longitude); map.setView([pos.coords.latitude, pos.coords.longitude], 13); },
+            () => say('Your browser would not share a location. Drag the marker instead.'));
+    });
+    $('stationForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type=submit]'); btn.disabled = true;
+        try {
+            const radius = Number($('stRadius').value), alt = Number($('stAltitude').value);
+            await api('POST', '/api/admin/settings', {
+                latitude: Number($('stLat').value), longitude: Number($('stLon').value),
+                site_place_name: $('stPlace').value.trim(), site_country: $('stCountry').value, site_timezone: $('stTimezone').value,
+                radius_km: radius, detection_radius_km: radius, altitude_max_m: alt, max_altitude_m: alt,
+                noise_assoc_inner_km: Number($('stSlant').value),
+            });
+            options = null;
+            await advance('feeds');
+        } catch (err) { say(err.message); } finally { btn.disabled = false; }
+    });
+
+    // ---- 3 feeds
+    const FEED_HELP = {
+        aircraft: 'Free. Register at opensky-network.org and create an API client to get 4,000 calls a day; positions every 30 s.',
+        aircraft_airplanes_live: 'Free for personal use. Works without a key; ask them for one if you poll often.',
+        aircraft_flightaware: 'Paid beyond a small free credit. Best used for aircraft type lookups, not positions.',
+    };
+    async function loadFeeds() {
+        const o = await loadOptions();
+        const noise = (o.feeds || []).find(f => f.id === 'noise');
+        if (noise && noise.sensor_id) $('sensorId').value = noise.sensor_id;
+        const box = $('feedChoices'); box.innerHTML = '';
+        const active = (o.active && o.active.aircraft) || 'aircraft';
+        (o.feeds || []).filter(f => f.kind === 'aircraft').forEach(f => {
+            const div = document.createElement('div');
+            div.className = 'choice' + (f.id === active ? ' selected' : '');
+            const secrets = f.secrets.map(sec => `
+                <div class="form-group">
+                    <label>${sec.label}${sec.set ? ' (saved, leave blank to keep)' : ''}</label>
+                    <input type="${/secret|password|key/i.test(sec.key) ? 'password' : 'text'}" data-feed="${f.id}" data-secret="${sec.key}" autocomplete="off">
+                    ${sec.help ? `<small>${sec.help}</small>` : ''}
+                </div>`).join('');
+            div.innerHTML = `<label style="display:flex;align-items:center;color:var(--theme-text-primary)"><input type="radio" name="aircraftFeed" value="${f.id}" ${f.id === active ? 'checked' : ''}> <strong>${f.name}</strong></label>
+                <small>${FEED_HELP[f.id] || f.summary || ''}${f.docs ? ` <a href="${f.docs}" target="_blank" rel="noopener">Docs</a>` : ''}</small>
+                <div class="fields">${secrets || '<small>No key needed.</small>'}</div>`;
+            div.addEventListener('click', (ev) => {
+                if (ev.target.tagName === 'A') return;
+                div.querySelector('input[type=radio]').checked = true;
+                box.querySelectorAll('.choice').forEach(c => c.classList.toggle('selected', c === div));
+            });
+            box.appendChild(div);
+        });
+    }
+    $('feedsForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type=submit]'); btn.disabled = true;
+        try {
+            const sensor = $('sensorId').value.trim();
+            if (sensor) await api('POST', '/api/admin/feeds/noise', { fields: { sensor_id: sensor } });
+            const chosen = document.querySelector('input[name=aircraftFeed]:checked');
+            if (chosen) {
+                const secrets = {};
+                document.querySelectorAll(`input[data-feed="${chosen.value}"]`).forEach(i => { if (i.value.trim()) secrets[i.dataset.secret] = i.value.trim(); });
+                await api('POST', `/api/admin/feeds/${chosen.value}`, { secrets });
+                await api('POST', '/api/admin/feeds/active', { aircraft: chosen.value, noise: 'noise' });
+            }
+            options = null;
+            await advance('alerts');
+        } catch (err) { say(err.message); } finally { btn.disabled = false; }
+    });
+
+    // ---- 4 alerts
+    async function loadAlerts() {
+        const o = await loadOptions();
+        const v = o.values || {};
+        $('alEnabled').checked = ['1', 'true', 'yes', 'on'].includes(String(v.notify_enabled || '').toLowerCase());
+        $('alMethod').value = v.notify_method || 'ntfy';
+        $('alNtfy').value = v.notify_ntfy_url || '';
+        $('alEmail').value = v.notify_email || '';
+    }
+    function alertValues() {
+        return {
+            notify_enabled: $('alEnabled').checked ? 'true' : 'false', notify_method: $('alMethod').value,
+            notify_ntfy_url: $('alNtfy').value.trim(), notify_email: $('alEmail').value.trim(),
+        };
+    }
+    $('alTest').addEventListener('click', async () => {
+        try {
+            await api('POST', '/api/admin/settings', alertValues());
+            const r = await api('POST', '/api/admin/notifications/test');
+            say(`Test sent: ${r.detail}`, 'ok');
+        } catch (err) { say(`Test not delivered: ${err.message}`); }
+    });
+    $('alertsForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type=submit]'); btn.disabled = true;
+        try {
+            await api('POST', '/api/admin/settings', alertValues());
+            await advance('done');
+        } catch (err) { say(err.message); } finally { btn.disabled = false; }
+    });
+
+    // ---- shared buttons
+    document.querySelectorAll('[data-skip]').forEach(b => b.addEventListener('click', () => advance('skipped').catch(err => say(err.message))));
+    document.querySelectorAll('[data-next]').forEach(b => b.addEventListener('click', () => advance(b.dataset.next).catch(err => say(err.message))));
+
+    // ---- start
+    api('GET', '/setup/state').then(s => {
+        if (s.state === 'done') { window.location.href = '/admin/dashboard'; return; }
+        if (s.state !== 'account' && !s.logged_in) { window.location.href = '/admin/login'; return; }
+        show(s.state);
+    }).catch(err => say(err.message));
+})();
+</script>
+</body>
+</html>

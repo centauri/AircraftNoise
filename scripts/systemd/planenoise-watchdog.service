@@ -1,0 +1,10 @@
+[Unit]
+Description=Aircraft Noise outside watchdog (one check)
+After=planenoise.service
+
+[Service]
+Type=oneshot
+User=__USER__
+WorkingDirectory=__DIR__
+EnvironmentFile=-__DIR__/.env
+ExecStart=__PYTHON__ __DIR__/scripts/watchdog.py --restart-unit planenoise.service --quiet

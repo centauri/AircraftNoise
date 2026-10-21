@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>API — Aircraft Noise</title>
+  <link rel="stylesheet" href="/static/css/theme.css?v=9">
+  <script src="/static/js/themes.js?v=3"></script>
+  <script src="/static/js/theme.js?v=10"></script>
+  <link rel="stylesheet" href="/static/css/admin.css?v=8">
+</head>
+<body>
+  <header>
+    <h1>API</h1>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2>Active feeds</h2>
+      <form id="activeForm">
+        <div class="feed-choice">
+          <div class="form-group">
+            <label for="activeNoise">Noise</label>
+            <select id="activeNoise"></select>
+            <small>The feed the server polls for noise.</small>
+          </div>
+          <div class="form-group">
+            <label for="activeAircraft">Aircraft</label>
+            <select id="activeAircraft"></select>
+            <small>One feed, or several in priority order.</small>
+          </div>
+        </div>
+        <div id="multiOptions"></div>
+        <div class="btn-group">
+          <button type="submit" class="btn">Save active feeds</button>
+        </div>
+        <p id="activeStatus" class="feed-meta"></p>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Request budget</h2>
+      <div id="budget" class="pane"><p class="feed-meta">Loading…</p></div>
+    </div>
+
+    <div class="card">
+      <h2>Today</h2>
+      <div id="today" class="pane"><p class="feed-meta">Loading…</p></div>
+    </div>
+  </div>
+
+  <script>
+    let catalog = null;
+
+    function esc(value) {
+      return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function fieldOf(feed, key) {
+      return (feed.fields || []).find(function (field) { return field.key === key; });
+    }
+
+    function numberFrom(feed, key, fallback) {
+      const input = document.querySelector('[data-feed="' + feed.id + '"][data-key="' + key + '"]');
+      if (input && input.value !== "") return Number(input.value);
+      const field = fieldOf(feed, key);
+      const value = field ? Number(field.value) : NaN;
+      return Number.isFinite(value) ? value : fallback;
+    }
+
+    function selectedAircraftFeeds() {
+      const choice = document.getElementById("activeAircraft").value;
+      if (choice === "multi") {
+        const enabled = {};
+        document.querySelectorAll("#multiOptions input[type=checkbox]").forEach(function (box) {
+          enabled[box.dataset.setting] = box.checked;
+        });
+        return catalog.feeds.filter(function (feed) {
+          const member = catalog.multi.find(function (row) { return row.id === feed.id; });
+          return member && enabled[member.setting];
+        });
+      }
+      return catalog.feeds.filter(function (feed) { return feed.id === choice; });
+    }
+
+    function fillMulti(box) {
+      box.innerHTML = catalog.multi.map(function (row) {
+        return '<div class="multi-row"><label><input type="checkbox" data-setting="' + esc(row.setting) + '"' +
+          (row.enabled ? " checked" : "") + "> " + esc(row.name) +
+          '</label><label>Priority <input type="number" min="1" max="9" value="' + esc(row.priority) +
+          '" data-priority="' + esc(row.setting) + '"></label></div>';
+      }).join("");
+    }
+
+    function renderActive() {
+      const noise = document.getElementById("activeNoise");
+      const aircraft = document.getElementById("activeAircraft");
+      noise.innerHTML = catalog.feeds.filter(function (feed) { return feed.kind === "noise"; }).map(function (feed) {
+        return '<option value="' + esc(feed.id) + '">' + esc(feed.name) + "</option>";
+      }).join("");
+      aircraft.innerHTML = catalog.feeds.filter(function (feed) { return feed.kind === "aircraft"; }).map(function (feed) {
+        return '<option value="' + esc(feed.id) + '">' + esc(feed.name) + "</option>";
+      }).join("") + '<option value="multi">Multiple feeds</option>';
+      noise.value = catalog.active.noise;
+      aircraft.value = catalog.active.aircraft;
+      const box = document.getElementById("multiOptions");
+      if (aircraft.value !== "multi") box.innerHTML = "";
+      else fillMulti(box);
+    }
+
+    function renderBudget() {
+      const noise = catalog.feeds.find(function (feed) { return feed.id === document.getElementById("activeNoise").value; });
+      const rows = [];
+      if (noise) rows.push(budgetRow(noise));
+      selectedAircraftFeeds().forEach(function (feed) { rows.push(budgetRow(feed)); });
+      const day = rows.reduce(function (sum, row) { return sum + row.perDay; }, 0);
+      const host = document.getElementById("budget");
+      if (!rows.length) {
+        host.innerHTML = '<p class="feed-meta">No active feeds.</p>';
+        return;
+      }
+      host.innerHTML = rows.map(function (row) {
+        return "<p><strong>" + esc(row.name) + "</strong> · every " + esc(row.poll) +
+          "s · " + esc(row.perDay.toLocaleString()) + " calls/day · " + row.perMin.toFixed(2) +
+          "/min of " + esc(row.limit) + " · " + (row.ok ? "within limit" : "over the per-minute limit") +
+          (row.note || "") + "</p>";
+      }).join("") + "<p><strong>Total</strong> · " + day.toLocaleString() + " calls/day</p>";
+    }
+
+    function boolFrom(feed, key) {
+      const input = document.querySelector('[data-feed="' + feed.id + '"][data-key="' + key + '"]');
+      if (input && input.type === "checkbox") return input.checked;
+      const field = fieldOf(feed, key);
+      if (!field) return false;
+      const value = field.value;
+      return value === true || value === 1 || ["true", "1", "yes", "on"].indexOf(String(value).toLowerCase()) >= 0;
+    }
+
+    function budgetRow(feed) {
+      const poll = Math.max(1, numberFrom(feed, "poll_interval_seconds", 300));
+      const limit = numberFrom(feed, "rate_limit", 0);
+      const perMin = 60 / poll;
+      const flightaware = feed.id === "aircraft_flightaware";
+      const enrich = flightaware && boolFrom(feed, "enrichment_only");
+      const spend = flightaware && boolFrom(feed, "spend_beyond_credit");
+      let perDay = Math.floor(86400 / poll);
+      let note = "";
+      if (enrich) {
+        perDay = 30;
+        note = " · enrichment, inside the $5 credit";
+      } else if (flightaware && !spend) {
+        perDay = 3;
+        note = " · positions, inside the $5 credit";
+      } else if (flightaware) {
+        note = " · past the $5 credit";
+      }
+      return {
+        name: feed.name,
+        poll: poll,
+        limit: limit,
+        perMin: perMin,
+        perDay: perDay,
+        ok: perMin <= limit,
+        note: note
+      };
+    }
+
+    function renderToday() {
+      const total = catalog.feeds.reduce(function (sum, feed) { return sum + (feed.usage.daily_requests || 0); }, 0);
+      const atLimit = catalog.feeds.filter(function (feed) {
+        return feed.usage.daily_limit && (feed.usage.daily_requests || 0) >= feed.usage.daily_limit;
+      }).length;
+      document.getElementById("today").innerHTML =
+        "<p>" + catalog.feeds.length + " feeds · " + total.toLocaleString() + " requests recorded today · " +
+        atLimit + " at a daily limit</p>";
+    }
+
+    function renderCards() {
+      document.querySelectorAll(".feed-card").forEach(function (node) { node.remove(); });
+      const container = document.querySelector(".container");
+      catalog.feeds.forEach(function (feed) {
+        const card = document.createElement("div");
+        card.className = "card feed-card";
+        card.id = "feed-" + feed.id;
+        const usage = feed.usage || {};
+        const limit = usage.daily_limit ? usage.daily_limit.toLocaleString() : "none";
+        const fields = (feed.fields || []).map(function (field) {
+          const id = feed.id + "-" + field.key;
+          if (field.type === "boolean") {
+            const checked = field.value === true || field.value === 1 || ["true", "1", "yes", "on"].indexOf(String(field.value).toLowerCase()) >= 0;
+            return '<div class="form-group"><label class="feed-check" for="' + esc(id) + '">' +
+              '<input id="' + esc(id) + '" type="checkbox" data-feed="' + esc(feed.id) + '" data-key="' + esc(field.key) + '"' +
+              (checked ? " checked" : "") + "> " + esc(field.label) + "</label>" +
+              (field.help ? "<small>" + esc(field.help) + "</small>" : "") + "</div>";
+          }
+          const step = field.step != null ? ' step="' + esc(field.step) + '"' : "";
+          const min = field.min != null ? ' min="' + esc(field.min) + '"' : "";
+          const max = field.max != null ? ' max="' + esc(field.max) + '"' : "";
+          return '<div class="form-group"><label for="' + esc(id) + '">' + esc(field.label) +
+            '</label><input id="' + esc(id) + '" type="' + esc(field.type === "number" ? "number" : "text") +
+            '" value="' + esc(field.value) + '" data-feed="' + esc(feed.id) + '" data-key="' + esc(field.key) + '"' +
+            min + max + step + ">" + (field.help ? "<small>" + esc(field.help) + "</small>" : "") + "</div>";
+        }).join("");
+        const secrets = (feed.secrets || []).map(function (secret) {
+          const status = secret.set ? "Saved. Leave blank to keep it." : "Not saved.";
+          return '<div class="form-group"><label for="' + esc(feed.id + "-" + secret.key) + '">' + esc(secret.label) +
+            '</label><input id="' + esc(feed.id + "-" + secret.key) + '" type="password" autocomplete="new-password" data-secret="' +
+            esc(secret.key) + '" placeholder="' + (secret.set ? "Saved" : "Not saved") + '">' +
+            '<small data-secret-status="' + esc(secret.key) + '">' + status + "</small>" +
+            (secret.help ? "<small>" + esc(secret.help) + "</small>" : "") +
+            '<small data-secret-clear-row="' + esc(secret.key) + '" style="' + (secret.set ? "" : "display:none") +
+            '"><label><input type="checkbox" data-secret-clear="' + esc(secret.key) + '"> Remove saved value</label></small></div>';
+        }).join("");
+        const credentials = secrets
+          ? '<p class="feed-meta">Credentials</p>' + secrets
+          : '<p class="feed-meta">No API key.</p>';
+        const docs = feed.docs ? ' · <a href="' + esc(feed.docs) + '" target="_blank" rel="noopener">Docs</a>' : "";
+        card.innerHTML =
+          "<h2>" + esc(feed.name) + "</h2>" +
+          '<p class="feed-meta">' + esc(feed.summary) + docs + "</p>" +
+          '<p class="feed-usage">Today ' + esc((usage.daily_requests || 0).toLocaleString()) +
+          " · daily limit " + esc(limit) + " · " + esc(usage.rate_limit_per_minute || "—") + " req/min · " +
+          esc(usage.pricing || "") + "</p>" +
+          '<form data-feed-form="' + esc(feed.id) + '">' + fields + credentials +
+          '<button type="submit" class="btn">Save ' + esc(feed.name) + '</button><p class="feed-meta" data-status></p></form>';
+        container.appendChild(card);
+      });
+    }
+
+    async function loadFeeds() {
+      const response = await fetch("/api/admin/feeds", { credentials: "same-origin" });
+      if (!response.ok) throw new Error("feeds_failed");
+      catalog = await response.json();
+      renderActive();
+      renderBudget();
+      renderToday();
+      renderCards();
+      document.dispatchEvent(new Event("admin-page-ready"));
+    }
+
+    document.getElementById("activeAircraft").addEventListener("change", function () {
+      const box = document.getElementById("multiOptions");
+      if (this.value === "multi") fillMulti(box);
+      else box.innerHTML = "";
+      renderBudget();
+    });
+    document.getElementById("activeNoise").addEventListener("change", renderBudget);
+    document.querySelector(".container").addEventListener("change", function (event) {
+      const key = event.target && event.target.dataset && event.target.dataset.key;
+      if (key === "spend_beyond_credit" || key === "enrichment_only") renderBudget();
+    });
+    document.getElementById("multiOptions").addEventListener("input", renderBudget);
+    document.getElementById("activeForm").addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const status = document.getElementById("activeStatus");
+      const multi = catalog.multi.map(function (row) {
+        const box = document.querySelector('#multiOptions input[data-setting="' + row.setting + '"]');
+        const priority = document.querySelector('#multiOptions input[data-priority="' + row.setting + '"]');
+        return {
+          setting: row.setting,
+          enabled: box ? box.checked : row.enabled,
+          priority: priority ? Number(priority.value) : row.priority
+        };
+      });
+      try {
+        const response = await fetch("/api/admin/feeds/active", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            noise: document.getElementById("activeNoise").value,
+            aircraft: document.getElementById("activeAircraft").value,
+            multi: multi
+          })
+        });
+        if (!response.ok) throw new Error("save_failed");
+        catalog = await response.json();
+        renderActive();
+        renderBudget();
+        status.textContent = "Active feeds saved.";
+      } catch (error) {
+        status.textContent = "Could not save the active feeds.";
+      }
+    });
+
+    document.querySelector(".container").addEventListener("submit", async function (event) {
+      const form = event.target.closest ? event.target.closest("form[data-feed-form]") : null;
+      if (!form) return;
+      event.preventDefault();
+      const feedId = form.getAttribute("data-feed-form");
+      const fields = {};
+      form.querySelectorAll("[data-key]").forEach(function (input) {
+        if (input.type === "checkbox") fields[input.dataset.key] = input.checked;
+        else if (input.type === "number") fields[input.dataset.key] = Number(input.value);
+        else fields[input.dataset.key] = input.value;
+      });
+      const secrets = {};
+      const clear = [];
+      form.querySelectorAll("[data-secret]").forEach(function (input) {
+        if (input.value) secrets[input.dataset.secret] = input.value;
+      });
+      form.querySelectorAll("[data-secret-clear]").forEach(function (box) {
+        if (box.checked && !secrets[box.dataset.secretClear]) clear.push(box.dataset.secretClear);
+      });
+      const status = form.querySelector("[data-status]");
+      try {
+        const response = await fetch("/api/admin/feeds/" + encodeURIComponent(feedId), {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fields: fields, secrets: secrets, clear: clear })
+        });
+        if (!response.ok) throw new Error("save_failed");
+        catalog = await response.json();
+        form.querySelectorAll("[data-secret]").forEach(function (input) { input.value = ""; });
+        const saved = catalog.feeds.find(function (feed) { return feed.id === feedId; });
+        if (saved) {
+          (saved.secrets || []).forEach(function (secret) {
+            const input = form.querySelector('[data-secret="' + secret.key + '"]');
+            const note = form.querySelector('[data-secret-status="' + secret.key + '"]');
+            const row = form.querySelector('[data-secret-clear-row="' + secret.key + '"]');
+            const box = form.querySelector('[data-secret-clear="' + secret.key + '"]');
+            if (input) input.placeholder = secret.set ? "Saved" : "Not saved";
+            if (note) note.textContent = secret.set ? "Saved. Leave blank to keep it." : "Not saved.";
+            if (row) row.style.display = secret.set ? "" : "none";
+            if (box) box.checked = false;
+          });
+        }
+        renderBudget();
+        renderToday();
+        status.textContent = "Saved.";
+      } catch (error) {
+        status.textContent = "Could not save this feed.";
+      }
+    });
+
+    document.querySelector(".container").addEventListener("input", function (event) {
+      if (event.target && event.target.dataset && event.target.dataset.key) renderBudget();
+    });
+
+    loadFeeds().catch(function () {
+      document.getElementById("budget").textContent = "Could not load feeds.";
+    });
+  </script>
+  <script src="/static/js/admin-shell.js?v=9"></script>
+</body>
+</html>

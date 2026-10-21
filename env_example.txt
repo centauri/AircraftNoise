@@ -1,0 +1,39 @@
+# Copy to .env. Everything here is optional: the setup walkthrough at /setup
+# stores the station's settings (position, feeds, keys) in the database.
+
+# Where the SQLite database lives. Keep it on persistent storage.
+PN_DB_PATH=data/plane_noise.db
+# The IP geolocation table for the visitor statistics (DB-IP country lite).
+GEO_DB_PATH=data/geo.db
+
+# Session secret for the admin pages. Made at first start when empty; set it
+# to keep sessions across restarts on a multi-host setup.
+SECRET_KEY=
+
+# TLS. The built-in server can use its own certificates (see TLS_SETUP.md).
+# Behind a proxy, a tunnel or in a container, leave TLS to that and set:
+TLS_DISABLED=true
+FORCE_HTTPS=false
+# Admin cookie: auto marks it Secure on HTTPS visits only; true or false pins it.
+SESSION_SECURE=auto
+
+# Logging
+LOG_LEVEL=INFO
+PN_LOG_FILE=
+PN_LOG_MAX_MB=10
+
+# Nightly database backups land here (scripts/backup_db.py).
+PN_BACKUP_DIR=data/backups
+
+# Gunicorn (deploy/gunicorn.conf.py)
+GUNICORN_BIND=0.0.0.0:8787
+GUNICORN_THREADS=8
+
+# Mail server for alerts and the password-reset link. Normally set under
+# Admin → Alerts instead; these only apply where that is left empty.
+MAIL_SERVER=
+MAIL_PORT=587
+MAIL_USE_TLS=true
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MAIL_DEFAULT_SENDER=

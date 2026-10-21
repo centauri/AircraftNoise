@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <!-- Main English Page -->
+  <url>
+    <loc>https://station.example/</loc>
+    <lastmod>2025-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://station.example/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://station.example/nl/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://station.example/" />
+  </url>
+  
+  <url>
+    <loc>https://station.example/community</loc>
+    <lastmod>2026-10-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://station.example/community" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://station.example/nl/community" />
+  </url>
+
+  <!-- Dutch Version -->
+  <url>
+    <loc>https://station.example/nl/</loc>
+    <lastmod>2025-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://station.example/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://station.example/nl/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://station.example/" />
+  </url>
+  
+  <!-- Public Access Page -->
+  <url>
+    <loc>https://station.example/public/</loc>
+    <lastmod>2025-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://station.example/public/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://station.example/nl/public/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://station.example/public/" />
+  </url>
+  
+  <!-- Dutch Public Access Page -->
+  <url>
+    <loc>https://station.example/nl/public/</loc>
+    <lastmod>2025-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://station.example/public/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://station.example/nl/public/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://station.example/public/" />
+  </url>
+  
+  <!-- Admin Dashboard (lower priority) -->
+  
+  <!-- API Documentation (if exists) -->
+  
+  <!-- Static Resources -->
+  
+  <!-- SEO Content Page -->
+  
+</urlset>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Aircraft Noise</title>
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/static/css/theme.css?v=9" />
+    <script src="/static/js/themes.js?v=3"></script>
+    <script src="/static/js/theme.js?v=10"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: var(--theme-bg-primary);
+            color: var(--theme-text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: var(--theme-bg-card);
+            border: 1px solid var(--theme-border);
+            border-radius: 0;
+            padding: 36px 32px 28px;
+            box-shadow: none;
+            width: 100%;
+            max-width: 420px;
+            text-align: left;
+        }
+
+        .logo {
+            margin-bottom: 28px;
+        }
+
+        .logo img {
+            height: 56px;
+            width: auto;
+        }
+        .logo .logo-on-light { display: none; }
+        [data-scheme="light"] .logo .logo-on-dark { display: none; }
+        [data-scheme="light"] .logo .logo-on-light { display: block; }
+
+        h1 {
+            font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+            color: var(--theme-text-primary);
+            margin-bottom: 8px;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-family: "IBM Plex Mono", ui-monospace, monospace;
+            color: var(--theme-text-muted);
+            margin-bottom: 28px;
+            font-size: 0.72rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-family: "IBM Plex Mono", ui-monospace, monospace;
+            font-size: 0.68rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 500;
+            color: var(--theme-text-secondary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--theme-border-light);
+            border-radius: 0;
+            font-size: 1rem;
+            font-family: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: var(--theme-bg-secondary);
+            color: var(--theme-text-primary);
+            transition: border-color 0.15s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--theme-accent);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--theme-accent);
+            color: var(--theme-accent-ink);
+            border: none;
+            border-radius: 0;
+            font-size: 0.8rem;
+            font-family: "IBM Plex Mono", ui-monospace, monospace;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            background: var(--theme-accent-hover);
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-link {
+            color: var(--theme-text-muted);
+            text-decoration: none;
+            font-family: "IBM Plex Mono", ui-monospace, monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .back-link:hover {
+            color: var(--theme-accent);
+        }
+
+        .error {
+            background: var(--theme-error-bg);
+            color: var(--theme-error-text);
+            border: 1px solid var(--theme-error);
+            padding: 12px;
+            border-radius: 0;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success {
+            background: var(--theme-success-bg);
+            color: var(--theme-success-text);
+            border: 1px solid var(--theme-success);
+            padding: 12px;
+            border-radius: 0;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            color: var(--theme-text-muted);
+            font-size: 0.85rem;
+        }
+
+        .password-reset {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--theme-border);
+        }
+
+        .password-reset a {
+            color: var(--theme-accent);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .password-reset a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 20px;
+                padding: 28px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img class="logo-on-dark" src="/static/brand/planenoise-logo-reversed.svg?v=2" alt="Aircraft Noise">
+            <img class="logo-on-light" src="/static/brand/planenoise-logo.svg?v=2" alt="">
+        </div>
+        <h1>Admin Access</h1>
+        <div class="subtitle">Aircraft Noise Administration</div>
+        
+        <div id="errorMessage" class="error"></div>
+        <div id="successMessage" class="success"></div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="btn" id="loginBtn">
+                <span id="btnText">Sign In</span>
+                <span id="btnLoading" class="loading">Signing in...</span>
+            </button>
+        </form>
+        
+        <div class="password-reset">
+            <a href="#" onclick="showPasswordReset()">Forgot your password?</a>
+        </div>
+        
+        <a href="/" class="back-link">← Back to Public View</a>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        let accessToken = localStorage.getItem('accessToken');
+        let refreshToken = localStorage.getItem('refreshToken');
+
+        // Check if already logged in (session-based)
+        // No need to check tokens since we're using server sessions
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            setLoading(true);
+            hideMessages();
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    showSuccess('Login successful! Redirecting...');
+                    
+                    // Redirect to admin dashboard
+                    setTimeout(() => {
+                        window.location.href = '/admin/dashboard';
+                    }, 1500);
+                } else {
+                    showError(data.error || 'Login failed');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Login failed. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        async function checkAuthStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/auth/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.user && data.user.is_admin) {
+                        window.location.href = '/admin/dashboard';
+                    } else {
+                        logout();
+                    }
+                } else {
+                    logout();
+                }
+            } catch (error) {
+                logout();
+            }
+        }
+
+        function logout() {
+            accessToken = null;
+            refreshToken = null;
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+        }
+
+        async function showPasswordReset() {
+            const email = (document.getElementById('email') || {}).value || prompt('The email address of your admin account:');
+            if (!email) return;
+            try {
+                const r = await fetch(`${API_BASE}/auth/password-reset`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim() }) });
+                const j = await r.json().catch(() => ({}));
+                showError(j.message || (r.status === 429 ? 'Too many requests; wait a quarter of an hour.' : 'That did not work.'));
+            } catch (e) { showError('That did not work.'); }
+        }
+        if (new URLSearchParams(window.location.search).get('reset') === '1') showError('The password is changed. Sign in with it.');
+
+        function setLoading(loading) {
+            const btn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoading = document.getElementById('btnLoading');
+            
+            if (loading) {
+                btn.disabled = true;
+                btnText.style.display = 'none';
+                btnLoading.style.display = 'inline';
+            } else {
+                btn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        function hideMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Noise by aircraft type — Aircraft Noise</title>
+  <meta name="description" content="Aircraft types ranked by the noise they make at this sensor, corrected to one distance." />
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/static/css/theme.css?v=9" />
+  <script src="/static/js/themes.js?v=3"></script>
+  <script src="/static/js/theme.js?v=10"></script>
+  <script src="/static/js/sortable.js?v=1" defer></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--theme-bg-primary); color: var(--theme-text-primary); font-family: var(--font-sans); line-height: 1.5; }
+    a { color: var(--theme-accent); }
+    .header-banner { background: var(--theme-masthead); color: var(--theme-masthead-ink); padding: 16px 0 14px; }
+    .header-content { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .header-content h1 { font-size: 1.8rem; margin: 0; display: flex; align-items: center; }
+    .brand-link { display: flex; align-items: center; text-decoration: none; }
+    .header-logo { height: 40px; width: auto; display: block; }
+    .site-title-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+    .subtitle { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--theme-masthead-muted); margin: 0.45rem 0 0; }
+    .header-actions { display: flex; align-items: center; gap: 1rem; }
+    .header-nav-link { color: var(--theme-masthead-ink); text-decoration: none; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    main { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+    .page-title { font-size: 1.6rem; margin: 0 0 0.25rem; }
+    .lead { color: var(--theme-text-secondary); margin: 0 0 1.25rem; max-width: 60rem; }
+    .card { border: 1px solid var(--theme-border); padding: 1.25rem; margin-bottom: 1.25rem; }
+    .muted { color: var(--theme-text-muted); font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .controls { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
+    .controls select { background: var(--theme-bg-tertiary); color: var(--theme-text-primary); border: 1px solid var(--theme-border); padding: 6px 8px; font: inherit; }
+    .tabs { display: flex; gap: 6px; }
+    .tabs button { background: transparent; border: 1px solid var(--theme-border); color: var(--theme-text-primary); padding: 6px 12px; cursor: pointer; font: inherit; font-size: 0.85rem; }
+    .tabs button[aria-pressed="true"] { border-color: var(--theme-accent); color: var(--theme-accent); }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--theme-text-muted); padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--theme-border); }
+    td { padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--theme-border); vertical-align: middle; }
+    td.num { font-family: var(--font-mono); white-space: nowrap; }
+    .bar-cell { min-width: 220px; }
+    .bar { position: relative; height: 14px; background: var(--theme-bg-tertiary); }
+    .bar span { position: absolute; top: 0; bottom: 0; left: 0; background: var(--theme-accent); border-radius: 0 3px 3px 0; }
+    .bar i { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--theme-text-primary); opacity: 0.5; }
+    .rank { color: var(--theme-text-muted); font-family: var(--font-mono); }
+    .ops { color: var(--theme-text-secondary); font-size: 0.8rem; }
+    .method { color: var(--theme-text-secondary); font-size: 0.9rem; }
+    .method code { font-family: var(--font-mono); font-size: 0.85rem; }
+    .empty { color: var(--theme-text-secondary); padding: 1rem 0; }
+    @media (max-width: 700px) { .header-content, main { padding-left: 1rem; padding-right: 1rem; } .bar-cell { min-width: 120px; } .ops { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="header-banner">
+    <div class="header-content">
+      <div class="header-top">
+        <h1>
+          <a href="/" class="brand-link"><img src="/static/brand/planenoise-logo-reversed.svg?v=2" alt="" class="header-logo"></a>
+          <span class="site-title-text">Aircraft Noise</span>
+        </h1>
+        <div class="header-actions">
+          <a href="/" class="header-nav-link">Live</a>
+          <a href="/community" class="header-nav-link">Community</a>
+          <div class="theme-controls" id="theme-controls-container"></div>
+        </div>
+      </div>
+      <div class="subtitle">Noise by aircraft type</div>
+    </div>
+  </div>
+
+  <main>
+    <h2 class="page-title">Which aircraft are loudest here?</h2>
+    <p class="lead" id="lead">Every measured peak is corrected to what it would sound like at the same distance, so types can be compared fairly. Ranked by the median.</p>
+
+    <div class="card">
+      <div class="controls">
+        <div class="tabs" role="group" aria-label="Flight phase">
+          <button type="button" data-kind="all" aria-pressed="true">All passes</button>
+          <button type="button" data-kind="arrival" aria-pressed="false">Arrivals</button>
+          <button type="button" data-kind="departure" aria-pressed="false">Departures</button>
+        </div>
+        <label>Period
+          <select id="days">
+            <option value="30">30 days</option>
+            <option value="90">90 days</option>
+            <option value="365" selected>1 year</option>
+            <option value="3650">All</option>
+          </select>
+        </label>
+        <label>At least
+          <select id="minN">
+            <option value="5">5 passes</option>
+            <option value="10" selected>10 passes</option>
+            <option value="25">25 passes</option>
+            <option value="50">50 passes</option>
+          </select>
+        </label>
+        <span class="muted" id="summary"></span>
+      </div>
+      <div id="tableWrap" class="table-wrap"><div class="empty">Loading…</div></div>
+    </div>
+
+    <div class="card method">
+      <div class="muted" style="margin-bottom:0.4rem">Method</div>
+      <p id="methodText">Each pass contributes its loudest 10 s LAeq and the straight-line distance to the microphone at that moment. The level is corrected to a reference distance of <code>1,000 m</code> with spherical spreading, <code>20·log10(d / 1000)</code>, plus air absorption of <code>1 dB per km</code>. Arrivals and departures are ranked separately because thrust differs; the combined view mixes both. Medians and the 25–75% range are shown, and a type needs the chosen minimum of passes to appear. Type names are folded into families, so "Boeing 737NG 8K2/W", "B738" and "737-8K2" count as one 737-800. The sensor measures what it hears at this address; another address hears another ranking. Aircraft identities come from the Mictronics aircraft database via tar1090-db; airline names from Wikidata.</p>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const $ = (id) => document.getElementById(id);
+      let kind = 'all';
+      let data = null;
+
+      function esc(v) { return String(v == null ? '' : v).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch])); }
+
+      function render() {
+        const wrap = $('tableWrap');
+        if (!data) return;
+        const rows = (data.groups && data.groups[kind]) || [];
+        $('summary').textContent = `${data.passes} measured passes · ${rows.length} types shown`;
+        if (data.place) $('lead').textContent = `Every measured peak at ${data.place} is corrected to what it would sound like at the same distance, so types can be compared fairly. Ranked by the median.`;
+        if (!rows.length) { wrap.innerHTML = '<div class="empty">Not enough passes yet for this view. Lower the minimum, widen the period, or let the recorder run a while longer.</div>'; return; }
+        const lo = Math.min(...rows.map(r => r.p25_db)) - 2;
+        const hi = Math.max(...rows.map(r => r.p75_db)) + 2;
+        const pct = (v) => Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100));
+        wrap.innerHTML = `<table>
+          <thead><tr><th>#</th><th>Type</th><th>Median at 1,000 m</th><th class="bar-cell">25–75%</th><th>Passes</th><th>Typical distance</th><th>Measured median</th><th>Operators</th></tr></thead>
+          <tbody>${rows.map((r, i) => `<tr>
+            <td class="rank">${i + 1}</td>
+            <td><strong>${esc(r.type)}</strong></td>
+            <td class="num"><strong>${r.median_db.toFixed(1)} dB</strong></td>
+            <td class="bar-cell"><div class="bar" title="${r.p25_db.toFixed(1)}–${r.p75_db.toFixed(1)} dB"><span style="left:${pct(r.p25_db)}%;width:${pct(r.p75_db) - pct(r.p25_db)}%"></span><i style="left:${pct(r.median_db)}%"></i></div></td>
+            <td class="num">${r.n}</td>
+            <td class="num">${r.slant_median_m} m</td>
+            <td class="num">${r.raw_median_db.toFixed(1)} dB</td>
+            <td class="ops">${esc((r.operators || []).join(', '))}</td>
+          </tr>`).join('')}</tbody></table>`;
+      }
+
+      async function load() {
+        $('tableWrap').innerHTML = '<div class="empty">Loading…</div>';
+        try {
+          const r = await fetch(`/api/stats/aircraft_types?days=${$('days').value}&min_n=${$('minN').value}`, { cache: 'no-cache' });
+          data = r.ok ? await r.json() : null;
+        } catch (e) { data = null; }
+        if (!data) { $('tableWrap').innerHTML = '<div class="empty">The ranking could not be loaded.</div>'; return; }
+        render();
+      }
+
+      document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => {
+        kind = b.dataset.kind;
+        document.querySelectorAll('.tabs button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+        render();
+      }));
+      $('days').addEventListener('change', load);
+      $('minN').addEventListener('change', load);
+      load();
+    })();
+  </script>
+</body>
+</html>

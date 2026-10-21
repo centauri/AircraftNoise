@@ -1,0 +1,3542 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aircraft Noise — real noise, measured on local sensors</title>
+  <meta name="description" content="Aircraft Noise measures real aircraft noise on local sensors and matches it to the flights overhead." />
+  <meta name="keywords" content="aircraft noise, plane tracking, noise monitoring, Netherlands, aviation, environmental monitoring, flight data, aircraft radar, noise pollution, real-time tracking, vliegtuig geluid, vliegtuig tracking, geluidsmonitoring, Nederland, luchtvaart, milieumonitoring, vluchtgegevens, vliegtuig radar, geluidsoverlast, real-time tracking, flightradar, vliegtuig geluidsoverlast, milieugegevens, geluidsmeting, vlucht tracking, luchtvaart monitoring" />
+  <meta name="author" content="Aircraft Noise" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="language" content="en" />
+  <meta name="geo.region" content="NL" />
+  <meta name="geo.placename" content="Netherlands" />
+  <meta name="geo.position" content="52.1326;5.2913" />
+  <meta name="ICBM" content="52.1326, 5.2913" />
+  
+  <!-- Canonical URL (SEO fix for www/non-www) -->
+  <link rel="canonical" href="https://station.example/" />
+  
+  <!-- Open Graph / Social Media Meta Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://station.example/" />
+  <meta property="og:title" content="Aircraft Noise — real noise, measured on local sensors" />
+  <meta property="og:description" content="Real aircraft noise, measured on local sensors and matched to the flights overhead." />
+  <meta property="og:image" content="https://station.example/static/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="Aircraft Noise" />
+  <meta property="og:locale" content="en_US" />
+  
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://station.example/" />
+  <meta name="twitter:title" content="Aircraft Noise — measured on local sensors" />
+  <meta name="twitter:description" content="Real aircraft noise, measured on local sensors and matched to the flights overhead." />
+  <meta name="twitter:image" content="https://station.example/static/og-image.png" />
+  
+  <!-- Additional SEO meta tags -->
+  <meta name="theme-color" content="#14160f" />
+  <meta name="msapplication-TileColor" content="#14160f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Aircraft Noise" />
+  
+  <!-- Performance hints -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+  
+  <!-- Security headers -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://station.example/" />
+  <meta property="og:title" content="Aircraft Noise — real noise, measured on local sensors" />
+  <meta property="og:description" content="Real aircraft noise, measured on local sensors and matched to the flights overhead." />
+  <meta property="og:image" content="https://station.example/static/og-image.png" />
+  <meta property="og:image:secure_url" content="https://station.example/static/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:alt" content="Aircraft Noise — real noise measured on local sensors" />
+  <meta property="og:site_name" content="Aircraft Noise" />
+  
+  <!-- WhatsApp specific -->
+  <meta property="og:image:url" content="https://station.example/static/og-image.png" />
+  <meta name="twitter:image:src" content="https://station.example/static/og-image.png" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="nl_NL" />
+  <meta property="fb:app_id" content="123456789012345" />
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://station.example/" />
+  <meta name="twitter:title" content="Aircraft Noise — measured on local sensors" />
+  <meta name="twitter:description" content="Real aircraft noise, measured on local sensors and matched to the flights overhead." />
+  <meta name="twitter:image" content="https://station.example/static/og-image.png" />
+  <meta name="twitter:image:alt" content="Aircraft Noise Dashboard" />
+  
+  <!-- Hreflang for multilingual support -->
+  <link rel="alternate" hreflang="en" href="https://station.example/" />
+  <link rel="alternate" hreflang="nl" href="https://station.example/nl/" />
+  <link rel="alternate" hreflang="x-default" href="https://station.example/" />
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://station.example/" />
+  
+  <!-- Favicon and Icons -->
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png" />
+  <link rel="manifest" href="/static/site.webmanifest" />
+  
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Aircraft Noise",
+    "description": "Real aircraft noise, measured on local sensors and matched to the flights overhead.",
+    "url": "https://station.example/",
+    "applicationCategory": "Environmental Monitoring",
+    "operatingSystem": "Web Browser",
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "softwareVersion": "1.0",
+    "datePublished": "2024-01-01",
+    "dateModified": "2025-10-03",
+    "inLanguage": "en",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    },
+    "creator": {
+      "@type": "Organization",
+      "name": "Aircraft Noise",
+      "url": "https://station.example/"
+    },
+    "featureList": [
+      "Noise measured on local sensors",
+      "Each pass matched to the flight overhead",
+      "Environmental impact assessment",
+      "Flight path visualization",
+      "Historical data analysis"
+    ],
+    "screenshot": "https://station.example/static/og-image.png",
+    "softwareVersion": "1.0",
+    "datePublished": "2024-01-01",
+    "dateModified": "2024-12-19",
+    "inLanguage": ["en", "nl"],
+    "isAccessibleForFree": true,
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "softwareRequirements": "Web Browser"
+  }
+  </script>
+  
+  <!-- Breadcrumb Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://station.example/"
+      }
+    ]
+  }
+  </script>
+  
+  <link rel="stylesheet" href="/static/vendor/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="/static/css/theme.css?v=13" />
+  <script src="/static/js/themes.js?v=3"></script>
+  <script src="/static/js/theme.js?v=11"></script>
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--theme-bg-primary);
+      color: var(--theme-text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+    }
+
+    .header-banner {
+      background: var(--theme-masthead);
+      color: var(--theme-masthead-ink);
+      padding: 16px 0 14px;
+      text-align: left;
+      box-shadow: none;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0;
+      gap: 1rem;
+    }
+
+    .header-content h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin: 0;
+      text-shadow: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .brand-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .header-logo {
+      height: 52px;
+      width: auto;
+      max-width: 100%;
+      display: block;
+    }
+
+    .site-title-text {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Hide mobile logo by default */
+    .mobile-logo {
+      display: none;
+    }
+
+    /* Show desktop logo by default */
+    .desktop-logo {
+      display: block;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-align: left;
+      color: var(--theme-masthead-muted);
+      margin: 0.45rem 0 0;
+      opacity: 1;
+    }
+
+    .station-mark { color: var(--theme-masthead-ink); }
+    .station-mark[hidden] { display: none; }
+    .station-mark:not([hidden])::after {
+      content: "·";
+      margin: 0 0.75rem;
+      color: var(--theme-masthead-muted);
+    }
+
+    .map-station { margin: 0 0 0.75rem; }
+    .map-station[hidden] { display: none; }
+    .map-station h2 {
+      margin: 0 0 0.3rem;
+      color: var(--theme-text-primary);
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .map-station p {
+      margin: 0;
+      color: var(--theme-text-secondary);
+      white-space: pre-wrap;
+    }
+
+    .admin-link {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.5);
+      padding: 0.4rem 0.8rem;
+      border-radius: 0;
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 400;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      opacity: 0.6;
+    }
+
+    .admin-link:hover {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.7);
+      opacity: 0.8;
+      transform: none;
+    }
+    
+    /* Language Switcher */
+    .header-nav-link {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--theme-masthead-ink);
+      border: 1px solid var(--theme-masthead-line);
+      padding: 0.35rem 0.7rem;
+      text-decoration: none;
+    }
+
+    .header-nav-link:hover {
+      color: var(--theme-accent);
+      text-decoration: none;
+    }
+
+    .language-switcher {
+      display: flex;
+      gap: 4px;
+      margin-right: 12px;
+    }
+    
+    .lang-link {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.5);
+      padding: 0.4rem 0.8rem;
+      border-radius: 0;
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 400;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .lang-link:hover {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.7);
+      opacity: 0.8;
+      transform: none;
+    }
+    
+    .lang-link.active {
+      background: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.9);
+      border-color: rgba(255,255,255,0.3);
+      font-weight: 500;
+    }
+
+    /* Theme Controls */
+    .theme-controls {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(244, 241, 234, 0.08);
+      transform: none;
+      box-shadow: none;
+    }
+
+    .theme-toggle:active {
+      transform: none;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header-top {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px 12px;
+        text-align: left;
+      }
+
+      .header-actions {
+        justify-content: flex-end;
+        flex-wrap: wrap;
+      }
+
+      .header-content h1 {
+        font-size: 1.5rem;
+        justify-content: flex-start;
+      }
+
+      .subtitle {
+        text-align: left;
+        letter-spacing: 0.08em;
+        line-height: 1.5;
+      }
+
+      .header-logo {
+        height: 40px;
+      }
+
+      /* Switch to mobile logo on small screens */
+      .desktop-logo {
+        display: none;
+      }
+
+      .mobile-logo {
+        display: block;
+      }
+
+      .theme-toggle {
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+    }
+
+    /* Extra small screens */
+    @media (max-width: 480px) {
+      .header-logo {
+        height: 35px;
+      }
+
+      .header-content h1 {
+        font-size: 1.3rem;
+        gap: 0.5rem;
+      }
+    }
+
+    /* Main Content */
+    .main-header {
+      text-align: center;
+      padding: 1rem 0;
+      background: var(--theme-bg-secondary);
+      border-bottom: 1px solid var(--theme-border);
+    }
+
+    .main-header h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--theme-text-primary);
+    }
+
+    .small {
+      color: var(--theme-text-muted);
+      font-size: 0.9rem;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Compact mini stats for public page */
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0 2rem 0;
+    }
+    .mini-card {
+      background: transparent;
+      border: 1px solid var(--theme-border);
+      border-left: 3px solid var(--theme-accent);
+      border-radius: 0;
+      padding: 0.9rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .mini-card .label {
+      color: var(--theme-text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .mini-card .value {
+      font-family: var(--font-mono);
+      font-size: 1.55rem;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      color: var(--theme-accent);
+    }
+    @media (max-width: 768px) {
+      .mini-stats { grid-template-columns: 1fr; }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .card {
+        padding: 1.5rem;
+      }
+      
+      /* Force horizontal scroll on mobile for table */
+      .table-wrapper {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        display: block;
+      }
+      
+      table {
+        min-width: 1200px !important;
+        width: 1200px !important;
+        display: table;
+      }
+    }
+
+    .card {
+      background: transparent;
+      border: 1px solid var(--theme-border);
+      border-radius: 0;
+      padding: 1.25rem;
+      box-shadow: none;
+    }
+
+    .card h3 {
+      margin-bottom: 1rem;
+      color: var(--theme-text-primary);
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .station-notes { margin-top: 2rem; }
+    .station-notes[hidden] { display: none; }
+    .station-note + .station-note {
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--theme-border);
+    }
+    .station-note h4 {
+      margin: 0 0 0.4rem;
+      color: var(--theme-text-primary);
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .station-note p {
+      margin: 0;
+      color: var(--theme-text-secondary);
+      white-space: pre-wrap;
+    }
+
+    /* Heatmap */
+    .heat-grid { display: grid; grid-template-columns: 100px repeat(24, 1fr); gap: 4px; }
+    .heat-row { display: contents; }
+    .heat-label { display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: var(--theme-text-secondary); font-size: 0.9rem; }
+    .heat-cell { height: 22px; border-radius: 0; background: var(--theme-bg-tertiary); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--theme-text-primary); border: 1px solid var(--theme-border); cursor: pointer; transition: all 0.2s ease; }
+    .heat-cell:hover { outline: 1px solid var(--theme-accent); transform: none; box-shadow: none; }
+    .heat-cell:active { transform: none; }
+    .heat-hours { display: grid; grid-template-columns: 100px repeat(24, 1fr); gap: 4px; margin-bottom: 6px; }
+    .heat-hours span { text-align: center; color: var(--theme-text-muted); font-size: 0.8rem; }
+    
+    /* Radius altitude info styling */
+    .radius-altitude-info {
+      margin-top: -40px;
+    }
+    
+    /* Mobile heatmap - much better responsive design with scrolling */
+    @media (max-width: 768px) {
+      .heatmap-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: var(--theme-border) transparent;
+      }
+      
+      .heatmap-container::-webkit-scrollbar {
+        height: 6px;
+      }
+      
+      .heatmap-container::-webkit-scrollbar-track {
+        background: var(--theme-bg-tertiary);
+        border-radius: 0;
+      }
+      
+      .heatmap-container::-webkit-scrollbar-thumb {
+        background: var(--theme-border);
+        border-radius: 0;
+      }
+      
+      .heat-grid, .heat-hours { 
+        grid-template-columns: 50px repeat(24, 1fr); 
+        gap: 2px;
+        font-size: 0.7rem;
+        min-width: 600px; /* Ensure full width for scrolling */
+      }
+      .heat-cell { 
+        height: 18px; 
+        font-size: 8px; 
+        border-radius: 0;
+        min-width: 20px; /* Ensure cells don't get too small */
+      }
+      .heat-label { 
+        font-size: 0.7rem; 
+        padding-right: 4px;
+      }
+      .heat-hours span { 
+        font-size: 0.6rem; 
+        min-width: 20px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .heat-grid, .heat-hours { 
+        grid-template-columns: 40px repeat(24, 1fr); 
+        gap: 1px;
+        min-width: 500px;
+      }
+      .heat-cell { 
+        height: 16px; 
+        font-size: 7px;
+        min-width: 18px;
+      }
+      .heat-label { 
+        font-size: 0.6rem; 
+        padding-right: 2px;
+      }
+      .heat-hours span { 
+        font-size: 0.5rem; 
+        min-width: 18px;
+      }
+    }
+    
+    /* Sensor time display animation */
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+    
+    /* Responsive design for sensor time display */
+    @media (max-width: 768px) {
+      .main-header > div:first-child {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+        padding: 0 16px;
+      }
+      .main-header > div:first-child > div:first-child {
+        display: none !important; /* Hide the left spacer on mobile */
+      }
+      .main-header > div:first-child > div:last-child {
+        flex: none !important; /* Remove flex on mobile */
+        justify-content: flex-start !important;
+      }
+      #sensorTimeDisplay {
+        text-align: left;
+      }
+      /* Fix the overlapping issue by removing negative margin on mobile */
+      .radius-altitude-info {
+        margin-top: 8px !important;
+        text-align: left !important;
+        padding: 0 16px;
+        line-height: 1.45;
+      }
+      /* Also ensure proper spacing between header and content */
+      .main-header {
+        margin-bottom: 20px !important;
+      }
+    }
+
+    .plane-map-legend {
+      background: var(--theme-bg-card);
+      color: var(--theme-text-secondary);
+      border: 1px solid var(--theme-border);
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+    .plane-arrow { background: none; border: none; }
+    .leaflet-container img.leaflet-marker-icon, .leaflet-container img.leaflet-marker-shadow {
+      max-width: none !important; width: auto; height: auto; padding: 0; margin: 0; transition: none;
+    }
+    .leaflet-tooltip { font-size: 12px; line-height: 1.4; }
+    .noise-summary-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
+    .noise-summary-sub { color: var(--theme-text-secondary); margin: 0.25rem 0 0.9rem; }
+    .noise-summary-toggle { background: transparent; color: var(--theme-text-primary); border: 1px solid var(--theme-border); padding: 6px 10px; cursor: pointer; font: inherit; font-size: 0.8rem; }
+    .noise-summary-toggle[aria-pressed="true"] { border-color: var(--theme-accent); }
+    .noise-summary-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.6rem; margin-bottom: 1rem; }
+    .noise-stat { border-left: 3px solid var(--theme-accent); padding: 0.3rem 0.6rem; }
+    .noise-stat-value { display: block; font-family: var(--font-mono, monospace); font-size: 1.3rem; color: var(--theme-text-primary); }
+    .noise-stat-label { display: block; font-size: 0.72rem; color: var(--theme-text-secondary); letter-spacing: 0.04em; }
+    .noise-summary-chart { position: relative; height: 240px; }
+    .noise-summary-table, .noise-summary-routes { overflow-x: auto; }
+    /* The mobile rule forcing tables to 1,200 px is for the events table; the id outranks it. */
+    #noiseSummaryCard table { min-width: 0 !important; width: 100% !important; }
+    .noise-summary-grid { width: 100%; min-width: 0 !important; border-collapse: collapse; font-size: 0.85rem; }
+    .noise-summary-grid th, .noise-summary-grid td { text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--theme-border); white-space: normal !important; }
+    @media (max-width: 700px) { .noise-summary-grid { font-size: 0.78rem; } .noise-summary-grid th, .noise-summary-grid td { padding: 0.3rem 0.35rem; } }
+    .noise-summary-loudest { color: var(--theme-text-secondary); margin: 0.75rem 0 0; }
+    .noise-summary-routes { margin-top: 1rem; }
+    .noise-summary-routes-title { font-size: 0.85rem; margin: 0 0 0.4rem; color: var(--theme-text-secondary); font-weight: 600; }
+    @media (max-width: 700px) { .noise-summary-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mini-stats { grid-template-columns: 1fr; } }
+    .route-badge { font-family: var(--font-mono, monospace); font-size: 0.68rem; color: var(--theme-text-secondary); letter-spacing: 0.04em; margin-top: 2px; }
+    .route-badge.route-weak { opacity: 0.6; }
+    .complaint-btn { display: inline-block; margin-top: 6px; padding: 4px 8px; font-size: 0.75rem; border: 1px solid var(--theme-border); background: var(--theme-bg-card); color: var(--theme-text-primary); cursor: pointer; }
+    .complaint-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 16px; }
+    .complaint-box { background: var(--theme-bg-card); color: var(--theme-text-primary); border: 1px solid var(--theme-border); max-width: 640px; width: 100%; padding: 20px; }
+    .complaint-box h3 { margin: 0 0 8px; }
+    .complaint-box p { color: var(--theme-text-secondary); font-size: 0.9rem; margin: 0 0 10px; }
+    .complaint-box textarea { width: 100%; min-height: 220px; font-family: var(--font-mono, monospace); font-size: 0.85rem; background: var(--theme-bg-primary); color: var(--theme-text-primary); border: 1px solid var(--theme-border); padding: 10px; }
+    .complaint-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .complaint-actions .btn, .complaint-actions a.btn { padding: 8px 14px; font-size: 0.85rem; }
+    #map {
+      height: 400px;
+      border-radius: 0;
+      border: 1px solid var(--theme-border);
+    }
+
+    /* Anti-aliasing for smooth polygon edges */
+    .smooth-polygon {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      shape-rendering: geometricPrecision;
+    }
+
+    .smooth-polygon path {
+      vector-effect: non-scaling-stroke;
+    }
+
+    /* Force anti-aliasing on all SVG elements */
+    #map svg {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      shape-rendering: geometricPrecision;
+    }
+
+    #map svg path {
+      vector-effect: non-scaling-stroke;
+    }
+
+    #chart {
+      height: 400px;
+      position: relative;
+    }
+
+    /* Table Styles */
+    .table-container {
+      background: var(--theme-bg-secondary);
+      border: 1px solid var(--theme-border);
+      border-radius: 0;
+      overflow: hidden;
+      margin-top: 2rem;
+      padding: 0.5rem;
+    }
+
+    .table-header {
+      background: var(--theme-bg-tertiary);
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--theme-border);
+    }
+
+    .table-header h3 {
+      margin: 0;
+      color: var(--theme-text-primary);
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: auto;
+    }
+
+    th, td {
+      padding: 0.85rem 1.2rem;
+      text-align: left;
+      border-bottom: 1px solid var(--theme-border);
+    }
+
+    th {
+      background: var(--theme-bg-tertiary);
+      color: var(--theme-text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+
+    th:hover {
+      background: var(--theme-hover);
+    }
+
+    th.active {
+      color: var(--theme-accent);
+    }
+
+    /* Prevent wrapping for tight columns */
+    .nowrap { white-space: nowrap; }
+    .col-img { width: 88px; }
+    .aircraft-thumb { display: inline-block; width: 72px; height: 40px; border-radius: 4px; object-fit: cover; vertical-align: middle; }
+    .aircraft-thumb-empty { line-height: 40px; text-align: center; background: var(--theme-bg-tertiary); color: var(--theme-text-secondary); font-size: 1.1rem; }
+    .col-callsign { width: 12px; white-space: nowrap; }
+    .col-num { width: 1%; white-space: nowrap; }
+    .col-time { width: 1%; white-space: nowrap; }
+    .col-heading { width: 40px; white-space: nowrap; }
+    .col-operator { width: 250px; word-break: break-word; }
+    .col-aircraft { width: 280px; word-break: break-word; }
+
+    /* Tighten spacing between Callsign and Time to give Time more room */
+    th.col-img, td.col-img { padding-right: 0.5rem; }
+    th.col-callsign, td.col-callsign { padding-left: 0.5rem; padding-right: 0.5rem; }
+    th.col-time, td.col-time { padding-left: 0.5rem; }
+
+    .sort-arrow {
+      margin-left: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    td {
+      color: var(--theme-text-primary);
+    }
+
+    tr:hover {
+      background: var(--theme-hover);
+    }
+
+    .aircraft-image {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 0;
+    }
+
+    .aircraft-mark {
+      display: block;
+      width: 46px;
+      height: 26px;
+      color: var(--theme-text-primary);
+    }
+
+    .aircraft-mark svg { width: 100%; height: 100%; display: block; }
+    .aircraft-mark.is-unknown { color: var(--theme-text-muted); opacity: 0.55; }
+
+    .aircraft-photo {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      width: 76px;
+      color: var(--theme-text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.01em;
+      line-height: 1.25;
+      text-decoration: none;
+    }
+
+    .aircraft-photo img {
+      width: 76px;
+      height: 50px;
+      object-fit: cover;
+      display: block;
+      background: var(--theme-bg-tertiary);
+    }
+
+    .aircraft-credit { color: var(--theme-text-muted); }
+
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: var(--theme-bg-tertiary);
+      border-top: 1px solid var(--theme-border);
+    }
+
+    .pagination button {
+      background: var(--theme-accent);
+      color: var(--theme-accent-ink);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .pagination button:disabled {
+      background: var(--theme-text-muted);
+      cursor: not-allowed;
+    }
+
+    .pagination button:hover:not(:disabled) {
+      background: var(--theme-accent-hover);
+    }
+
+    .pagination-info {
+      color: var(--theme-text-muted);
+      font-size: 0.9rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--theme-text-muted);
+    }
+
+    .error {
+      color: var(--theme-warning);
+      text-align: center;
+      padding: 1rem;
+    }
+
+    /* Link styles */
+    a {
+      color: var(--theme-accent);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    a:hover {
+      color: var(--theme-accent-hover, var(--theme-accent));
+      text-decoration: underline;
+    }
+
+    a:visited {
+      color: var(--theme-accent);
+    }
+
+    a:visited:hover {
+      color: var(--theme-accent-hover, var(--theme-accent));
+    }
+  </style>
+</head>
+<body>
+  <div class="header-banner">
+    <div class="header-content">
+      <div class="header-top">
+        <h1 id="site-title">
+          <a href="/" class="brand-link">
+            <img src="/static/brand/planenoise-logo-reversed.svg?v=2"
+                 alt=""
+                 class="header-logo">
+          </a>
+          <span class="site-title-text" data-translate="site_title_text">Aircraft Noise</span>
+        </h1>
+        <div class="header-actions">
+          <a href="/types.html" class="header-nav-link" data-translate="types_link">Aircraft types</a>
+          <a href="/community" class="header-nav-link" data-translate="community_link">Community</a>
+          <div class="theme-controls" id="theme-controls-container">
+            <!-- Theme controls will be injected here by theme.js -->
+          </div>
+        </div>
+      </div>
+      <div class="subtitle" id="subtitle"><span id="stationMark" class="station-mark" hidden></span><span id="subtitleText">Real noise, measured on your own sensors</span></div>
+    </div>
+  </div>
+
+  <!-- Main Content Header -->
+  <div class="main-header" style="margin-bottom: 0px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0px; min-height: 60px; padding-top: 0px; padding-bottom: 10px;">
+      <div style="flex: 1;"></div>
+      <div style="flex: 1; display: flex; justify-content: flex-end;">
+        <div id="sensorTimeDisplay" style="padding: 6px 12px; background: var(--theme-bg-tertiary); border-radius: 0; font-size: 0.9em; color: var(--theme-text-secondary); border: 1px solid var(--theme-border);">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img id="placeFlag" alt="Netherlands" width="18" height="12" src="/static/flags/4x3/nl.svg" style="display:block;flex:none;border:1px solid rgba(0,0,0,.28);width:18px;height:12px;">
+            <div>
+              <div style="font-weight: 600; font-size: 0.95em;" id="netherlands-time">Netherlands Time (UTC+2)</div>
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 0.85em; opacity: 0.8;">
+                <span id="sensorTime">Loading...</span>
+                <span id="sensorTimeStatus" style="color: #4ade80;">●</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="small radius-altitude-info" style="text-align: center;" id="radius-altitude-info">Loading...</div>
+  </div>
+
+  <div class="container" style="margin-top: -20px;">
+    <!-- Today mini stats -->
+    <div class="mini-stats" id="miniStats" aria-live="polite">
+      <div class="mini-card">
+        <div class="label" id="today-avg-noise">Today Avg Noise</div>
+        <div class="value" id="todayAvgNoise">–</div>
+      </div>
+      <div class="mini-card">
+        <div class="label" id="closest-approach-today">Closest Approach Today</div>
+        <div class="value" id="todayClosestApproach">–</div>
+      </div>
+      <div class="mini-card">
+        <div class="label" id="loudest-today">Loudest Today</div>
+        <div class="value" id="todayLoudest">–</div>
+      </div>
+    </div>
+
+    
+    <div class="grid">
+      <div class="card">
+        <h3 id="sensor-location-heading">Sensor Location & Aircraft</h3>
+        <div id="mapStation" class="map-station" hidden>
+          <h2 id="mapStationTitle"></h2>
+          <p id="mapStationBody"></p>
+        </div>
+        <div id="map"></div>
+        <p class="small" id="weather-credit" style="margin:0.35rem 0 0;font-size:0.75rem;">Weather data by <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a> (CC BY 4.0).</p>
+      </div>
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 id="noise-level-heading">Noise Level (SPL)</h3>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="chartToggle" onclick="toggleChartType()" style="
+              background: var(--theme-accent); 
+              color: white; 
+              border: none; 
+              padding: 0.25rem 0.5rem; 
+              border-radius: 0; 
+              font-size: 0.75rem; 
+              cursor: pointer;
+              transition: all 0.2s ease;
+            " onmouseover="this.style.background='var(--theme-accent-hover)'" onmouseout="this.style.background='var(--theme-accent)'">
+              <span id="chart-button">Chart</span>
+            </button>
+            <button id="tableToggle" onclick="toggleChartType()" style="
+              background: var(--theme-bg-tertiary); 
+              color: var(--theme-text-muted); 
+              border: 1px solid var(--theme-border); 
+              padding: 0.25rem 0.5rem; 
+              border-radius: 0; 
+              font-size: 0.75rem; 
+              cursor: pointer;
+              transition: all 0.2s ease;
+            " onmouseover="this.style.background='var(--theme-hover)'" onmouseout="this.style.background='var(--theme-bg-tertiary)'">
+              <span id="table-button">Table</span>
+            </button>
+          </div>
+        </div>
+        <div id="chart"></div>
+      </div>
+    </div>
+
+    
+
+    <div class="table-container">
+      <div class="table-header" style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
+        <h3 id="recent-events-heading">Recent Aircraft Events</h3>
+        <label class="small" style="display:flex;align-items:center;gap:0.5rem;">
+          <span id="events-view-label" data-translate="events_view">Show</span>
+          <select id="eventsView" style="background:var(--theme-bg-tertiary);color:var(--theme-text-primary);border:1px solid var(--theme-border);padding:6px 8px;border-radius:0;">
+            <option value="zone" data-translate="events_view_zone">In the zone</option>
+            <option value="measured" data-translate="events_view_measured">Measured only</option>
+            <option value="all" data-translate="events_view_all">All within range</option>
+          </select>
+        </label>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-img" onclick="sortTable('image')"><span id="sort-image">Image</span></th>
+              <th class="col-callsign" onclick="sortTable('callsign')"><span id="sort-callsign">Callsign</span> <span class="sort-arrow"></span></th>
+              <th class="col-time" onclick="sortTable('time')"><span id="sort-time">Time</span> <span class="sort-arrow">↓</span></th>
+              <th class="col-dist col-num" onclick="sortTable('distance')"><span id="sort-distance">Distance</span> <span class="sort-arrow"></span></th>
+              <th class="col-alt col-num" onclick="sortTable('altitude')"><span id="sort-altitude">Altitude</span> <span class="sort-arrow"></span></th>
+              <th class="col-speed col-num" onclick="sortTable('speed')"><span id="sort-speed">Speed</span> <span class="sort-arrow"></span></th>
+              <th class="col-heading col-num" onclick="sortTable('heading')"><span id="sort-heading">Heading</span> <span class="sort-arrow"></span></th>
+              <th class="col-noise col-num" onclick="sortTable('noise')"><span id="sort-noise">Noise</span> <span class="sort-arrow"></span></th>
+              <th class="col-operator" onclick="sortTable('operator')"><span id="sort-operator">Operator</span> <span class="sort-arrow"></span></th>
+              <th class="col-aircraft" onclick="sortTable('manufacturer')"><span id="sort-manufacturer">Aircraft</span> <span class="sort-arrow"></span></th>
+            </tr>
+          </thead>
+          <tbody id="eventsTableBody">
+            <tr>
+              <td colspan="9" class="loading" data-translate="loading_data">Loading data...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <button id="prevPage" onclick="changePage(-1)" data-translate="previous">← Previous</button>
+        <div class="pagination-info" id="paginationInfo">Page 1 of 1</div>
+        <button id="nextPage" onclick="changePage(1)" data-translate="next">Next →</button>
+      </div>
+    </div>
+
+    <!-- Spacing between table and heatmap -->
+    <div style="margin: 2rem 0;"></div>
+
+    <div class="card" id="noiseSummaryCard"></div>
+
+    <div style="margin: 2rem 0;"></div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
+        <h3 id="activity-heatmap-heading">All Logged Planes — Activity Heatmap</h3>
+        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+          <label for="heatMode" class="small" data-translate="view_label">View:</label>
+          <select id="heatMode" style="background:var(--theme-bg-tertiary);color:var(--theme-text-primary);border:1px solid var(--theme-border);padding:6px 8px;border-radius:0;">
+            <option value="day">Day</option>
+            <option value="week" selected>Week</option>
+          </select>
+          <label for="heatDate" class="small" data-translate="date_label">Date:</label>
+          <input type="date" id="heatDate" style="background:var(--theme-bg-tertiary);color:var(--theme-text-primary);border:1px solid var(--theme-border);padding:6px 8px;border-radius:0;" />
+          <button id="heatClear" style="background: var(--theme-bg-tertiary); color: var(--theme-text-muted); border: 1px solid var(--theme-border); padding: 6px 10px; border-radius: 0; cursor: pointer;" data-translate="all_time_button">All time</button>
+        </div>
+      </div>
+      <div class="small" id="heatmap-description">Counts are distinct aircraft per hour • Click squares to see plane details</div>
+      <div class="small mobile-note" style="display: none; color: var(--theme-text-muted); font-style: italic; margin-top: 4px;">
+        <span id="mobile-note">📱 Mobile view - scroll horizontally to see all 24 hours</span>
+      </div>
+      <div class="heatmap-container">
+        <div class="heat-hours" id="heatHours"></div>
+        <div class="heat-grid" id="planesHeatmap" aria-label="Planes activity heatmap"></div>
+      </div>
+      <div class="small" id="heatLegend" style="margin-top:8px;"></div>
+    </div>
+
+    <section class="card station-notes" id="stationNotes" hidden>
+      <h3>About this station</h3>
+      <div id="stationNotesBody"></div>
+    </section>
+
+    <!-- Plane Details Modal -->
+    <div id="planeDetailsModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+      <div style="background: var(--theme-bg-secondary); margin: 5% auto; padding: 20px; border: 1px solid var(--theme-border); border-radius: 0; width: 90%; max-width: 800px; max-height: 80vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 id="modalTitle" style="margin: 0; color: var(--theme-text-primary);">Plane Details</h3>
+          <button id="closeModal" style="background: var(--theme-bg-tertiary); color: var(--theme-text-muted); border: 1px solid var(--theme-border); padding: 8px 12px; border-radius: 0; cursor: pointer;">✕</button>
+        </div>
+        <div id="modalContent" style="color: var(--theme-text-primary);">
+          Loading...
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Disclaimer Modal -->
+  <div id="disclaimer-modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+    <div style="background: var(--theme-bg-secondary); margin: 5% auto; padding: 30px; border: 1px solid var(--theme-border); border-radius: 0; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="margin: 0; color: var(--theme-text-primary);" id="disclaimer-title">Disclaimer</h3>
+        <button id="close-disclaimer" style="background: var(--theme-bg-tertiary); color: var(--theme-text-muted); border: 1px solid var(--theme-border); padding: 8px 12px; border-radius: 0; cursor: pointer;">✕</button>
+      </div>
+      <div style="color: var(--theme-text-primary); line-height: 1.6;">
+        <p><strong data-translate="disclaimer_important">Important Notice:</strong></p>
+        <p data-translate="disclaimer_text_1">This website and all data presented herein are provided for informational purposes only. The information is not intended for professional use, legal proceedings, or any official purposes.</p>
+        <p data-translate="disclaimer_text_2">Data accuracy, completeness, and reliability are not guaranteed. Aircraft tracking information, noise measurements, and environmental data should not be considered legally binding or used for regulatory compliance.</p>
+        <p data-translate="disclaimer_text_3">Users are advised to verify any critical information through official sources and consult with appropriate professionals for any decisions based on this data.</p>
+        <p style="margin-top: 20px; font-size: 0.9rem; color: var(--theme-text-muted);">
+          <em data-translate="disclaimer_updated">Last updated: 2025</em>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/vendor/leaflet/leaflet.js"></script>
+  <script src="/static/js/plane-map.js?v=1"></script>
+  <script src="/static/vendor/chartjs/chart.umd.js"></script>
+  <script src="/static/js/noise-summary.js?v=1"></script>
+  <script src="/static/js/translations.js?v=9"></script>
+  <script src="/static/js/translation.js?v=6"></script>
+  <script>
+    // Simple Chart.js loading check
+    console.log('Chart.js loaded:', typeof Chart !== 'undefined');
+    if (typeof Chart !== 'undefined') {
+      console.log('Chart.js version:', Chart.version || 'unknown');
+    }
+    // Data storage
+    let sensorData = [];
+    let aircraftData = [];
+    let events = [];
+    let closestByIcao = {};
+    let map;
+    let _sensorMarker = null;
+    let chart;
+    let currentSettings = {};
+    let currentPage = 1;
+    let itemsPerPage = 20;
+    let currentSort = { field: 'time', direction: 'desc' };
+    let chartType = 'chart'; // 'chart' or 'table' - default to chart
+    let globalHeatmap = {};
+    let currentWeekStart = null;
+    let weekOptions = [];
+    // Keep track of which events are currently visible in the table (current page)
+    let currentPageEvents = [];
+    
+    // Sensor timezone configuration - Netherlands timezone with automatic DST handling
+    window.SENSOR_TIMEZONE = 'Europe/Amsterdam';
+    window.PLANE_PLACE_NAME = 'Netherlands';
+    
+    // Time formatting utility - always 24-hour format with ISO dates
+    function formatTimeUTC(date) {
+        if (!date) return '-';
+        return new Date(date).toLocaleTimeString('en-GB', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+          timeZone: 'UTC'
+        });
+    }
+
+    function formatDateTime(date) {
+        if (!date) return '-';
+        
+        const d = new Date(date);
+        const dateStr = d.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC' }).replace(/\//g, '-');
+        const timeStr = formatTimeUTC(date);
+        return `${dateStr} ${timeStr}`;
+    }
+    
+    // Helper function to format time in sensor timezone (Netherlands time)
+    function formatSensorTime(timestamp) {
+      const utcTime = new Date(timestamp * 1000);
+      return utcTime.toLocaleTimeString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: window.SENSOR_TIMEZONE
+      });
+    }
+    
+    // Helper function to format date in sensor timezone (Netherlands time)
+    function formatSensorDate(timestamp) {
+      const utcTime = new Date(timestamp * 1000);
+      return utcTime.toLocaleDateString('en-GB', { 
+        year: 'numeric', 
+        month: '2-digit', 
+        day: '2-digit',
+        timeZone: window.SENSOR_TIMEZONE
+      }).replace(/\//g, '-');
+    }
+    
+    // Helper function to get current sensor time (Netherlands time)
+    function getCurrentSensorTime() {
+      return new Date();
+    }
+    
+    // Helper function to format current sensor time for display (Netherlands time)
+    function formatCurrentSensorTime() {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('en-GB', { 
+        year: 'numeric', 
+        month: '2-digit', 
+        day: '2-digit',
+        timeZone: window.SENSOR_TIMEZONE
+      }).replace(/\//g, '-');
+      const timeStr = now.toLocaleTimeString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: window.SENSOR_TIMEZONE
+      });
+      return `${dateStr} ${timeStr}`;
+    }
+    
+    // Update sensor time display
+    function updateSensorTime() {
+      const sensorTimeElement = document.getElementById('sensorTime');
+      const statusElement = document.getElementById('sensorTimeStatus');
+      
+      if (sensorTimeElement) {
+        sensorTimeElement.textContent = formatCurrentSensorTime();
+      }
+      // Update header label to reflect current Netherlands timezone
+      const labelEl = document.querySelector('#sensorTimeDisplay div div:first-child + div > div:first-child');
+      if (labelEl) {
+        // Get current timezone offset for Netherlands using a more reliable method
+        const now = new Date();
+        
+        // Create two dates: one in UTC, one in Netherlands timezone
+        const utcTime = new Date(now.toLocaleString("en-US", {timeZone: "UTC"}));
+        const nlTime = new Date(now.toLocaleString("en-US", {timeZone: window.SENSOR_TIMEZONE}));
+        
+        // Calculate offset in hours
+        const offsetMs = nlTime.getTime() - utcTime.getTime();
+        const offsetHours = Math.round(offsetMs / (1000 * 60 * 60));
+        
+        const sign = offsetHours >= 0 ? '+' : '';
+        if (window.translationSystem) {
+          window.translationSystem.updateTimezoneLabel();
+        } else {
+          const place = window.PLANE_PLACE_NAME || 'Netherlands';
+          labelEl.textContent = place + ' Time (UTC' + sign + offsetHours + ')';
+        }
+      }
+      
+      // Add a subtle pulse animation to the status indicator
+      if (statusElement) {
+        statusElement.style.animation = 'none';
+        setTimeout(() => {
+          statusElement.style.animation = 'pulse 0.5s ease-in-out';
+        }, 10);
+      }
+    }
+
+    // Toggle between chart and table view
+    function toggleChartType() {
+      chartType = chartType === 'chart' ? 'table' : 'chart';
+      
+      // Save preference to localStorage
+      localStorage.setItem('chartType', chartType);
+      
+      updateChartButtons();
+      
+      if (chartType === 'table') {
+        // Switch to table view
+        createFallbackChart();
+      } else {
+        // Switch to chart view
+        const chartElement = document.getElementById('chart');
+        if (chartElement) {
+          chartElement.innerHTML = '<canvas id="chartCanvas" style="width: 100%; height: 400px;"></canvas>';
+        }
+        setTimeout(() => {
+          initChart();
+        }, 100);
+      }
+    }
+    
+    // Update chart toggle buttons
+    function updateChartButtons() {
+      const chartToggle = document.getElementById('chartToggle');
+      const tableToggle = document.getElementById('tableToggle');
+      
+      if (chartType === 'chart') {
+        chartToggle.style.background = 'var(--theme-accent)';
+        chartToggle.style.color = 'white';
+        chartToggle.style.border = 'none';
+        tableToggle.style.background = 'var(--theme-bg-tertiary)';
+        tableToggle.style.color = 'var(--theme-text-muted)';
+        tableToggle.style.border = '1px solid var(--theme-border)';
+      } else {
+        tableToggle.style.background = 'var(--theme-accent)';
+        tableToggle.style.color = 'white';
+        tableToggle.style.border = 'none';
+        chartToggle.style.background = 'var(--theme-bg-tertiary)';
+        chartToggle.style.color = 'var(--theme-text-muted)';
+        chartToggle.style.border = '1px solid var(--theme-border)';
+      }
+    }
+
+    // Initialize the application
+    async function init() {
+      try {
+        console.log('Initializing application...');
+        
+        // Load saved chart type preference (default to chart if no preference)
+        const savedChartType = localStorage.getItem('chartType');
+        if (savedChartType) {
+          chartType = savedChartType;
+        } else {
+          // Set default to chart view
+          chartType = 'chart';
+          localStorage.setItem('chartType', 'chart');
+        }
+        
+        // Wait for DOM to be fully loaded with timeout
+        if (document.readyState !== 'complete') {
+          console.log('Waiting for DOM to be complete...');
+          await new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+              console.warn('DOM ready timeout, proceeding anyway...');
+              resolve();
+            }, 5000);
+            
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', () => {
+                clearTimeout(timeout);
+                resolve();
+              });
+            } else {
+              clearTimeout(timeout);
+              resolve();
+            }
+          });
+        }
+        
+        console.log('DOM ready, proceeding with initialization...');
+        
+        // Load settings
+        await loadVisitorSettings();
+        
+        // Initialize map
+        initMap();
+        
+        // Load initial data first
+        await loadData();
+
+        // Load mini stats
+        await loadTodayStats();
+        NoiseSummary.mount({
+          cardId: 'noiseSummaryCard', loudestTileId: 'todayLoudest', days: 14, timeFn: formatSensorTime,
+          labels: Object.fromEntries(Object.keys(NoiseSummary.DEFAULT_LABELS).map(k => {
+            const v = window.t ? window.t('noise_' + k) : null;
+            return [k, (v && v !== 'noise_' + k) ? v : NoiseSummary.DEFAULT_LABELS[k]];
+          })),
+        });
+
+        // Initialize week selection
+        initializeWeekSelection();
+        
+        // Load planes heatmap
+        await loadPlanesHeatmap();
+        
+        // Initialize sensor time display
+        updateSensorTime();
+        setInterval(updateSensorTime, 1000); // Update every second
+        
+        // Initialize chart after data is loaded
+        setTimeout(() => {
+          if (chartType === 'chart') {
+            console.log('Initializing chart after data load...');
+            console.log('Sensor data available:', sensorData ? sensorData.length : 0, 'points');
+            initChart();
+            updateChartButtons();
+            
+            // Force chart to be visible and properly sized
+            setTimeout(() => {
+              if (chart) {
+                console.log('Chart created, forcing resize and update...');
+                chart.resize();
+                // Update with loaded data
+                console.log('Updating chart with data...');
+                updateChart();
+              } else {
+                console.error('Chart creation failed!');
+              }
+            }, 200);
+          } else {
+            console.log('Chart type is table, creating table view');
+            createFallbackChart();
+            updateChartButtons();
+          }
+        }, 500);
+        
+        // Set up periodic refresh (just for display updates)
+        setInterval(loadData, 10000); // Refresh every 10 seconds
+        // Refresh mini stats less frequently
+        setInterval(loadTodayStats, 60000); // Every 60 seconds
+        // Refresh heatmap periodically (lightweight)
+        setInterval(loadPlanesHeatmap, 300000); // Every 5 minutes
+        
+        // Re-render heatmap on window resize for mobile responsiveness
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            if (globalHeatmap && Object.keys(globalHeatmap).length > 0) {
+              renderPlanesHeatmap();
+            }
+          }, 250);
+        });
+
+        // Re-render heatmap when theme changes
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+              if (globalHeatmap && Object.keys(globalHeatmap).length > 0) {
+                renderPlanesHeatmap();
+              }
+            }
+          });
+        });
+        observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
+        
+        // Initialize button states
+        updateChartButtons();
+        
+        // Listen for language changes
+        window.addEventListener('languageChanged', (event) => {
+          console.log('Language changed to:', event.detail.language);
+          // Update dynamic content that might have changed
+          updateHeaderDisplay();
+          if (globalHeatmap && Object.keys(globalHeatmap).length > 0) {
+            renderPlanesHeatmap();
+          }
+        });
+        
+        console.log('Application initialized successfully');
+        
+      } catch (error) {
+        console.error('Failed to initialize:', error);
+        showError('Failed to load data. Please refresh the page.');
+      }
+    }
+
+    // Load today's compact stats from /admin/stats
+    async function loadTodayStats() {
+      try {
+        const res = await fetch('/admin/stats');
+        if (!res.ok) return;
+        const payload = await res.json();
+        const stats = payload.stats || payload || {};
+        const today = stats.today || {};
+        const avg = today.avg_noise_db;
+        const closest = today.closest_approach_km;
+        const avgEl = document.getElementById('todayAvgNoise');
+        const closeEl = document.getElementById('todayClosestApproach');
+        if (avgEl) avgEl.textContent = (typeof avg === 'number' ? avg.toFixed(1) + ' dB' : '–');
+        if (closeEl) closeEl.textContent = (typeof closest === 'number' && closest > 0 ? closest.toFixed(2) + ' km' : '–');
+      } catch (e) {
+        // Silently ignore; public page should remain clean
+      }
+    }
+
+    function applyPlaceSettings(settings) {
+      if (!settings) return;
+      if (settings.timezone) window.SENSOR_TIMEZONE = settings.timezone;
+      if (settings.place_name) window.PLANE_PLACE_NAME = settings.place_name;
+      const flag = document.getElementById('placeFlag');
+      if (flag && /^[a-z]{2}$/.test(settings.country || '')) {
+        flag.src = '/static/flags/4x3/' + settings.country + '.svg';
+        flag.alt = settings.place_name || settings.country;
+      }
+      if (window.translationSystem) window.translationSystem.updateTimezoneLabel();
+      else if (typeof updateSensorTime === 'function') updateSensorTime();
+      renderStationNotes(settings.station_notes);
+      const credit = document.getElementById('weather-credit');
+      if (credit && Object.prototype.hasOwnProperty.call(settings, 'weather_advice')) {
+        credit.hidden = settings.weather_advice === false;
+      }
+    }
+
+    function renderStationNotes(notes) {
+      const section = document.getElementById('stationNotes');
+      const body = document.getElementById('stationNotesBody');
+      if (!section || !body) return;
+      body.replaceChildren();
+      const list = Array.isArray(notes) ? notes : [];
+      list.forEach(function (note) {
+        if (!note || !note.title) return;
+        const block = document.createElement('div');
+        block.className = 'station-note';
+        const heading = document.createElement('h4');
+        heading.textContent = note.title;
+        block.appendChild(heading);
+        if (note.body) {
+          const copy = document.createElement('p');
+          copy.textContent = note.body;
+          block.appendChild(copy);
+        }
+        body.appendChild(block);
+      });
+      section.hidden = body.childElementCount === 0;
+      const first = list.find(function (note) { return note && note.title; });
+      const mark = document.getElementById('stationMark');
+      const mapStation = document.getElementById('mapStation');
+      const mapTitle = document.getElementById('mapStationTitle');
+      const mapBody = document.getElementById('mapStationBody');
+      if (mark) {
+        mark.textContent = first ? first.title : '';
+        mark.hidden = !first;
+      }
+      if (mapStation && mapTitle && mapBody) {
+        mapTitle.textContent = first ? first.title : '';
+        mapBody.textContent = first && first.body ? first.body : '';
+        mapBody.hidden = !(first && first.body);
+        mapStation.hidden = !first;
+      }
+      if (first) document.title = first.title + ' — Aircraft Noise';
+    }
+
+    // Load visitor settings
+    async function loadVisitorSettings() {
+      try {
+        const response = await fetch('/visitor/settings');
+        if (response.ok) {
+          currentSettings = await response.json();
+          applyPlaceSettings(currentSettings);
+          if (window.applyMapZoom) window.applyMapZoom();  // the zone may have been drawn before the settings arrived
+        }
+        
+        // Also load actual detection zone to show accurate info
+        const detectionResponse = await fetch('/api/detection_zone');
+        if (detectionResponse.ok) {
+          const detectionZone = await detectionResponse.json();
+          currentSettings.detectionZone = detectionZone;
+        }
+        
+        updateHeaderDisplay();
+      } catch (error) {
+        console.error('Failed to load settings:', error);
+        // Use defaults
+        currentSettings = { radius_km: 8, altitude_max_m: 2000 };
+        updateHeaderDisplay();
+      }
+    }
+
+
+    // Update header display
+    function updateHeaderDisplay() {
+      try {
+        const infoElement = document.getElementById('radius-altitude-info');
+        if (!infoElement) return;
+        
+        // Show actual detection zone info instead of bogus visitor settings
+        if (currentSettings.detectionZone) {
+          const zone = currentSettings.detectionZone;
+          
+          if (zone.zone_type === 'polygon') {
+            // Use area from database
+            const areaKm2 = zone.area_km2 ? zone.area_km2.toFixed(1) : '0.0';
+            const altitude = currentSettings.altitude_max_m || 2000;
+            
+            // Set the data attributes for translation system
+            infoElement.setAttribute('data-translate', 'polygon_altitude_info');
+            infoElement.setAttribute('data-area', areaKm2);
+            infoElement.setAttribute('data-altitude', altitude);
+            
+            // Let translation system handle the display
+            if (window.translationSystem) {
+              window.translationSystem.updateRadiusAltitudeInfo(window.translationSystem.translations[window.translationSystem.getCurrentLanguage()]);
+            }
+          } else {
+            // Show actual inner circle radius
+            const radius = zone.radius_km || 2.5;
+            const altitude = currentSettings.altitude_max_m || 2000;
+            
+            // Set the data attributes for translation system
+            infoElement.setAttribute('data-translate', 'radius_altitude_info');
+            infoElement.setAttribute('data-radius', radius);
+            infoElement.setAttribute('data-altitude', altitude);
+            
+            // Let translation system handle the display
+            if (window.translationSystem) {
+              window.translationSystem.updateRadiusAltitudeInfo(window.translationSystem.translations[window.translationSystem.getCurrentLanguage()]);
+            }
+          }
+        } else {
+          // Fallback to visitor settings
+          const radius = currentSettings.radius_km || 8;
+          const altitude = currentSettings.altitude_max_m || 2000;
+          
+          // Set the data attributes for translation system
+          infoElement.setAttribute('data-translate', 'radius_altitude_info');
+          infoElement.setAttribute('data-radius', radius);
+          infoElement.setAttribute('data-altitude', altitude);
+          
+          // Let translation system handle the display
+          if (window.translationSystem) {
+            window.translationSystem.updateRadiusAltitudeInfo(window.translationSystem.translations[window.translationSystem.getCurrentLanguage()]);
+          }
+        }
+      } catch (error) {
+        console.error('Error in updateHeaderDisplay:', error);
+      }
+    }
+
+    // Load data from database
+    async function loadData() {
+      try {
+        console.log('Loading data...');
+        
+        // Load events from database with retry logic
+        let eventsLoaded = false;
+        let retryCount = 0;
+        const maxRetries = 3;
+        
+        while (!eventsLoaded && retryCount < maxRetries) {
+          try {
+            const eventsResponse = await fetch('/recent_events?limit=1000', {
+              cache: 'no-cache',
+              headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
+              }
+            });
+            console.log('Events response status:', eventsResponse.status);
+            
+            if (eventsResponse.ok) {
+              const data = await eventsResponse.json();
+              events = data.events || [];
+              console.log('Loaded events:', events.length);
+              
+              // Build per-aircraft closest distance cache from recorded closest_approach events
+              closestByIcao = {};
+              for (const e of events) {
+                if (e && e.type === 'closest_approach' && typeof e.distance_km === 'number' && e.icao24) {
+                  const prev = closestByIcao[e.icao24];
+                  if (prev === undefined || e.distance_km < prev) {
+                    closestByIcao[e.icao24] = e.distance_km;
+                  }
+                }
+              }
+              displayEvents();
+              eventsLoaded = true;
+            } else {
+              console.warn(`Events request failed with status ${eventsResponse.status}, retry ${retryCount + 1}/${maxRetries}`);
+              retryCount++;
+              if (retryCount < maxRetries) {
+                await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+              }
+            }
+          } catch (fetchError) {
+            console.warn(`Events fetch error, retry ${retryCount + 1}/${maxRetries}:`, fetchError);
+            retryCount++;
+            if (retryCount < maxRetries) {
+              await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+            }
+          }
+        }
+        
+        if (!eventsLoaded) {
+          console.error('Failed to load events after all retries');
+          events = [];
+        }
+
+        // Load recent noise data from backend-only endpoint (no upstream calls)
+        let noiseLoaded = false;
+        retryCount = 0;
+        
+        while (!noiseLoaded && retryCount < maxRetries) {
+          try {
+            const sensorResponse = await fetch('/api/noise/recent?limit=1000', {
+              cache: 'no-cache',
+              headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
+              }
+            });
+            console.log('Noise recent status:', sensorResponse.status);
+            
+            if (sensorResponse.ok) {
+              const payload = await sensorResponse.json();
+              const recent = Array.isArray(payload) ? payload : (payload?.data || []);
+              // Map to historical format expected by chart code: {timestamp, value}
+              sensorData = recent.map(d => ({ timestamp: d.timestamp, value: d.value }));
+              console.log('Loaded noise samples:', sensorData.length);
+              noiseLoaded = true;
+            } else {
+              console.warn(`Noise request failed with status ${sensorResponse.status}, retry ${retryCount + 1}/${maxRetries}`);
+              retryCount++;
+              if (retryCount < maxRetries) {
+                await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+              }
+            }
+          } catch (fetchError) {
+            console.warn(`Noise fetch error, retry ${retryCount + 1}/${maxRetries}:`, fetchError);
+            retryCount++;
+            if (retryCount < maxRetries) {
+              await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+            }
+          }
+        }
+        
+        if (!noiseLoaded) {
+          console.warn('Failed to load recent noise after all retries');
+          sensorData = [];
+        }
+
+        // The map was drawn by displayEvents(); the noise samples do not change it.
+
+        // Ensure noise chart refreshes on every data reload
+        try {
+          if (chartType === 'chart') {
+            if (!chart) {
+              console.log('Chart not initialized, creating chart...');
+              initChart();
+            }
+            updateChart();
+          } else {
+            // Table fallback view
+            updateFallbackChart();
+          }
+        } catch (e) {
+          console.error('Chart refresh after loadData failed:', e);
+        }
+
+      } catch (error) {
+        console.error('Failed to load data:', error);
+        // Show user-friendly error message
+        const loadingElement = document.querySelector('.loading');
+        if (loadingElement) {
+          loadingElement.textContent = 'Failed to load data. Please refresh the page.';
+          loadingElement.style.color = 'var(--theme-error)';
+        }
+      }
+    }
+
+    function signalColor() {
+      return (window.themeManager && window.themeManager.token('theme-accent')) || '#e2a122';
+    }
+
+    function signalFill() {
+      return (window.themeManager && window.themeManager.rgba('theme-accent', 0.12)) || 'rgba(226, 161, 34, 0.12)';
+    }
+
+    function chartInk() {
+      return (window.themeManager && window.themeManager.token('theme-text-secondary')) || '#5c574e';
+    }
+
+    function chartGrid() {
+      return (window.themeManager && window.themeManager.token('theme-border-light')) || 'rgba(20, 22, 15, 0.28)';
+    }
+
+    function applyChartChrome() {
+      if (!chart || !chart.options) return;
+      const ink = chartInk();
+      const grid = chartGrid();
+      chart.options.color = ink;
+      const labels = chart.options.plugins && chart.options.plugins.legend && chart.options.plugins.legend.labels;
+      if (labels) labels.color = ink;
+      ['x', 'y'].forEach(function (axis) {
+        const scale = chart.options.scales && chart.options.scales[axis];
+        if (!scale) return;
+        if (scale.grid) scale.grid.color = grid;
+        if (scale.ticks) scale.ticks.color = ink;
+        if (scale.title) scale.title.color = ink;
+        if (scale.border) scale.border.color = grid;
+      });
+    }
+
+    function colorForHeat(n, max){
+      const ratio = Math.min(1, (n || 0) / Math.max(1, max));
+      if (window.themeManager) return window.themeManager.heatColor(ratio);
+      return signalColor();
+    }
+
+    function getThemeColor(varName){
+      const val = getComputedStyle(document.documentElement).getPropertyValue(varName).trim() ||
+                  getComputedStyle(document.body).getPropertyValue(varName).trim();
+      return parseColor(val || '#888888');
+    }
+
+    function getFirstThemeColor(){
+      for(let i=0;i<arguments.length;i++){
+        const c = getThemeColor(arguments[i]);
+        if(c) return c;
+      }
+      return {r:136,g:136,b:136};
+    }
+
+    function parseColor(str){
+      if(!str) return {r:136,g:136,b:136};
+      if(str.startsWith('#')){
+        return hexToRgb(str);
+      }
+      if(str.startsWith('rgb')){
+        const m = str.match(/rgb[aA]?\(([^)]+)\)/);
+        if(m){
+          const parts = m[1].split(',').map(s=>parseFloat(s.trim()));
+          return {r:Math.round(parts[0]||0), g:Math.round(parts[1]||0), b:Math.round(parts[2]||0)};
+        }
+      }
+      // Fallback: try to let browser resolve named color
+      const tmp = document.createElement('span');
+      tmp.style.color = str; document.body.appendChild(tmp);
+      const cs = getComputedStyle(tmp).color; document.body.removeChild(tmp);
+      const mm = cs.match(/rgb[aA]?\(([^)]+)\)/);
+      if(mm){
+        const parts = mm[1].split(',').map(s=>parseFloat(s.trim()));
+        return {r:Math.round(parts[0]||0), g:Math.round(parts[1]||0), b:Math.round(parts[2]||0)};
+      }
+      return {r:136,g:136,b:136};
+    }
+
+    function hexToRgb(hex){
+      let h = hex.replace('#','');
+      if(h.length===3){ h = h.split('').map(c=>c+c).join(''); }
+      const num = parseInt(h,16);
+      return { r:(num>>16)&255, g:(num>>8)&255, b:num&255 };
+    }
+
+    function lerp(a,b,t){ return a + (b-a)*t; }
+    function lerpRgb(a,b,t){ return { r:Math.round(lerp(a.r,b.r,t)), g:Math.round(lerp(a.g,b.g,t)), b:Math.round(lerp(a.b,b.b,t)) }; }
+
+
+    // Initialize selection controls (default to week mode and today)
+    function initializeWeekSelection() {
+      const mode = document.getElementById('heatMode');
+      const dateInput = document.getElementById('heatDate');
+      if (!mode || !dateInput) return;
+      // Default date = today
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      dateInput.value = `${yyyy}-${mm}-${dd}`;
+      mode.value = 'week';
+    }
+
+    // Get week start date for a given date
+    function getWeekStart(date) {
+      const d = new Date(date);
+      // Make Monday the first day of week
+      const day = d.getDay(); // 0 = Sun, 1 = Mon, ...
+      const offset = (day + 6) % 7; // Mon->0, Tue->1, ..., Sun->6
+      d.setHours(0,0,0,0);
+      d.setDate(d.getDate() - offset);
+      return d;
+    }
+
+    // Helpers to avoid UTC shifting with input type=date
+    function formatDateForAPI(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+    function parseInputDateLocal(val) {
+      if (!val) return new Date();
+      const parts = val.split('-').map(n => parseInt(n, 10));
+      if (parts.length === 3 && !Number.isNaN(parts[0])) {
+        return new Date(parts[0], parts[1]-1, parts[2]);
+      }
+      return new Date(val);
+    }
+
+    async function loadPlanesHeatmap(){
+      try {
+        const dateInput = document.getElementById('heatDate');
+        const mode = document.getElementById('heatMode');
+        
+        // Week mode: one range request. The server applies the same overhead-only
+        // rule per day and per range, so a week equals the sum of its days.
+        if (mode && mode.value === 'week') {
+          const base = (dateInput && dateInput.value) ? parseInputDateLocal(dateInput.value) : new Date();
+          const weekStart = getWeekStart(base);
+          const weekEnd = new Date(weekStart);
+          weekEnd.setDate(weekStart.getDate() + 6);
+          const url = `/api/stats/planes/heatmap?start_date=${encodeURIComponent(formatDateForAPI(weekStart))}&end_date=${encodeURIComponent(formatDateForAPI(weekEnd))}&_ts=${Date.now()}`;
+          const res = await fetch(url);
+          if (!res.ok) return;
+          const j = await res.json();
+          globalHeatmap = j.heatmap || { '0': {}, '1': {}, '2': {}, '3': {}, '4': {}, '5': {}, '6': {} };
+        } else {
+          // Day mode
+          let dateVal = '';
+          const base = (dateInput && dateInput.value) ? parseInputDateLocal(dateInput.value) : new Date();
+          dateVal = `?date=${encodeURIComponent(formatDateForAPI(base))}`;
+          const res = await fetch(`/api/stats/planes/heatmap${dateVal}&_ts=${Date.now()}`);
+          if(!res.ok) return;
+          const j = await res.json();
+          globalHeatmap = j.heatmap || {};
+        }
+        renderPlanesHeatmap();
+      } catch(e){
+        console.error('Failed to load heatmap:', e);
+      }
+    }
+
+    async function loadPlanesHeatmapAllTime(){
+      try {
+        console.log('Loading all-time heatmap data...');
+        // Fetch all-time data (no date parameters)
+        const res = await fetch(`/api/stats/planes/heatmap?_ts=${Date.now()}`);
+        if(!res.ok) {
+          console.error('Failed to fetch all-time heatmap data');
+          return;
+        }
+        const j = await res.json();
+        globalHeatmap = j.heatmap || {};
+        console.log('All-time heatmap data loaded:', globalHeatmap);
+        renderPlanesHeatmap();
+      } catch(e){
+        console.error('Failed to load all-time heatmap:', e);
+      }
+    }
+
+    function renderPlanesHeatmap(){
+      const container = document.getElementById('planesHeatmap');
+      const hoursEl = document.getElementById('heatHours');
+      if(!container || !hoursEl) return;
+      container.innerHTML = '';
+      hoursEl.innerHTML = '';
+      
+      // Detect mobile screen size
+      const isMobile = window.innerWidth <= 768;
+      
+      // Show/hide mobile note
+      const mobileNote = document.querySelector('.mobile-note');
+      if (mobileNote) {
+        mobileNote.style.display = (isMobile) ? 'block' : 'none';
+      }
+      
+      // Always show all 24 hours - mobile will scroll horizontally
+      const hoursToShow = 24;
+      
+      // Hours header
+      const spacer = document.createElement('span');
+      spacer.textContent = '';
+      hoursEl.appendChild(spacer);
+      
+      for(let h=0; h<hoursToShow; h++){
+        const s = document.createElement('span');
+        s.textContent = String(h);
+        hoursEl.appendChild(s);
+      }
+      // Compute max for scaling - use a consistent scale for better color consistency
+      let maxVal = 1;
+      for(const d of Object.keys(globalHeatmap)){
+        const row = globalHeatmap[d]||{};
+        for(const v of Object.values(row)) maxVal = Math.max(maxVal, Number(v)||0);
+      }
+      
+      // Use a consistent maximum scale to prevent color changes when switching views
+      // This ensures the same value always gets the same color regardless of dataset
+      const consistentMaxVal = Math.max(maxVal, 50); // Minimum scale of 50 for consistency
+      // Determine if selected range is the current week to hide future cells
+      const modeSel = document.getElementById('heatMode');
+      const dateInput = document.getElementById('heatDate');
+      const baseDate = dateInput && dateInput.value ? parseInputDateLocal(dateInput.value) : new Date();
+      const selectedWeekStart = (modeSel && modeSel.value === 'day') ? getWeekStart(baseDate) : getWeekStart(baseDate);
+      const nowUtc = new Date();
+      const nowLocal = new Date(nowUtc.toLocaleString("en-US", {timeZone: window.SENSOR_TIMEZONE}));
+      const currentWeekStart = getWeekStart(nowLocal);
+      // Don't blank future cells for all-time data (when no date is selected)
+      const isCurrentWeek = dateInput && dateInput.value && selectedWeekStart.toDateString() === currentWeekStart.toDateString();
+      const currentDayIdxMon0 = (nowLocal.getDay() + 6) % 7; // 0=Mon (Monday-first index)
+      const currentHourLocal = nowLocal.getHours();
+
+      // Start week on Monday (logical order) but map to correct data structure
+      const dayOrder = [1,2,3,4,5,6,0]; // Mon..Sun (visual order)
+      const dayNames = (window.translationSystem && window.translationSystem.translations && window.translationSystem.translations[window.translationSystem.currentLanguage]) ? 
+        window.translationSystem.translations[window.translationSystem.currentLanguage].days_short : 
+        ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+      for(let idx=0; idx<7; idx++){
+        const d = dayOrder[idx];
+        const row = document.createElement('div');
+        row.className = 'heat-row';
+        const label = document.createElement('div');
+        label.className = 'heat-label';
+        // Map JavaScript day numbers (0=Sun, 1=Mon, etc.) to our day names array (0=Sun, 1=Mon, etc.)
+        // dayOrder is [1,2,3,4,5,6,0] = [Mon,Tue,Wed,Thu,Fri,Sat,Sun]
+        // days_short is [Sun,Mon,Tue,Wed,Thu,Fri,Sat] = [0,1,2,3,4,5,6]
+        // So d directly maps to the correct index in days_short
+        label.textContent = dayNames[d];
+        container.appendChild(label);
+        const mapRow = globalHeatmap[String(d)] || {};
+        for(let h=0; h<hoursToShow; h++){
+          const key = String(h).padStart(2,'0');
+          let n = Number(mapRow[key]||0);
+          // If we are showing the current week, blank out future cells
+          if (isCurrentWeek) {
+            if (idx > currentDayIdxMon0 || (idx === currentDayIdxMon0 && h > currentHourLocal)) {
+              n = 0;
+            }
+          }
+          const cell = document.createElement('div');
+          cell.className = 'heat-cell';
+          cell.style.background = colorForHeat(n, consistentMaxVal);
+          cell.setAttribute('role','button');
+          cell.setAttribute('aria-label', `${dayNames[idx]} ${h}:00 seen ${n} aircraft`);
+          cell.title = `${dayNames[idx]} ${h}:00 — ${n} aircraft (click for details)`;
+          cell.textContent = n > 0 ? String(n) : '';
+          // ensure contrast - theme-specific text colors for ALL values including 0
+          const ratio = Math.min(1, n/Math.max(1, consistentMaxVal));
+          const ink = window.themeManager ? window.themeManager.heatInk(ratio) : '#000000';
+          const onPale = window.themeManager && ratio <= window.themeManager.current().heatInkAt && window.themeManager.current().scheme === 'light';
+          cell.style.color = ink;
+          cell.style.textShadow = onPale ? '0 1px 2px rgba(255,255,255,0.75)' : '0 1px 3px rgba(0,0,0,0.85)';
+          
+          // Add click handler for plane details
+          if(n > 0) {
+            cell.addEventListener('click', () => showPlaneDetails(d, h, n));
+          }
+          
+          container.appendChild(cell);
+        }
+      }
+      const legend = document.getElementById('heatLegend');
+      if(legend) legend.textContent = `Max per hour across days: ${maxVal} (scale: ${consistentMaxVal})`;
+    }
+
+    // Show plane details modal
+    async function showPlaneDetails(dayOfWeek, hour, count) {
+      const modal = document.getElementById('planeDetailsModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalContent = document.getElementById('modalContent');
+      
+      if (!modal || !modalTitle || !modalContent) return;
+      
+      const dayNames = (window.translationSystem && window.translationSystem.translations && window.translationSystem.translations[window.translationSystem.currentLanguage]) ? 
+        window.translationSystem.translations[window.translationSystem.currentLanguage].days : 
+        ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const dayName = dayNames[dayOfWeek];
+      const timeStr = `${hour.toString().padStart(2, '0')}:00`;
+      
+      modalTitle.textContent = window.t ? window.t('aircraft_on_day', { day: dayName, time: timeStr }) : `Aircraft on ${dayName} at ${timeStr}`;
+      modalContent.innerHTML = `<div style="text-align: center; padding: 20px;">${window.t ? window.t('loading_aircraft') : 'Loading aircraft details...'}</div>`;
+      modal.style.display = 'block';
+      
+      try {
+        // Determine selected date and mode
+        const dateInput = document.getElementById('heatDate');
+        const modeSel = document.getElementById('heatMode');
+        let startDate, endDate;
+        if (modeSel && modeSel.value === 'day' && dateInput && dateInput.value) {
+          startDate = parseInputDateLocal(dateInput.value);
+          endDate = parseInputDateLocal(dateInput.value);
+        } else {
+          const base = (dateInput && dateInput.value) ? parseInputDateLocal(dateInput.value) : new Date();
+          startDate = getWeekStart(base);
+          endDate = new Date(startDate);
+          endDate.setDate(startDate.getDate() + 6);
+        }
+        
+        // Calculate the specific date for this day of week
+        const targetDate = new Date(startDate);
+        const currentDayOfWeek = targetDate.getDay();
+        const daysToAdd = (dayOfWeek - currentDayOfWeek + 7) % 7;
+        targetDate.setDate(targetDate.getDate() + daysToAdd);
+        
+        const dateStr = formatDateForAPI(targetDate);
+        const hourStr = hour.toString().padStart(2, '0');
+        
+        // Fetch aircraft data for this specific day and hour
+        const response = await fetch(`/api/stats/planes/details?date=${dateStr}&hour=${hourStr}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch aircraft details');
+        }
+        
+        const data = await response.json();
+        const aircraft = data.aircraft || [];
+        
+        // Sort aircraft by timestamp (earliest first)
+        aircraft.sort((a, b) => a.timestamp - b.timestamp);
+        
+        if (aircraft.length === 0) {
+          modalContent.innerHTML = `
+            <div style="text-align: center; padding: 20px; color: var(--theme-text-muted);">
+              <h4>${window.t ? window.t('no_aircraft_found') : 'No aircraft data found'}</h4>
+              <p>${window.t ? window.t('no_aircraft_recorded', { day: dayName, time: timeStr }) : `No aircraft were recorded for ${dayName} at ${timeStr}`}</p>
+            </div>
+          `;
+        } else {
+          let html = `
+            <div style="margin-bottom: 15px;">
+              <strong>${window.t ? window.t('found_aircraft', { count: aircraft.length, day: dayName, time: timeStr }) : `Found ${aircraft.length} aircraft on ${dayName} at ${timeStr}`}</strong>
+            </div>
+            <div style="max-height: 400px; overflow-y: auto;">
+              <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr style="background: var(--theme-bg-tertiary);">
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--theme-border);">${window.t ? window.t('callsign') : 'Callsign'}</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--theme-border);">${window.t ? window.t('time') : 'Time'}</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--theme-border);">${window.t ? window.t('distance') : 'Distance'}</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--theme-border);">${window.t ? window.t('altitude') : 'Altitude'}</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--theme-border);">${window.t ? window.t('aircraft') : 'Aircraft'}</th>
+                  </tr>
+                </thead>
+                <tbody>
+          `;
+          
+          aircraft.forEach(plane => {
+            const time = formatSensorTime(plane.timestamp);
+            const distance = plane.distance_km ? `${plane.distance_km.toFixed(2)} km` : 'N/A';
+            const altitude = plane.altitude_m ? `${plane.altitude_m} m` : 'N/A';
+            const aircraftType = plane.manufacturer && plane.model ?
+              `${plane.manufacturer} ${plane.model}` :
+              (plane.model || plane.manufacturer || 'Unknown');
+            
+            // Make callsign clickable if it exists
+            const callsignDisplay = plane.callsign ? 
+              `<a href="/callsign.html?c=${encodeURIComponent(plane.callsign)}" target="_blank">${plane.callsign}</a>` : 
+              'N/A';
+            
+            html += `
+              <tr style="border-bottom: 1px solid var(--theme-border);">
+                <td style="padding: 8px;">${callsignDisplay}</td>
+                <td style="padding: 8px;">${time}</td>
+                <td style="padding: 8px;">${distance}</td>
+                <td style="padding: 8px;">${altitude}</td>
+                <td style="padding: 8px;">${aircraftType}</td>
+              </tr>
+            `;
+          });
+          
+          html += `
+                </tbody>
+              </table>
+            </div>
+          `;
+          
+          modalContent.innerHTML = html;
+        }
+        
+      } catch (error) {
+        console.error('Error loading plane details:', error);
+        modalContent.innerHTML = `
+          <div style="text-align: center; padding: 20px; color: var(--theme-warning);">
+            <h4>${window.t ? window.t('error_loading_details') : 'Error loading aircraft details'}</h4>
+            <p>${window.t ? window.t('failed_to_load') : 'Failed to load aircraft data. Please try again.'}</p>
+          </div>
+        `;
+      }
+    }
+
+    // Close modal
+    function closeModal() {
+      const modal = document.getElementById('planeDetailsModal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    // Disclaimer modal functions
+    function showDisclaimer() {
+      const modal = document.getElementById('disclaimer-modal');
+      if (modal) {
+        modal.style.display = 'block';
+      }
+    }
+
+    function closeDisclaimer() {
+      const modal = document.getElementById('disclaimer-modal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    // Heatmap controls
+    document.addEventListener('DOMContentLoaded', () => {
+      const dateInput = document.getElementById('heatDate');
+      const mode = document.getElementById('heatMode');
+      const clearBtn = document.getElementById('heatClear');
+      const closeModalBtn = document.getElementById('closeModal');
+      
+      if(dateInput){ dateInput.addEventListener('change', loadPlanesHeatmap); }
+      const modeSel = document.getElementById('heatMode');
+      if(modeSel){ modeSel.addEventListener('change', loadPlanesHeatmap); }
+      if(clearBtn){ clearBtn.addEventListener('click', () => { 
+        if(dateInput){ dateInput.value=''; } 
+        loadPlanesHeatmapAllTime(); 
+      }); }
+      if(closeModalBtn){ closeModalBtn.addEventListener('click', closeModal); }
+      
+      // Close modal when clicking outside
+      const modal = document.getElementById('planeDetailsModal');
+      if(modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+      }
+
+      // Disclaimer modal controls
+      const disclaimerLink = document.getElementById('disclaimer-link');
+      const closeDisclaimerBtn = document.getElementById('close-disclaimer');
+      const disclaimerModal = document.getElementById('disclaimer-modal');
+      
+      if(disclaimerLink) {
+        disclaimerLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          showDisclaimer();
+        });
+      }
+      
+      if(closeDisclaimerBtn) {
+        closeDisclaimerBtn.addEventListener('click', closeDisclaimer);
+      }
+      
+      if(disclaimerModal) {
+        disclaimerModal.addEventListener('click', (e) => {
+          if (e.target === disclaimerModal) {
+            closeDisclaimer();
+          }
+        });
+      }
+    });
+
+    // Create smooth curved polygon from points
+    function createSmoothPolygon(points) {
+      if (points.length < 3) return points;
+      
+      const smoothPoints = [];
+      const tension = 0.3; // Controls curve smoothness (0.1 = very smooth, 0.5 = less smooth)
+      
+      for (let i = 0; i < points.length; i++) {
+        const prev = points[(i - 1 + points.length) % points.length];
+        const curr = points[i];
+        const next = points[(i + 1) % points.length];
+        const nextNext = points[(i + 2) % points.length];
+        
+        // Add current point
+        smoothPoints.push([curr[0], curr[1]]);
+        
+        // Add smooth curve to next point
+        const cp1x = curr[0] + (next[0] - prev[0]) * tension;
+        const cp1y = curr[1] + (next[1] - prev[1]) * tension;
+        const cp2x = next[0] - (nextNext[0] - curr[0]) * tension;
+        const cp2y = next[1] - (nextNext[1] - curr[1]) * tension;
+        
+        // Generate curve points
+        for (let t = 0.1; t < 1; t += 0.1) {
+          const x = cubicBezier(curr[0], cp1x, cp2x, next[0], t);
+          const y = cubicBezier(curr[1], cp1y, cp2y, next[1], t);
+          smoothPoints.push([x, y]);
+        }
+      }
+      
+      return smoothPoints;
+    }
+    
+    // Cubic Bezier curve calculation
+    function cubicBezier(p0, p1, p2, p3, t) {
+      const u = 1 - t;
+      const tt = t * t;
+      const uu = u * u;
+      const uuu = uu * u;
+      const ttt = tt * t;
+      
+      return uuu * p0 + 3 * uu * t * p1 + 3 * u * tt * p2 + ttt * p3;
+    }
+
+    // ---- Sensor position privacy: the ring wanders around the public position ----
+    // Nothing in this file names the real sensor: the position comes from the zone endpoint.
+    let _publicSensor = null;
+    const MAP_START = [52.2, 4.9];   // a wide view until the zone endpoint answers
+
+    function sensorTooltipText() {
+      const base = (window.t && window.t('noise_sensor') !== 'noise_sensor') ? window.t('noise_sensor') : 'Noise sensor';
+      if (!_publicSensor || !_publicSensor.radius) return base;
+      const note = (window.t && window.t('sensor_privacy_note') !== 'sensor_privacy_note') ? window.t('sensor_privacy_note') : 'shown within {m} m of the real spot';
+      return `${base} · ${note.replace('{m}', String(_publicSensor.radius))}`;
+    }
+
+    function scatterSensorPin() {
+      if (!_sensorMarker || !_publicSensor || !_publicSensor.radius) return;
+      const r = _publicSensor.radius * Math.sqrt(Math.random());
+      const a = 2 * Math.PI * Math.random();
+      const lat = _publicSensor.lat + (r * Math.cos(a)) / 111320;
+      const lon = _publicSensor.lon + (r * Math.sin(a)) / (111320 * Math.cos(_publicSensor.lat * Math.PI / 180));
+      _sensorMarker.setLatLng([lat, lon]);
+    }
+
+    function mapLabels() {
+      const out = {};
+      for (const key of Object.keys(PlaneMap.DEFAULT_LABELS)) {
+        const v = window.t ? window.t('map_' + key) : null;
+        out[key] = (v && v !== 'map_' + key) ? v : PlaneMap.DEFAULT_LABELS[key];
+      }
+      return out;
+    }
+
+    // Initialize map
+    function initMap() {
+      try {
+        console.log('Initializing map...');
+        map = L.map('map').setView(MAP_START, 9);
+        // The admin can pin the public map to one zoom level instead of fitting the zone.
+        window._zoneCenter = null;  // set once the zone is drawn
+        window.applyMapZoom = function () {
+          const z = currentSettings && currentSettings.map_zoom;
+          if (typeof z !== 'number' || !map) return;
+          // Zoom around the station, never around the placeholder start view.
+          const center = _publicSensor ? [_publicSensor.lat, _publicSensor.lon] : window._zoneCenter;
+          if (center) map.setView(center, z);
+        };
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // The sensor as a ring. For privacy it is drawn at the public position the
+        // server gives, and on every zoom or pan it moves to a new random spot within
+        // the privacy radius, so nothing on screen marks the address. Weather popups
+        // read this position; they never move it.
+        map.on('zoomend moveend', scatterSensorPin);
+
+        // Load and display detection zone
+        loadDetectionZone();
+        // Live aircraft from the recorder's last poll: no upstream call per visitor.
+        PlaneMap.startLive(map, { labels: mapLabels(), timeFn: formatSensorTime });
+
+        console.log('Map initialized successfully');
+      } catch (error) {
+        console.error('Failed to initialize map:', error);
+      }
+    }
+
+    // Load and display detection zone
+    async function loadDetectionZone() {
+      try {
+        const response = await fetch('/api/detection_zone');
+        if (response.ok) {
+          const zoneData = await response.json();
+          PlaneMap.drawGate(map, zoneData, mapLabels());
+          if (Array.isArray(zoneData.sensor) && zoneData.sensor.length === 2) {
+            _publicSensor = { lat: Number(zoneData.sensor[0]), lon: Number(zoneData.sensor[1]), radius: Number(zoneData.privacy_jitter_m) || 0 };
+            if (!_sensorMarker) {
+              _sensorMarker = L.circleMarker([_publicSensor.lat, _publicSensor.lon], {
+                radius: 7, color: signalColor(), weight: 3, fillColor: '#ffffff', fillOpacity: 1,
+              }).addTo(map).bindTooltip(sensorTooltipText(), { direction: 'top', offset: [0, -8] });
+            } else {
+              _sensorMarker.setLatLng([_publicSensor.lat, _publicSensor.lon]);
+              _sensorMarker.setTooltipContent(sensorTooltipText());
+            }
+            map.setView([_publicSensor.lat, _publicSensor.lon], (currentSettings && typeof currentSettings.map_zoom === 'number') ? currentSettings.map_zoom : 11);
+            scatterSensorPin();
+          }
+
+          if (zoneData.zone_type === 'polygon' && zoneData.points && zoneData.points.length >= 3) {
+            // Create smooth curved polygon using spline interpolation
+            const smoothPoints = createSmoothPolygon(zoneData.points);
+            
+            const polygon = L.polygon(smoothPoints, {
+              color: signalColor(),
+              fillColor: signalColor(),
+              fillOpacity: 0.1,
+              weight: 2,
+              smoothFactor: 1.0,
+              lineCap: 'round',
+              lineJoin: 'round',
+              dashArray: null,
+              className: 'smooth-polygon',
+              renderer: L.svg({ padding: 0.5 })
+            }).addTo(map);
+            
+            // Fit map to polygon bounds
+            map.fitBounds(polygon.getBounds());
+            window._zoneCenter = polygon.getBounds().getCenter();
+            applyMapZoom();
+            console.log('Custom polygon detection zone loaded');
+          } else {
+            // Display circular zone
+            const radius = (zoneData.radius_km || 8) * 1000;
+            window._zoneCenter = zoneData.center || zoneData.sensor || null;
+            L.circle(zoneData.center || zoneData.sensor || MAP_START, {
+              color: signalColor(),
+              fillColor: signalColor(),
+              fillOpacity: 0.1,
+              radius: radius
+            }).addTo(map);
+            applyMapZoom();
+            console.log('Circular detection zone loaded');
+          }
+        } else {
+          // Fallback to default circular zone around whatever position is known
+          const radius = (currentSettings.radius_km || 8) * 1000;
+          if (_publicSensor) L.circle([_publicSensor.lat, _publicSensor.lon], {
+            color: signalColor(),
+            fillColor: signalColor(),
+            fillOpacity: 0.1,
+            radius: radius
+          }).addTo(map);
+          applyMapZoom();
+          console.log('Default circular detection zone loaded');
+        }
+      } catch (error) {
+        console.error('Failed to load detection zone:', error);
+        // Fallback to default circular zone around whatever position is known
+        const radius = (currentSettings.radius_km || 8) * 1000;
+        if (_publicSensor) L.circle([_publicSensor.lat, _publicSensor.lon], {
+          color: signalColor(),
+          fillColor: signalColor(),
+          fillOpacity: 0.1,
+          radius: radius
+        }).addTo(map);
+      }
+    }
+
+    // Helper: the distance shown for a row (rows are already merged per flight)
+    function getDisplayDistanceKm(event) {
+      // Show the distance of this specific event
+      return event ? event.distance_km : undefined;
+    }
+
+    // Update map with aircraft events: one circle per listed flight, coloured
+    // by decibel, plus the recorded flight path where samples exist.
+    function updateMap() {
+      const shown = (currentPageEvents && currentPageEvents.length ? currentPageEvents : events);
+      PlaneMap.drawEvents(map, shown, { labels: mapLabels(), timeFn: formatSensorTime, onClick: focusOnEvent });
+      PlaneMap.drawTracks(map, shown, { labels: mapLabels() });
+    }
+
+    // Same escaping for table cells. The table code calls it by this name.
+    function escapeHtml(value) {
+      return escapePopupText(value);
+    }
+
+    // ---- Image column: photos from planespotters.net, looked up in the browser ----
+    const _photoCache = new Map();      // 'reg:PH-BXA' or 'hex:485A83' -> photo or null
+    const _photoPending = new Map();    // same keys -> promise in flight
+    const PHOTO_WORKERS = 3;
+
+    function aircraftMark(event, label) {
+      const alt = escapeHtml(label || 'Aircraft');
+      const url = String((event && event.image_url) || '');
+      if (/^https:\/\/[^"'<>\s]+$/i.test(url)) {
+        return `<a class="aircraft-photo" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer"><img src="${escapeHtml(url)}" alt="${alt}" loading="lazy"></a>`;
+      }
+      return `<span class="aircraft-thumb aircraft-thumb-empty" title="${alt}" aria-hidden="true">\u2708</span>`;
+    }
+
+    function photoHtml(photo, label) {
+      const credit = photo.photographer ? `\u00a9 ${escapeHtml(photo.photographer)}` : 'planespotters.net';
+      return `<a class="aircraft-photo" href="${escapeHtml(photo.link || '#')}" target="_blank" rel="noopener noreferrer" title="${escapeHtml(label)} \u2013 ${credit}">`
+        + `<img src="${escapeHtml(photo.src)}" alt="${escapeHtml(label)}" loading="lazy">`
+        + `<span class="aircraft-credit">${credit}</span></a>`;
+    }
+
+    function lookupPhoto(kind, key) {
+      const cacheKey = `${kind}:${key}`;
+      if (_photoCache.has(cacheKey)) return Promise.resolve(_photoCache.get(cacheKey));
+      if (_photoPending.has(cacheKey)) return _photoPending.get(cacheKey);
+      let stored = null;
+      // Only found photos are kept for the session. A miss is retried on the next load,
+      // so an earlier failed lookup never hides a photo that exists.
+      try { stored = sessionStorage.getItem('photo:v2:' + cacheKey); } catch (e) { stored = null; }
+      if (stored) {
+        const value = JSON.parse(stored);
+        _photoCache.set(cacheKey, value);
+        return Promise.resolve(value);
+      }
+      // The server asks planespotters.net with its own agent string and caches
+      // the answer, so visitors never call planespotters themselves.
+      const job = (async () => {
+        let photo = null;
+        try {
+          const r = await fetch(`/api/aircraft_photo?${kind}=${encodeURIComponent(key)}`);
+          if (r.ok) {
+            const j = await r.json();
+            if (j && j.src) photo = { src: j.src, link: j.link, photographer: j.photographer };
+          }
+        } catch (e) {
+          photo = null;
+        }
+        _photoCache.set(cacheKey, photo);
+        if (photo) {
+          try { sessionStorage.setItem('photo:v2:' + cacheKey, JSON.stringify(photo)); } catch (e) { /* no storage */ }
+        }
+        _photoPending.delete(cacheKey);
+        return photo;
+      })();
+      _photoPending.set(cacheKey, job);
+      return job;
+    }
+
+    // Fill the image column: by registration first, then by hex. A few at a time.
+    function loadAircraftPhotos() {
+      const cells = Array.from(document.querySelectorAll('#eventsTableBody td.col-img'))
+        .filter(td => !td.querySelector('.aircraft-photo') && (td.dataset.reg || td.dataset.hex));
+      let next = 0;
+      async function worker() {
+        while (next < cells.length) {
+          const td = cells[next++];
+          const label = td.dataset.label || 'Aircraft';
+          let photo = td.dataset.reg ? await lookupPhoto('reg', td.dataset.reg) : null;
+          if (!photo && td.dataset.hex) photo = await lookupPhoto('hex', td.dataset.hex);
+          if (photo && td.isConnected) td.innerHTML = photoHtml(photo, label);
+        }
+      }
+      for (let i = 0; i < PHOTO_WORKERS; i++) worker();
+    }
+
+    function escapePopupText(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    function weatherSentencesHtml(ids) {
+      if (!Array.isArray(ids) || !ids.length) return '';
+      const lines = [];
+      ids.forEach(function (id) {
+        const key = 'weather_' + id;
+        const text = (typeof window.t === 'function') ? window.t('weather_' + id) : key;
+        if (!text || text === key) return;
+        lines.push(escapePopupText(text));
+      });
+      if (!lines.length) return '';
+      return '<br>' + lines.join('<br>');
+    }
+
+    function rowWeatherSentences(row) {
+      return String((row && row.dataset && row.dataset.weatherSentences) || '')
+        .split(',')
+        .map(function (id) { return id.trim(); })
+        .filter(Boolean);
+    }
+
+    function eventFocusPopupHtml(evt, sentenceIds) {
+      const noiseTxt = (typeof evt.spl_db === 'number') ? `${evt.spl_db.toFixed(1)} dB` : 'N/A';
+      const distTxtSrc = getDisplayDistanceKm(evt);
+      const distTxt = (typeof distTxtSrc === 'number') ? `${distTxtSrc.toFixed(2)} km` : 'N/A';
+      const timeTxt = `${formatSensorDate(evt.ts)} ${formatSensorTime(evt.ts)}`;
+      const cs = evt.callsign || 'Unknown';
+      window.__lastFocusEvent = evt;
+      const reportLabel = (window.t && window.t('report_pass') !== 'report_pass') ? window.t('report_pass') : 'Report this pass';
+      const report = `<br><button type="button" class="complaint-btn" onclick="openComplaint(window.__lastFocusEvent)">${reportLabel}</button>`;
+      return `<strong>${cs}</strong><br>${timeTxt}<br>Distance: ${distTxt}<br>Noise: ${noiseTxt}${weatherSentencesHtml(sentenceIds)}${report}`;
+    }
+
+    // ---- Route badge: arrival ↓ / departure ↑ on a runway, or an overflight ----
+    function routeBadge(event) {
+      if (!event || !event.route_kind || event.route_kind === 'unknown') return '';
+      const arrow = event.route_kind === 'arrival' ? '↓' : event.route_kind === 'departure' ? '↑' : '→';
+      const short = event.route_runway ? `${event.route_runway} ${arrow}` : (event.route_kind === 'overflight' ? (event.route_label || '').replace('overflight', '').trim() + ' ' + arrow : `${event.route_airport || ''} ${arrow}`);
+      const weak = (event.route_confidence || 0) < 0.6 ? ' route-weak' : '';
+      return `<div class="route-badge${weak}" title="${escapePopupText(event.route_label || '')}">${escapePopupText(short.trim())}</div>`;
+    }
+
+    // ---- Complaint helper: the text a report needs, from the recorded pass ----
+    let complaintTarget = { name: '', url: '' };
+    fetch('/api/complaint_target', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(j => { if (j) complaintTarget = j; }).catch(() => {});
+    const COMPLAINT_DEFAULTS = {
+      complaint_title: 'Aircraft noise report', complaint_when: 'Date and time', complaint_flight: 'Flight',
+      complaint_aircraft: 'Aircraft', complaint_altitude: 'Altitude', complaint_distance: 'distance over the ground',
+      complaint_noise: 'Measured noise', complaint_not_measured: 'not measured', complaint_peak: 'peak', complaint_at: 'at',
+      complaint_method: "Measured by: a Sensor.Community noise sensor at the reporter's address, matched to ADS-B positions.",
+      complaint_source: 'Source', complaint_unknown: 'unknown', complaint_heading: 'Report this pass', complaint_route: 'Route',
+      complaint_intro: 'The details a complaint form asks for, ready to paste.',
+      complaint_copy: 'Copy text', complaint_open: 'Open the report form', complaint_close: 'Close', complaint_copied: 'Copied',
+      complaint_goes_to: 'Reports in this area go to {name}.',
+    };
+    function ct(key) {
+      const v = window.t ? window.t(key) : null;
+      return (v && v !== key) ? v : COMPLAINT_DEFAULTS[key];
+    }
+
+    function complaintText(partial) {
+      // The row carries a few fields; the full record with type, operator and altitude is in `events`.
+      const list = (typeof events !== 'undefined' && Array.isArray(events)) ? events : [];
+      const full = list.find(e => e && partial.id != null && String(e.id) === String(partial.id))
+        || list.find(e => e && e.ts === partial.ts && (e.callsign || '') === (partial.callsign || ''))
+        || {};
+      const evt = Object.assign({}, full, Object.fromEntries(Object.entries(partial).filter(([k, v]) => v !== undefined && v !== null && v !== '')));
+      const when = `${formatSensorDate(evt.ts)} ${formatSensorTime(evt.ts)}`;
+      const place = (typeof currentSettings !== 'undefined' && currentSettings && currentSettings.site_place_name) || '';
+      const unknown = ct('complaint_unknown');
+      const lines = [
+        `${ct('complaint_title')}${place ? ' – ' + place : ''}`,
+        `${ct('complaint_when')}: ${when}`,
+        `${ct('complaint_flight')}: ${evt.callsign || unknown}${evt.registration ? ' (' + evt.registration + ')' : ''}`,
+        `${ct('complaint_aircraft')}: ${[evt.manufacturer, evt.model].filter(Boolean).join(' ') || unknown}${evt.operator ? ', ' + evt.operator : ''}`,
+        `${ct('complaint_altitude')}: ${evt.altitude_m != null ? Math.round(evt.altitude_m) + ' m' : unknown}, ${ct('complaint_distance')}: ${typeof evt.distance_km === 'number' ? evt.distance_km.toFixed(2) + ' km' : unknown}`,
+        evt.route_label ? `${ct('complaint_route')}: ${evt.route_label}` : null,
+        `${ct('complaint_noise')}: ${typeof evt.spl_db === 'number' ? evt.spl_db.toFixed(1) + ' dB LAeq (10 s)' : ct('complaint_not_measured')}${evt.spl_max_db != null ? ', ' + ct('complaint_peak') + ' ' + Number(evt.spl_max_db).toFixed(1) + ' dB LAmax' : ''}${evt.spl_peak_ts ? ' ' + ct('complaint_at') + ' ' + formatSensorTime(evt.spl_peak_ts) : ''}`,
+        ct('complaint_method'),
+        `${ct('complaint_source')}: ${window.location.origin}/callsign.html?c=${encodeURIComponent(evt.callsign || '')}`,
+      ].filter(Boolean);
+      return lines.join('\n');
+    }
+
+    function openComplaint(evt) {
+      if (!evt) return;
+      const existing = document.querySelector('.complaint-modal');
+      if (existing) existing.remove();
+      const modal = document.createElement('div');
+      modal.className = 'complaint-modal';
+      modal.innerHTML = `<div class="complaint-box" role="dialog" aria-modal="true" aria-labelledby="complaintTitle">
+        <h3 id="complaintTitle">${ct('complaint_heading')}</h3>
+        <p>${ct('complaint_intro')}${complaintTarget.url ? ' ' + ct('complaint_goes_to').replace('{name}', escapePopupText(complaintTarget.name || complaintTarget.url)) : ''}</p>
+        <textarea readonly></textarea>
+        <div class="complaint-actions">
+          <button type="button" class="btn" data-copy>${ct('complaint_copy')}</button>
+          ${complaintTarget.url ? `<a class="btn btn-secondary" href="${escapePopupText(complaintTarget.url)}" target="_blank" rel="noopener noreferrer">${ct('complaint_open')}</a>` : ''}
+          <button type="button" class="btn btn-secondary" data-close>${ct('complaint_close')}</button>
+        </div></div>`;
+      modal.querySelector('textarea').value = complaintText(evt);
+      modal.querySelector('[data-copy]').addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(modal.querySelector('textarea').value); modal.querySelector('[data-copy]').textContent = ct('complaint_copied'); }
+        catch (e) { modal.querySelector('textarea').select(); }
+      });
+      modal.querySelector('[data-close]').addEventListener('click', () => modal.remove());
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+      document.body.appendChild(modal);
+    }
+    window.openComplaint = openComplaint;
+
+    // Focus/highlight utilities for map when clicking a table row
+    let _focusMarker = null;
+    let _focusCircle = null;
+    function focusOnEvent(evt) {
+      try {
+        if (!map || !evt) return;
+        let lat = Number(evt.latitude);
+        let lon = Number(evt.longitude);
+        // Fallback: if this event lacks coordinates, try to find a recent
+        // event for the same aircraft in the global events list that has coords
+        if ((!Number.isFinite(lat) || !Number.isFinite(lon)) && (evt.icao24 || evt.callsign)) {
+          let best = null, bestDt = Infinity;
+          for (const e of events) {
+            if (!e || !e.latitude || !e.longitude) continue;
+            if (evt.icao24 && e.icao24 === evt.icao24 || (!evt.icao24 && evt.callsign && e.callsign === evt.callsign)) {
+              const dt = Math.abs((evt.ts || 0) - (e.ts || 0));
+              if (dt < bestDt) { bestDt = dt; best = e; }
+            }
+          }
+          if (best) {
+            lat = Number(best.latitude);
+            lon = Number(best.longitude);
+          }
+        }
+        const sentenceIds = Array.isArray(evt.weather_sentences) ? evt.weather_sentences : [];
+        if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+          if (sentenceIds.length && _sensorMarker) {
+            const anchor = _sensorMarker.getLatLng();
+            L.popup().setLatLng(anchor).setContent(eventFocusPopupHtml(evt, sentenceIds)).openOn(map);
+          }
+          return;
+        }
+        if (Number.isNaN(lat) || Number.isNaN(lon)) return;
+
+        // Clear previous highlight
+        if (_focusMarker) { map.removeLayer(_focusMarker); _focusMarker = null; }
+        if (_focusCircle) { map.removeLayer(_focusCircle); _focusCircle = null; }
+
+        // Add a subtle highlight circle and a marker
+        _focusCircle = L.circle([lat, lon], {
+          radius: 200, // meters
+          color: getComputedStyle(document.documentElement).getPropertyValue('--theme-accent') || '#4f46e5',
+          weight: 2,
+          fillColor: getComputedStyle(document.documentElement).getPropertyValue('--theme-accent') || '#4f46e5',
+          fillOpacity: 0.15
+        }).addTo(map);
+
+        _focusMarker = L.marker([lat, lon]).addTo(map);
+        _focusMarker.bindPopup(eventFocusPopupHtml(evt, sentenceIds)).openPopup();
+
+        // Smoothly pan/zoom to the point
+        map.flyTo([lat, lon], Math.max(map.getZoom(), 14));
+      } catch (err) {
+        console.error('focusOnEvent failed', err);
+      }
+    }
+
+    // Expose handler globally (optional for debugging)
+    window.focusOnEvent = focusOnEvent;
+
+    // Find nearest known coordinates for the same aircraft (by icao24 or callsign)
+    function findNearestCoords(identity){
+      try{
+        let best=null, bestDt=Infinity;
+        for(const e of events){
+          if(!e || !e.latitude || !e.longitude) continue;
+          const same = (identity.icao24 && e.icao24===identity.icao24) || (!identity.icao24 && identity.callsign && e.callsign===identity.callsign);
+          if(!same) continue;
+          const dt = Math.abs((identity.ts||0) - (e.ts||0));
+          if(dt < bestDt){ bestDt = dt; best = {lat: Number(e.latitude), lon: Number(e.longitude)}; }
+        }
+        return best;
+      }catch(_){ return null; }
+    }
+
+    // Initialize chart
+    function initChart() {
+      try {
+        console.log('Initializing chart...');
+        console.log('Chart.js available:', typeof Chart !== 'undefined');
+        console.log('Document ready state:', document.readyState);
+        
+        // Find the chart div and create a canvas element
+        const chartDiv = document.getElementById('chart');
+        if (!chartDiv) {
+          console.error('Chart div not found');
+          return;
+        }
+        
+        // Create canvas element if it doesn't exist
+        let chartElement = document.getElementById('chartCanvas');
+        if (!chartElement) {
+          console.log('Creating canvas element...');
+          chartElement = document.createElement('canvas');
+          chartElement.id = 'chartCanvas';
+          chartElement.style.width = '100%';
+          chartElement.style.height = '400px';
+          chartDiv.innerHTML = '';
+          chartDiv.appendChild(chartElement);
+        }
+        
+        console.log('Chart element found:', chartElement);
+        console.log('Chart element dimensions:', chartElement.offsetWidth, 'x', chartElement.offsetHeight);
+        console.log('Chart element parent:', chartElement.parentElement);
+        
+        // Ensure the chart element is visible and properly sized
+        chartElement.style.display = 'block';
+        chartElement.style.visibility = 'visible';
+        chartElement.style.height = '400px';
+        chartElement.style.width = '100%';
+        chartElement.style.position = 'relative';
+        
+        // Force the parent container to be visible too
+        const parentCard = chartElement.closest('.card');
+        if (parentCard) {
+          parentCard.style.display = 'block';
+          parentCard.style.visibility = 'visible';
+        }
+        
+        // Check if Chart.js is loaded
+        if (typeof Chart === 'undefined') {
+          console.error('Chart.js not loaded');
+          chartElement.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #ff6b6b;">Chart.js library not loaded</div>';
+          return;
+        }
+        
+        // Test Chart.js basic functionality
+        try {
+          const testCtx = document.createElement('canvas').getContext('2d');
+          if (!testCtx) {
+            throw new Error('Canvas context not available');
+          }
+        } catch (testError) {
+          console.error('Canvas test failed:', testError);
+          chartElement.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #ff6b6b;">Canvas not supported</div>';
+          return;
+        }
+        
+        console.log('Getting canvas context...');
+        const ctx = chartElement.getContext('2d');
+        console.log('Canvas context obtained:', ctx);
+        
+        // Destroy existing chart if it exists
+        if (chart) {
+          console.log('Destroying existing chart...');
+          chart.destroy();
+        }
+        
+        console.log('Creating new Chart instance...');
+        console.log('Chart constructor available:', typeof Chart === 'function');
+        console.log('Canvas context:', ctx);
+        console.log('Canvas element:', chartElement);
+        
+        chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['Loading...'],
+            datasets: [{
+              label: 'Noise Level (dB)',
+              data: [0],
+              borderColor: signalColor(),
+              backgroundColor: signalFill(),
+              tension: 0.1,
+              fill: true,
+              pointRadius: 2,
+              pointHoverRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+              intersect: false,
+              mode: 'index'
+            },
+            scales: {
+              y: {
+                beginAtZero: false,
+                min: 30,
+                max: 80,
+                title: {
+                  display: true,
+                  text: 'Sound Pressure Level (dB)',
+                  color: chartInk()
+                },
+                grid: {
+                  color: chartGrid()
+                },
+                ticks: { color: chartInk() },
+                border: { color: chartGrid() }
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: 'Time',
+                  color: chartInk()
+                },
+                grid: {
+                  color: chartGrid()
+                },
+                ticks: { color: chartInk() },
+                border: { color: chartGrid() }
+              }
+            },
+            color: chartInk(),
+            plugins: {
+              legend: {
+                display: true,
+                labels: {
+                  color: chartInk()
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#fff',
+                bodyColor: '#fff'
+              }
+            }
+          }
+        });
+        
+        console.log('Chart initialized successfully');
+        console.log('Chart instance:', chart);
+        console.log('Chart data:', chart.data);
+        console.log('Chart options:', chart.options);
+        
+        // Force a resize to ensure proper rendering
+        setTimeout(() => {
+          if (chart) {
+            chart.resize();
+            console.log('Chart resized successfully');
+          }
+        }, 100);
+        
+        // Additional resize after a longer delay to ensure DOM is ready
+        setTimeout(() => {
+          if (chart) {
+            chart.resize();
+            console.log('Chart resized again after DOM ready');
+          }
+        }, 500);
+        
+      } catch (error) {
+        console.error('Failed to initialize chart:', error);
+        console.error('Error details:', error.message, error.stack);
+        // Show detailed error message
+        const chartDiv = document.getElementById('chart');
+        if (chartDiv) {
+          chartDiv.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #ff6b6b; text-align: center; padding: 20px;">' +
+            '<div>' +
+              '<div style="font-size: 18px; margin-bottom: 10px;">Chart failed to load</div>' +
+              '<div style="font-size: 12px; color: #999;">Error: ' + (error.message || 'Unknown error') + '</div>' +
+              '<div style="font-size: 10px; color: #666; margin-top: 5px;">Check browser console for details</div>' +
+            '</div>' +
+          '</div>';
+        }
+      }
+    }
+    
+    // Create a simple fallback chart using HTML/CSS
+    function createFallbackChart() {
+      const chartElement = document.getElementById('chart');
+      if (!chartElement) return;
+      
+      console.log('Creating fallback chart...');
+      
+      // Create a simple bar chart representation
+      const fallbackHTML = `
+        <div style="height: 100%; display: flex; flex-direction: column; padding: 20px; background: var(--theme-bg-secondary); border-radius: 0;">
+          <div style="text-align: center; margin-bottom: 20px; color: var(--theme-text-primary);">
+            <h4>Noise Level (dB) - Fallback Display</h4>
+            <div style="font-size: 12px; color: var(--theme-text-muted);">Chart.js unavailable, showing data table</div>
+          </div>
+          <div id="fallbackChartData" style="flex: 1; overflow-y: auto;">
+            <div style="text-align: center; color: var(--theme-text-muted);">Loading sensor data...</div>
+          </div>
+        </div>
+      `;
+      
+      chartElement.innerHTML = fallbackHTML;
+      
+      // Update fallback chart with sensor data
+      if (sensorData && sensorData.length > 0) {
+        updateFallbackChart();
+      }
+    }
+    
+    // Update fallback chart with data
+    function updateFallbackChart() {
+      const fallbackData = document.getElementById('fallbackChartData');
+      if (!fallbackData || !sensorData || !sensorData.length) return;
+      
+      const sortedData = [...sensorData].sort((a, b) => a.timestamp - b.timestamp);
+      const latestData = sortedData.slice(-10); // Show last 10 points
+      
+      let html = '<div style="display: grid; gap: 8px;">';
+      latestData.forEach(point => {
+        const timeStr = formatSensorTime(point.timestamp);
+        const value = point.value;
+        const barWidth = Math.max(10, (value - 30) * 2); // Scale to 30-80 dB range
+        
+        html += `
+          <div style="display: flex; align-items: center; gap: 10px; padding: 8px; background: var(--theme-bg-tertiary); border-radius: 0;">
+            <div style="min-width: 60px; font-size: 12px; color: var(--theme-text-muted);">${timeStr}</div>
+            <div style="flex: 1; display: flex; align-items: center; gap: 8px;">
+              <div style="width: ${barWidth}px; height: 20px; background: ${signalColor()}; border-radius: 0;"></div>
+              <div style="min-width: 40px; font-weight: bold; color: var(--theme-text-primary);">${value.toFixed(1)} dB</div>
+            </div>
+          </div>
+        `;
+      });
+      html += '</div>';
+      
+      fallbackData.innerHTML = html;
+    }
+
+    // Update chart with sensor data
+    function updateChart() {
+      // Check if we're using table view
+      if (chartType === 'table') {
+        console.log('Updating table chart...');
+        updateFallbackChart();
+        return;
+      }
+      
+      if (!chart) {
+        console.error('Chart not initialized');
+        return;
+      }
+      
+      if (!sensorData || !sensorData.length) {
+        console.log('No sensor data available for chart');
+        // Show a message in the chart
+        chart.data.labels = ['No data available'];
+        chart.data.datasets[0].data = [0];
+        chart.update();
+        return;
+      }
+
+      console.log('Updating chart with', sensorData.length, 'data points');
+      console.log('Sample sensor data:', sensorData.slice(0, 3));
+
+      try {
+        // Sort data by timestamp to ensure proper order
+        const sortedData = [...sensorData].sort((a, b) => a.timestamp - b.timestamp);
+        
+        const labels = sortedData.map(point => formatSensorTime(point.timestamp));
+
+        const data = sortedData.map(point => point.value);
+
+        console.log('Chart labels:', labels.slice(0, 5));
+        console.log('Chart data:', data.slice(0, 5));
+
+        // Update chart data
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = data;
+        
+        // Update chart scales based on data range
+        const minValue = Math.min(...data);
+        const maxValue = Math.max(...data);
+        const padding = (maxValue - minValue) * 0.1;
+        
+        chart.options.scales.y.min = Math.max(30, minValue - padding);
+        chart.options.scales.y.max = Math.min(80, maxValue + padding);
+        
+        // Update the chart
+        chart.update('none'); // Use 'none' for smoother updates
+        
+        console.log('Chart updated successfully');
+        
+        // Force a resize after update
+        setTimeout(() => {
+          if (chart) {
+            chart.resize();
+            console.log('Chart resized after update');
+          }
+        }, 50);
+        
+        // Additional resize to ensure proper display
+        setTimeout(() => {
+          if (chart) {
+            chart.resize();
+            console.log('Chart resized again after update');
+          }
+        }, 200);
+        
+      } catch (error) {
+        console.error('Error updating chart:', error);
+        // Show error in chart
+        chart.data.labels = ['Error loading data'];
+        chart.data.datasets[0].data = [0];
+        chart.update();
+      }
+    }
+
+    // The station's setting decides what the table lists; a visitor's change lasts for this page view only.
+    let _eventsViewTouched = false;
+    function eventsView() {
+      const el = document.getElementById('eventsView');
+      const station = (currentSettings && currentSettings.events_view) || 'zone';
+      if (el && !_eventsViewTouched && el.value !== station) el.value = station;
+      return (el && el.value) || station;
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const el = document.getElementById('eventsView');
+      if (!el) return;
+      el.addEventListener('change', () => { _eventsViewTouched = true; currentPage = 1; displayEvents(); });
+    });
+
+    // Display events in table
+    function displayEvents() {
+      const tbody = document.getElementById('eventsTableBody');
+      tbody.innerHTML = '';
+
+      let baseEvents = PlaneMap.mergeFlightRows(events);
+
+      // Show every pass recorded inside the detection circle. A decibel is
+      // filled in only when the aircraft was also inside the inner noise gate.
+      const listKm = (typeof currentSettings.detection_radius_km === 'number') ? currentSettings.detection_radius_km : 8;
+      baseEvents = baseEvents.filter(e => {
+        const d = e.distance_km;
+        return typeof d === 'number' && d <= listKm + 0.01;
+      });
+      // The view selector: passes that crossed the drawn zone or got a decibel (default),
+      // only measured ones, or every pass inside the detection circle.
+      const view = eventsView();
+      if (view === 'zone') baseEvents = baseEvents.filter(e => e.in_zone || e.spl_db != null);
+      else if (view === 'measured') baseEvents = baseEvents.filter(e => e.spl_db != null);
+      
+      if (baseEvents.length === 0) {
+        const noEventsText = window.t ? window.t('no_events_found') : 'No aircraft events found';
+        tbody.innerHTML = `<tr><td colspan="9" class="loading">${noEventsText}</td></tr>`;
+        return;
+      }
+
+      // Sort events
+      const sortedEvents = [...baseEvents].sort((a, b) => {
+        let aVal = a[currentSort.field];
+        let bVal = b[currentSort.field];
+        
+        // Handle null/undefined values
+        if (aVal === null || aVal === undefined) aVal = '';
+        if (bVal === null || bVal === undefined) bVal = '';
+        
+        // Special handling for different field types
+        if (currentSort.field === 'time' || currentSort.field === 'ts') {
+          // Sort by timestamp (numeric)
+          aVal = a.ts || 0;
+          bVal = b.ts || 0;
+        } else if (currentSort.field === 'distance') {
+          // Sort by preferred distance (closest if available)
+          aVal = parseFloat(getDisplayDistanceKm(a)) || 0;
+          bVal = parseFloat(getDisplayDistanceKm(b)) || 0;
+        } else if (currentSort.field === 'altitude') {
+          // Sort by altitude (numeric)
+          aVal = parseFloat(a.altitude_m) || 0;
+          bVal = parseFloat(b.altitude_m) || 0;
+        } else if (currentSort.field === 'speed') {
+          // Sort by speed (numeric)
+          aVal = parseFloat(a.speed_kmh) || 0;
+          bVal = parseFloat(b.speed_kmh) || 0;
+        } else if (currentSort.field === 'heading') {
+          // Sort by heading (numeric)
+          aVal = parseFloat(a.heading_deg) || 0;
+          bVal = parseFloat(b.heading_deg) || 0;
+        } else if (currentSort.field === 'noise') {
+          // Sort by noise level (numeric)
+          aVal = parseFloat(a.spl_db) || 0;
+          bVal = parseFloat(b.spl_db) || 0;
+              } else {
+          // String comparison for other fields
+          aVal = String(aVal).toLowerCase();
+          bVal = String(bVal).toLowerCase();
+        }
+        
+        // Perform comparison
+        if (currentSort.direction === 'asc') {
+          return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+        } else {
+          return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+        }
+      });
+
+      // Paginate
+      const total = sortedEvents.length;
+      const totalPages = Math.ceil(total / itemsPerPage);
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const pageEvents = sortedEvents.slice(startIndex, endIndex);
+
+      pageEvents.forEach(event => {
+        const row = createTableRow(event);
+        tbody.appendChild(row);
+      });
+
+      // Ensure row click handler is bound (event delegation)
+      bindTableRowClicks();
+
+      updatePaginationInfo(total);
+      loadAircraftPhotos();
+      // Limit map markers to visible rows
+      currentPageEvents = pageEvents;
+      updateMap();
+    }
+
+    // Create table row
+    function createTableRow(event) {
+      const row = document.createElement('tr');
+      row.style.cursor = 'pointer';
+      // Ensure we always try to carry coordinates on the row
+      let latInit = (event && event.latitude) ? Number(event.latitude) : NaN;
+      let lonInit = (event && event.longitude) ? Number(event.longitude) : NaN;
+      if(!Number.isFinite(latInit) || !Number.isFinite(lonInit)){
+        const found = findNearestCoords(event || {});
+        if(found){ latInit = found.lat; lonInit = found.lon; }
+      }
+      if(Number.isFinite(latInit) && Number.isFinite(lonInit)){
+        row.dataset.lat = String(latInit);
+        row.dataset.lon = String(lonInit);
+      }
+      if (event.ts) row.dataset.ts = String(event.ts);
+      if (event.id != null) row.dataset.id = String(event.id);
+      if (event.spl_db != null) row.dataset.spl = String(event.spl_db);
+      if (event.callsign) row.dataset.callsign = String(event.callsign);
+      if (Array.isArray(event.weather_sentences) && event.weather_sentences.length) {
+        row.dataset.weatherSentences = event.weather_sentences.join(',');
+      }
+      
+      const dateStr = formatSensorDate(event.ts);
+      const timeStr = formatSensorTime(event.ts);
+      const timeHtml = `${dateStr}, ${timeStr}`;
+      const dispDistRow = getDisplayDistanceKm(event);
+      const approx = '≈';
+      const distance = (typeof dispDistRow === 'number') ? `${approx} ${dispDistRow.toFixed(2)} km` : 'N/A';
+      const altitude = event.altitude_m ? `${approx} ${event.altitude_m} m` : 'N/A';
+      const speed = event.speed_kmh ? `${event.speed_kmh} km/h` : 'N/A';
+      const heading = event.heading_deg ? `${event.heading_deg}°` : 'N/A';
+      const noise = event.spl_db ? `${event.spl_db.toFixed(1)} dB` : 'N/A';
+      const peakTitle = (event.spl_db && event.spl_peak_ts)
+        ? ` title="${window.t ? window.t('peak_at') : 'Peak at'} ${formatSensorTime(event.spl_peak_ts)}${event.spl_max_db != null ? ` · LAmax ${Number(event.spl_max_db).toFixed(1)} dB` : ''}"`
+        : '';
+      let weatherMark = '';
+      if (event.weather_mark) {
+        weatherMark = ' <span class="weather-mark" style="font-size:0.65em;opacity:0.75;vertical-align:super" aria-hidden="true">●</span>';
+      }
+      const aircraft = event.manufacturer && event.model ?
+        `${event.manufacturer} ${event.model}` :
+        (event.model || event.manufacturer || 'Unknown');
+      const registration = String(event.registration || '').toUpperCase().replace(/[^A-Z0-9-]/g, '');
+      const hex = String(event.icao24 || '').toUpperCase().replace(/[^0-9A-F]/g, '');
+      const registrationOk = /^[A-Z0-9-]{4,10}$/.test(registration) && /[A-Z]/.test(registration);
+      const hexOk = /^[0-9A-F]{6}$/.test(hex);
+      
+      row.innerHTML = `
+        <td class="col-img" data-reg="${registrationOk ? registration : ''}" data-hex="${hexOk ? hex : ''}" data-label="${escapeHtml(aircraft)}">${aircraftMark(event, aircraft)}</td>
+        <td class="col-callsign">${event.callsign ? `<a href="/callsign.html?c=${encodeURIComponent(event.callsign)}" class="link">${event.callsign}</a>` : 'N/A'}${routeBadge(event)}</td>
+        <td class="col-time">${timeHtml}</td>
+        <td class="col-dist col-num">${distance}</td>
+        <td class="col-alt col-num">${altitude}</td>
+        <td class="col-speed col-num">${speed}</td>
+        <td class="col-heading col-num">${heading}</td>
+        <td class="col-noise col-num"${peakTitle}>${noise}${weatherMark}</td>
+        <td class="col-operator">${event.operator || '—'}</td>
+        <td class="col-aircraft">${aircraft}</td>
+      `;
+
+      // Also bind a direct listener per row for reliability
+      row.addEventListener('click', (ev) => {
+        const a = ev.target && ev.target.closest ? ev.target.closest('a') : null;
+        if (a) return; // allow link navigation
+        const lat = parseFloat(row.dataset.lat || 'NaN');
+        const lon = parseFloat(row.dataset.lon || 'NaN');
+        const weatherSentences = rowWeatherSentences(row);
+        if ((!Number.isFinite(lat) || !Number.isFinite(lon)) && weatherSentences.length === 0) return;
+        focusOnEvent({
+          latitude: Number.isFinite(lat) ? lat : undefined,
+          longitude: Number.isFinite(lon) ? lon : undefined,
+          id: row.dataset.id,
+          spl_db: row.dataset.spl ? parseFloat(row.dataset.spl) : undefined,
+          ts: row.dataset.ts ? parseFloat(row.dataset.ts) : undefined,
+          callsign: row.dataset.callsign || undefined,
+          weather_sentences: weatherSentences,
+        });
+      });
+
+      return row;
+    }
+
+    // Delegated click handler for table body
+    let _tableClicksBound = false;
+    function bindTableRowClicks(){
+      if (_tableClicksBound) return;
+      const tbody = document.getElementById('eventsTableBody');
+      if (!tbody) return;
+      tbody.addEventListener('click', (ev) => {
+        const a = ev.target.closest('a');
+        if (a) return; // normal link navigation
+        const tr = ev.target.closest('tr');
+        if (!tr) return;
+        const lat = parseFloat(tr.dataset.lat || 'NaN');
+        const lon = parseFloat(tr.dataset.lon || 'NaN');
+        const weatherSentences = rowWeatherSentences(tr);
+        if ((!Number.isFinite(lat) || !Number.isFinite(lon)) && weatherSentences.length === 0) return;
+        focusOnEvent({
+          latitude: Number.isFinite(lat) ? lat : undefined,
+          longitude: Number.isFinite(lon) ? lon : undefined,
+          id: tr.dataset.id,
+          spl_db: tr.dataset.spl ? parseFloat(tr.dataset.spl) : undefined,
+          ts: tr.dataset.ts ? parseFloat(tr.dataset.ts) : undefined,
+          callsign: tr.dataset.callsign || undefined,
+          weather_sentences: weatherSentences,
+        });
+      });
+      _tableClicksBound = true;
+    }
+
+    // (Removed pin/link handler; row click focuses the map)
+
+    // Sort table
+    function sortTable(field) {
+      // Update sort arrows
+      document.querySelectorAll('.sort-arrow').forEach(arrow => {
+        arrow.textContent = '';
+        arrow.parentElement.classList.remove('active');
+      });
+
+      if (currentSort.field === field) {
+        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        currentSort.field = field;
+        currentSort.direction = 'desc';
+      }
+
+      const arrow = document.getElementById(`sort-${field}`);
+      arrow.textContent = currentSort.direction === 'asc' ? '↑' : '↓';
+      arrow.parentElement.classList.add('active');
+
+      displayEvents();
+    }
+
+    // Change page
+    function changePage(direction) {
+      const totalPages = Math.ceil(events.length / itemsPerPage);
+      const newPage = currentPage + direction;
+      
+      if (newPage >= 1 && newPage <= totalPages) {
+        currentPage = newPage;
+        displayEvents();
+      }
+    }
+
+    // Update pagination info
+    function updatePaginationInfo(totalCount) {
+      const total = (typeof totalCount === 'number') ? totalCount : events.length;
+      const totalPages = Math.ceil(total / itemsPerPage);
+      const paginationText = window.t ? 
+        window.t('page_info', { current: currentPage, total: totalPages, count: total }) :
+        `Page ${currentPage} of ${totalPages} (${total} total aircraft)`;
+      document.getElementById('paginationInfo').textContent = paginationText;
+      
+      document.getElementById('prevPage').disabled = currentPage === 1;
+      document.getElementById('nextPage').disabled = currentPage === totalPages;
+    }
+
+    // Show error message
+    function showError(message) {
+      const tbody = document.getElementById('eventsTableBody');
+      tbody.innerHTML = `<tr><td colspan="9" class="error">${message}</td></tr>`;
+    }
+
+    function paintThemedSurfaces() {
+      const color = signalColor();
+      if (chart && chart.data) {
+        chart.data.datasets.forEach(function (dataset) {
+          dataset.borderColor = color;
+          dataset.backgroundColor = signalFill();
+        });
+        applyChartChrome();
+        chart.update('none');
+      }
+      if (map && window.L) {
+        map.eachLayer(function (layer) {
+          if (layer instanceof L.Path) layer.setStyle({ color: color, fillColor: color });
+        });
+      }
+      if (typeof updateFallbackChart === 'function') updateFallbackChart();
+    }
+
+    window.addEventListener('planenoise-theme', function () {
+      if (globalHeatmap && Object.keys(globalHeatmap).length > 0) renderPlanesHeatmap();
+      paintThemedSurfaces();
+    });
+
+    // Start the application
+    // Use multiple initialization strategies to ensure chart loads
+    let initAttempted = false;
+    
+    function attemptInit() {
+      if (initAttempted) return;
+      initAttempted = true;
+      
+      console.log('Attempting initialization, DOM ready state:', document.readyState);
+      
+      // Wait for DOM to be ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          console.log('DOM loaded, initializing...');
+          init();
+        });
+      } else {
+        console.log('DOM already ready, initializing immediately...');
+        init();
+      }
+    }
+    
+    // Try initialization immediately
+    attemptInit();
+    
+    // Fallback initialization after a delay if chart still not created
+    setTimeout(() => {
+      if (!chart && !initAttempted) {
+        console.log('Fallback initialization triggered...');
+        attemptInit();
+      } else if (!chart) {
+        console.log('Chart not created after init, attempting chart creation...');
+        initChart();
+        if (sensorData && sensorData.length > 0) {
+          updateChart();
+        }
+      }
+    }, 2000);
+    
+    // Additional fallback for link navigation issues
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        console.log('Page restored from cache, reinitializing...');
+        setTimeout(() => {
+          if (!chart) {
+            attemptInit();
+          }
+        }, 100);
+      }
+    });
+    
+    // Handle page visibility changes (useful when returning from admin pages)
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        console.log('Page became visible, checking data...');
+        // If we don't have data or chart, try to reload
+        if (!events || events.length === 0 || !chart) {
+          console.log('Missing data or chart, reloading...');
+          setTimeout(() => {
+            loadData();
+            if (!chart && chartType === 'chart') {
+              initChart();
+            }
+          }, 500);
+        }
+      }
+    });
+  </script>
+  
+  <footer class="site-footer" style="margin-top: 3rem; padding: 2rem; background: var(--theme-bg-secondary); border-top: 1px solid var(--theme-border);">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2rem;">
+        <div>
+          <h4 data-translate="footer_station">This station</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; line-height: 1.9;">
+            <li><a href="/" style="color: var(--theme-accent);" data-translate="footer_live">Live</a></li>
+            <li><a href="/types.html" style="color: var(--theme-accent);" data-translate="footer_types">Aircraft types</a></li>
+            <li><a href="/community" style="color: var(--theme-accent);" data-translate="footer_community">Community</a></li>
+            <li><a href="#disclaimer" id="disclaimer-link" style="color: var(--theme-accent);" data-translate="footer_disclaimer">Disclaimer</a></li>
+            <li><a href="?lang=en" style="color: var(--theme-accent);">English</a> · <a href="?lang=nl" style="color: var(--theme-accent);">Nederlands</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 data-translate="footer_sources">Sources</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; line-height: 1.9; font-size: 0.9em; color: var(--theme-text-muted);">
+            <li><span data-translate="footer_src_positions">Aircraft positions</span>: <a href="https://opensky-network.org/" target="_blank" rel="noopener" style="color: var(--theme-accent);">OpenSky</a>, <a href="https://airplanes.live/" target="_blank" rel="noopener" style="color: var(--theme-accent);">airplanes.live</a>, <a href="https://adsb.fi/" target="_blank" rel="noopener" style="color: var(--theme-accent);">adsb.fi</a> <span data-translate="footer_src_or">or</span> <a href="https://adsb.lol/" target="_blank" rel="noopener" style="color: var(--theme-accent);">adsb.lol</a> (ODbL), <span data-translate="footer_src_as_set">as set by the station</span></li>
+            <li><span data-translate="footer_src_identities">Aircraft identities</span>: Mictronics <span data-translate="footer_src_via">via</span> <a href="https://github.com/wiedehopf/tar1090-db" target="_blank" rel="noopener" style="color: var(--theme-accent);">tar1090-db</a></li>
+            <li><span data-translate="footer_src_airlines">Airline names</span>: <a href="https://www.wikidata.org/" target="_blank" rel="noopener" style="color: var(--theme-accent);">Wikidata</a> (CC0)</li>
+            <li><span data-translate="footer_src_weather">Weather</span>: <a href="https://open-meteo.com/" target="_blank" rel="noopener" style="color: var(--theme-accent);">Open-Meteo</a> (CC BY 4.0)</li>
+            <li><span data-translate="footer_src_map">Map</span>: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" style="color: var(--theme-accent);">OpenStreetMap</a> contributors</li>
+          </ul>
+        </div>
+        <div>
+          <h4 data-translate="footer_project">The project</h4>
+          <p style="margin: 0 0 0.6rem; line-height: 1.6;"><span data-translate="footer_powered">Powered by</span> <a href="https://aircraftnoise.eu/" target="_blank" rel="noopener" style="color: var(--theme-accent); font-weight: 600;">Aircraft Noise</a><span data-translate="footer_powered_tail">, free and open source software for people under a flight path.</span></p>
+          <p style="margin: 0; line-height: 1.6;"><a href="https://data.aircraftnoise.eu/" target="_blank" rel="noopener" style="color: var(--theme-accent);" data-translate="footer_worldwide">Stations worldwide, measured by residents</a></p>
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--theme-border); color: var(--theme-text-muted); font-size: 0.9em;">
+        <p style="margin: 0;">Aircraft Noise · <span data-translate="footer_tagline">Real noise, measured on a local sensor and matched to the aircraft overhead.</span></p>
+        <a href="/trap/events?all=1" rel="nofollow" aria-hidden="true" tabindex="-1" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">all events</a>
+      </div>
+    </div>
+  </footer>
+  
+  
+  <!-- Direct translation fix -->
+  <script>
+    // Apply translations immediately when page loads
+    function applyTranslationsDirectly() {
+      if (window.Translations && window.Translations.en) {
+        const elements = document.querySelectorAll('[data-translate]');
+        elements.forEach(element => {
+          const key = element.getAttribute('data-translate');
+          const translation = window.Translations.en[key] || key;
+          element.textContent = translation;
+        });
+        console.log('Applied translations to', elements.length, 'elements');
+      }
+    }
+    
+    // Apply immediately if translations are ready
+    if (window.Translations) {
+      applyTranslationsDirectly();
+    } else {
+      // Wait for translations to load
+      setTimeout(applyTranslationsDirectly, 100);
+    }
+  </script>
+  
+</body>
+</html>

@@ -1,0 +1,28 @@
+# Aircraft Noise station. Paste this into Portainer, the Unraid Compose
+# Manager, or run `docker compose up -d`. Nothing else is needed: the setup
+# walkthrough at http://<host>:8787/setup stores the station's settings in the
+# database, which lives in the ./data volume.
+services:
+  planenoise:
+    image: ghcr.io/centauri/aircraftnoise:latest
+    # Developers: comment the image line and build from this checkout instead.
+    # build: .
+    container_name: planenoise
+    restart: unless-stopped
+    ports:
+      - "8787:8787"
+    environment:
+      # The database and community data live in the volume, not in the image.
+      PN_DB_PATH: /app/data/plane_noise.db
+      COMMUNITY_DATA_PATH: /app/data/monitors.json
+      # Plain HTTP inside the container; put TLS on the proxy or tunnel in front.
+      TLS_DISABLED: "true"
+      FORCE_HTTPS: "false"
+      # The admin cookie is marked Secure on HTTPS visits and not on plain
+      # http://nas:8787, automatically. Pin it with SESSION_SECURE true/false.
+    # Optional overrides (see env_example.txt); the file may be absent.
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./data:/app/data

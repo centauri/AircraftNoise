@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Community monitors</title>
+  <meta name="description" content="Noise monitors that opted in to share an approximate location." />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/static/css/theme.css?v=13" />
+  <link rel="stylesheet" href="/static/css/community.css?v=3" />
+  <link rel="stylesheet" href="/static/vendor/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="/static/vendor/leaflet.markercluster/MarkerCluster.css" />
+  <link rel="stylesheet" href="/static/vendor/leaflet.markercluster/MarkerCluster.Default.css" />
+  <script src="/static/js/themes.js?v=3"></script>
+  <script src="/static/js/theme.js?v=11"></script>
+</head>
+<body data-page="community">
+  <div class="header-banner">
+    <div class="header-content">
+      <div class="header-top">
+        <h1 id="site-title">
+          <a href="/" class="brand-link">
+            <img src="/static/brand/planenoise-logo-reversed.svg?v=2"
+                 alt=""
+                 class="header-logo">
+          </a>
+          <span class="site-title-text" data-translate="site_title_text">Aircraft Noise</span>
+        </h1>
+        <div class="header-actions">
+          <a href="/community" class="header-nav-link" data-translate="community_link">Community</a>
+          <div class="theme-controls" id="theme-controls-container">
+            <!-- Theme controls will be injected here by theme.js -->
+          </div>
+        </div>
+      </div>
+      <div class="subtitle" id="subtitle"><span id="stationMark" class="station-mark" hidden></span><span id="subtitleText">Real noise, measured on your own sensors</span></div>
+    </div>
+  </div>
+
+  <main class="community-wrap">
+    <div class="community-head">
+      <div>
+        <h1 data-translate="community_heading">Community monitors</h1>
+        <p class="community-note"><span data-translate="community_privacy">Locations are shifted by a few hundred metres before they are stored (200 m by default), and the pin moves a little more each time the map is drawn.</span> <a href="https://aircraftnoise.eu/" target="_blank" rel="noopener" data-translate="community_site_link">About Aircraft Noise</a></p>
+      </div>
+      <div class="community-updated" id="community-updated" hidden></div>
+    </div>
+
+    <div class="community-stats">
+      <div class="community-stat">
+        <div class="value" id="stat-monitors">0</div>
+        <div class="label" data-translate="community_monitors">Monitors</div>
+      </div>
+      <div class="community-stat">
+        <div class="value" id="stat-feeds">0</div>
+        <div class="label" data-translate="community_feeds">Feeds</div>
+      </div>
+      <div class="community-stat">
+        <div class="value" id="stat-countries">0</div>
+        <div class="label" data-translate="community_countries">Countries</div>
+      </div>
+    </div>
+
+    <div id="community-map" role="region" aria-label="Community monitors map"></div>
+
+    <div class="community-filters">
+      <input id="community-search" type="search" data-translate-placeholder="community_search" placeholder="Search monitors">
+      <select id="community-country" aria-label="Country"></select>
+      <select id="community-feed" aria-label="Feed"></select>
+      <button type="button" id="community-clear" hidden data-translate="community_clear">Clear</button>
+    </div>
+    <p class="community-count" id="community-count" hidden></p>
+    <div id="community-list"></div>
+  </main>
+
+  <script src="/static/vendor/leaflet/leaflet.js"></script>
+  <script src="/static/vendor/leaflet.markercluster/leaflet.markercluster.js"></script>
+  <script src="/static/js/translations.js?v=6"></script>
+  <script src="/static/js/translation.js?v=5"></script>
+  <script src="/static/js/community.js?v=2"></script>
+</body>
+</html>

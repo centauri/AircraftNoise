@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Aircraft Noise</title>
+    <link rel="stylesheet" href="/static/css/theme.css?v=9">
+    <script src="/static/js/themes.js?v=3"></script>
+    <script src="/static/js/theme.js?v=10"></script>
+    <link rel="stylesheet" href="/static/css/admin.css?v=7">
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+    <div class="admin-app">
+        <header class="admin-toolbar">
+            <a class="admin-brand" href="/admin/dashboard">
+                <img class="admin-mark" src="/static/brand/planenoise-mark.svg" alt="">
+                <span>Aircraft Noise</span>
+            </a>
+            <nav class="admin-nav" aria-label="Admin">
+                <a class="admin-nav-link" href="/admin/dashboard">Overview</a>
+                <a class="admin-nav-link" href="/admin/analytics">Analytics</a>
+                <a class="admin-nav-link" href="/admin/database">Database</a>
+                <a class="admin-nav-link" href="/admin/detection-zone">Zone</a>
+                <a class="admin-nav-link" href="/admin/settings">Settings</a>
+                <a class="admin-nav-link" href="/admin/users">Users</a>
+                <a class="admin-nav-link" href="/admin/logs">Logs</a>
+                <a class="admin-nav-link" href="/admin/api-usage">API</a>
+            </nav>
+            <div class="admin-toolbar-tools">
+                <div id="theme-controls-container"></div>
+                <span class="admin-user" id="userEmail"></span>
+                <button type="button" class="logout-btn" id="admin-logout">Log out</button>
+                <a class="admin-nav-link admin-nav-public" href="/">Public site</a>
+            </div>
+        </header>
+        <div id="setup-notice" class="admin-notice" hidden>
+            The first-run walkthrough is not finished. <a href="/setup">Continue it</a> or ignore this and use Settings.
+        </div>
+        <iframe id="admin-frame" title="Admin section"></iframe>
+    </div>
+    <script src="/static/js/admin-app.js?v=4"></script>
+    <script>
+        fetch('/setup/state', { credentials: 'same-origin' }).then(r => r.json()).then(s => {
+            if (['station', 'feeds', 'alerts', 'skipped'].includes(s.state)) document.getElementById('setup-notice').hidden = false;
+        }).catch(() => {});
+    </script>
+</body>
+</html>

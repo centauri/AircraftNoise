@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="pageTitle">Callsign</title>
+  <link rel="stylesheet" href="/static/css/theme.css?v=13" />
+  <script src="/static/js/themes.js?v=3"></script>
+  <script src="/static/js/theme.js?v=11"></script>
+  <script src="/static/js/sortable.js?v=1" defer></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--theme-bg-primary); color: var(--theme-text-primary); font-family: var(--font-sans); line-height: 1.5; }
+    a.link { color: var(--theme-accent); text-decoration: none; }
+    a.link:hover { text-decoration: underline; }
+
+    .header-banner { background: var(--theme-masthead); color: var(--theme-masthead-ink); padding: 16px 0 14px; text-align: left; }
+    .header-content { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .header-content h1 { font-size: 1.8rem; font-weight: 600; margin: 0; display: flex; align-items: center; }
+    .header-actions { display: flex; align-items: center; gap: 1rem; }
+    .brand-link { display: flex; align-items: center; text-decoration: none; }
+    .header-logo { height: 52px; width: auto; max-width: 100%; display: block; }
+    .site-title-text { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .subtitle { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; text-align: left; color: var(--theme-masthead-muted); margin: 0.45rem 0 0; }
+    .language-switcher { display: flex; gap: 4px; }
+    .toolbar-callsign,
+    .lang-link {
+      height: 34px;
+      box-sizing: border-box;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 400;
+      line-height: 1;
+    }
+    .toolbar-callsign {
+      border: 1px solid var(--theme-masthead-line);
+      color: var(--theme-masthead-ink);
+      font-family: var(--font-mono);
+      letter-spacing: 0.08em;
+    }
+    #faLink { gap: 6px; }
+    #faLink .external-icon { width: 11px; height: 11px; flex: none; display: block; }
+
+    .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+    .breadcrumbs { color: var(--theme-text-muted); font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .page-title { font-family: var(--font-display); font-size: 1.8rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--theme-text-primary); margin: 0 0 1rem; }
+
+    .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .card { background: transparent; border: 1px solid var(--theme-border); border-radius: 0; padding: 1.25rem; box-shadow: none; }
+    .card h3 { margin-bottom: 1rem; color: var(--theme-text-primary); font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+    .muted { color: var(--theme-text-muted); font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .stat { font-family: var(--font-mono); font-size: 1.25rem; font-weight: 500; color: var(--theme-accent); }
+
+    .section { margin-top: 16px; }
+    .heat { display: grid; grid-template-columns: repeat(24, 1fr); gap: 4px; }
+    .table-wrap { overflow-x: auto; }
+    .passes { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .passes th { text-align: left; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--theme-text-muted); padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--theme-border); }
+    .passes td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--theme-border); white-space: nowrap; }
+    .passes td.num { font-family: var(--font-mono); }
+    .heat-cell { height: 22px; border-radius: 0; background: var(--theme-bg-tertiary); display: flex; align-items: center; justify-content: center; font-size: 10px; line-height: 1; user-select: none; font-weight: 700; color: var(--theme-text-primary); border: 1px solid var(--theme-heat-border, var(--theme-border)); }
+    .heat-labels { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; color: var(--theme-text-muted); margin-top: 6px; }
+
+    @media (max-width: 768px) {
+      .container { padding: 1rem; }
+      .header-top { flex-direction: row; flex-wrap: wrap; gap: 8px 12px; text-align: left; }
+      .header-actions { justify-content: flex-end; flex-wrap: wrap; }
+      .header-content h1 { justify-content: flex-start; }
+      .header-logo { height: 40px; }
+      .subtitle { text-align: left; letter-spacing: 0.08em; }
+      .heat { grid-template-columns: repeat(12, 1fr); }
+    }
+    .aircraft-card { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    .aircraft-photo-link { display: flex; flex-direction: column; gap: 0.25rem; text-decoration: none; font-size: 0.75rem; }
+    .aircraft-photo-link img { width: 280px; max-width: 100%; height: 187px; object-fit: cover; border-radius: 6px; display: block; background: var(--theme-bg-tertiary); }
+    .aircraft-facts { min-width: 200px; }
+    .aircraft-credit-line { color: var(--theme-text-muted); font-family: var(--font-mono); font-size: 0.7rem; }
+  </style>
+</head>
+<body>
+  <div class="header-banner">
+    <div class="header-content">
+      <div class="header-top">
+        <h1>
+          <a href="/" class="brand-link">
+            <img src="/static/brand/planenoise-logo-reversed.svg?v=2" alt="" class="header-logo">
+          </a>
+          <span class="site-title-text">Aircraft Noise</span>
+        </h1>
+        <div class="header-actions">
+          <span class="toolbar-callsign" id="toolbarCallsign"></span>
+          <a id="faLink" class="lang-link" href="#" target="_blank" rel="noopener noreferrer" hidden title="Opens FlightAware in a new tab">FlightAware<svg class="external-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M14 5h5v5M19 5 10 14"/><path fill="none" stroke="currentColor" stroke-width="2" d="M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg><span class="site-title-text"> (opens in a new tab)</span></a>
+          <div class="theme-controls" id="theme-controls-container"></div>
+        </div>
+      </div>
+      <div class="subtitle" id="subtitle">Callsign statistics</div>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="breadcrumbs"><a class="link" href="/">Home</a> › <span id="crumb"></span></div>
+    <h2 class="page-title" id="headerTitle">Callsign</h2>
+
+    <div class="card section aircraft-card" id="aircraftCard" hidden>
+      <a id="aircraftPhotoLink" class="aircraft-photo-link" href="#" target="_blank" rel="noopener noreferrer" hidden>
+        <img id="aircraftPhoto" alt="" loading="lazy">
+        <span class="aircraft-credit-line" id="aircraftCredit"></span>
+      </a>
+      <div class="aircraft-facts">
+        <div class="stat" id="aircraftType">-</div>
+        <div class="muted" id="aircraftFacts"></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card"><div class="muted">Times seen</div><div class="stat" id="seen">-</div></div>
+      <div class="card"><div class="muted">First seen</div><div class="stat" id="first">-</div></div>
+      <div class="card"><div class="muted">Last seen</div><div class="stat" id="last">-</div></div>
+      <div class="card"><div class="muted">Speed (km/h) min/avg/max</div><div class="stat" id="speed">-</div></div>
+      <div class="card"><div class="muted">Altitude (m) min/avg/max</div><div class="stat" id="alt">-</div></div>
+      <div class="card"><div class="muted">Noise (dB) min/avg/max</div><div class="stat" id="noise">-</div></div>
+    </div>
+
+    <div class="card section">
+      <h3>Activity by hour (0–23)</h3>
+      <div id="byHour" class="heat"></div>
+      <div class="heat-labels"><span>0</span><span>6</span><span>12</span><span>18</span><span>23</span></div>
+      <div class="muted" id="byHourLegend"></div>
+    </div>
+
+    <div class="card section">
+      <h3>Activity by weekday (0=Sun)</h3>
+      <div id="byWday" class="heat" style="grid-template-columns: repeat(7, 1fr);"></div>
+      <div class="heat-labels"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+      <div class="muted" id="byWdayLegend"></div>
+    </div>
+
+    <div class="card section">
+      <h3>Recent passes</h3>
+      <div class="table-wrap">
+        <table class="passes" id="passesTable">
+          <thead><tr><th>When</th><th>Distance</th><th>Altitude</th><th>Peak</th><th>LAmax</th><th>Registration</th><th>Type</th></tr></thead>
+          <tbody id="passesBody"><tr><td colspan="7" class="muted">Loading…</td></tr></tbody>
+        </table>
+        <p style="margin:0.6rem 0 0"><button type="button" id="passesMore" class="btn btn-secondary" style="display:none" onclick="loadPasses(window.__callsign, true)">Show older passes</button></p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function q(k){ return document.querySelector(k); }
+    function fmtTs(ts){
+      if(!ts) return '-';
+      const d = new Date(ts * 1000);
+      const zone = window.SENSOR_TIMEZONE || 'Europe/Amsterdam';
+      const dateStr = d.toLocaleDateString('en-GB', { year:'numeric', month:'2-digit', day:'2-digit', timeZone: zone }).replace(/\//g, '-');
+      const timeStr = d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit', hour12:false, timeZone: zone });
+      return dateStr + ', ' + timeStr;
+    }
+    function paintCell(div, n, max){
+      const ratio = Math.min(1, (n || 0) / Math.max(1, max));
+      if (n > 0 && window.themeManager) div.style.background = window.themeManager.heatColor(ratio);
+      const ink = window.themeManager ? window.themeManager.heatInk(n > 0 ? ratio : 0) : 'var(--theme-text-primary)';
+      div.style.color = ink;
+      if (n > 0 && window.themeManager) {
+        const look = window.themeManager.current();
+        const onPale = look && ratio <= look.heatInkAt && look.scheme === 'light';
+        div.style.textShadow = onPale ? '0 1px 2px rgba(255,255,255,0.75)' : '0 1px 3px rgba(0,0,0,0.85)';
+      }
+    }
+
+    async function load(){
+      const params = new URLSearchParams(location.search);
+      const c = params.get('c');
+      const title = c ? c : 'Callsign';
+      document.title = c ? `Callsign ${c} — Aircraft Noise` : 'Callsign — Aircraft Noise';
+      q('#pageTitle').textContent = document.title;
+      q('#headerTitle').textContent = title;
+      q('#crumb').textContent = c || '';
+      const cUp = c ? String(c).trim().toUpperCase() : '';
+      const chip = q('#toolbarCallsign');
+      if (chip) chip.textContent = cUp;
+      const fa = document.getElementById('faLink');
+      if (c && fa) {
+        fa.href = `https://nl.flightaware.com/live/flight/${encodeURIComponent(cUp)}`;
+        fa.hidden = false;
+      } else if (fa) {
+        fa.hidden = true;
+      }
+      var storedLang = 'en';
+      try { storedLang = localStorage.getItem('plane_noise_language') || 'en'; } catch (error) {}
+      document.querySelectorAll('.language-switcher .lang-link').forEach(function (link) {
+        link.classList.toggle('active', link.getAttribute('data-lang') === storedLang);
+      });
+      if(!c) return;
+      try {
+        const place = await fetch('/visitor/settings');
+        if (place.ok) {
+          const settings = await place.json();
+          if (settings.timezone) window.SENSOR_TIMEZONE = settings.timezone;
+        }
+      } catch (error) {}
+      const res = await fetch(`/api/callsigns/${encodeURIComponent(c)}/stats`);
+      if(!res.ok){ document.querySelector('main').innerHTML = '<div class="card">No data found for this callsign.</div>'; return; }
+      const s = await res.json();
+      showAircraft(s.aircraft || {});
+      window.__callsign = c;
+      loadPasses(c);
+      q('#seen').textContent = s.seen;
+      q('#first').textContent = fmtTs(s.first_ts);
+      q('#last').textContent = fmtTs(s.last_ts);
+      q('#speed').textContent = `${s.min_speed_kmh ?? '-'} / ${s.avg_speed_kmh ?? '-'} / ${s.max_speed_kmh ?? '-'}`;
+      q('#alt').textContent = `${s.min_altitude_m ?? '-'} / ${s.avg_altitude_m ?? '-'} / ${s.max_altitude_m ?? '-'}`;
+      q('#noise').textContent = `${s.min_noise_db ?? '-'} / ${s.avg_noise_db ?? '-'} / ${s.max_noise_db ?? '-'}`;
+
+      // Hour heatmap
+      const byH = s.by_hour || {}; const maxH = Math.max(1, ...Object.values(byH).map(Number));
+      const bh = q('#byHour'); bh.innerHTML = '';
+      for(let h=0; h<24; h++){
+        const key = String(h).padStart(2,'0');
+        const n = Number(byH[key]||0);
+        const div = document.createElement('div');
+        div.className='heat-cell'; div.title=`${h}:00 — ${n}`;
+        paintCell(div, n, maxH);
+        div.setAttribute('role','img');
+        div.setAttribute('aria-label', `${h}:00 seen ${n}`);
+        div.textContent = n > 0 ? String(n) : '';
+        bh.appendChild(div);
+      }
+      q('#byHourLegend').textContent = `Max per hour: ${maxH}`;
+
+      // Weekday heatmap
+      const byW = s.by_wday || {}; const maxW = Math.max(1, ...Object.values(byW).map(Number));
+      const bw = q('#byWday'); bw.innerHTML = '';
+      for(let d=0; d<7; d++){
+        const n = Number(byW[String(d)]||0);
+        const div = document.createElement('div');
+        div.className='heat-cell'; div.title=`weekday ${d} — ${n}`;
+        paintCell(div, n, maxW);
+        div.setAttribute('role','img');
+        div.setAttribute('aria-label', `weekday ${d} seen ${n}`);
+        div.textContent = n > 0 ? String(n) : '';
+        bw.appendChild(div);
+      }
+      q('#byWdayLegend').textContent = `Max per weekday: ${maxW}`;
+    }
+    let passesBefore = null;
+    async function loadPasses(callsign, older) {
+      const body = q('#passesBody');
+      if (!body) return;
+      const moreBtn = q('#passesMore');
+      try {
+        const url = `/api/callsigns/${encodeURIComponent(callsign)}/passes?limit=50` + (older && passesBefore ? `&before=${passesBefore}` : '');
+        const r = await fetch(url);
+        const j = r.ok ? await r.json() : { passes: [] };
+        const rows = j.passes || [];
+        if (moreBtn) moreBtn.style.display = j.more ? '' : 'none';
+        if (rows.length) passesBefore = rows[rows.length - 1].ts;
+        if (!rows.length && !older) { body.innerHTML = '<tr><td colspan="7" class="muted">No passes recorded yet.</td></tr>'; return; }
+        const esc = (v) => String(v == null ? '' : v).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+        const num = (v, d, unit) => (typeof v === 'number' ? `${v.toFixed(d)}${unit}` : '–');
+        body.innerHTML = (older ? body.innerHTML : '') + rows.map(p => `<tr>
+          <td data-sort="${Number(p.ts) || 0}">${esc(fmtTs(p.ts))}</td>
+          <td class="num">${num(p.distance_km, 2, ' km')}</td>
+          <td class="num">${num(p.altitude_m, 0, ' m')}</td>
+          <td class="num">${num(p.spl_db, 1, ' dB')}${p.spl_peak_ts ? ` <span class="muted" title="peak time">${esc(fmtTs(p.spl_peak_ts).split(' ').pop())}</span>` : ''}</td>
+          <td class="num">${num(p.spl_max_db, 1, ' dB')}</td>
+          <td>${esc(p.registration || '–')}</td>
+          <td>${esc(p.model || '–')}</td>
+        </tr>`).join('');
+      } catch (error) {
+        body.innerHTML = '<tr><td colspan="7" class="muted">Passes could not be loaded.</td></tr>';
+      }
+    }
+
+    // The aircraft card: type, registration, operator and a planespotters.net photo
+    // fetched through the server, which caches it and sends its own agent string.
+    async function showAircraft(a) {
+      const card = q('#aircraftCard');
+      if (!card) return;
+      const type = a.manufacturer && a.model ? `${a.manufacturer} ${a.model}` : (a.model || a.manufacturer || '');
+      const facts = [a.registration, a.operator, a.icao24 ? a.icao24.toUpperCase() : null].filter(Boolean).join(' · ');
+      if (!type && !facts) return;
+      q('#aircraftType').textContent = type || 'Aircraft';
+      q('#aircraftFacts').textContent = facts;
+      card.hidden = false;
+      const params = new URLSearchParams();
+      if (a.registration) params.set('reg', a.registration);
+      if (a.icao24) params.set('hex', a.icao24);
+      if (![...params.keys()].length) return;
+      try {
+        const r = await fetch(`/api/aircraft_photo?${params.toString()}`);
+        const photo = r.ok ? await r.json() : null;
+        if (!photo || !photo.src) return;
+        const link = q('#aircraftPhotoLink');
+        q('#aircraftPhoto').src = photo.src;
+        q('#aircraftPhoto').alt = type || 'Aircraft';
+        link.href = photo.link || '#';
+        q('#aircraftCredit').textContent = photo.photographer ? `\u00a9 ${photo.photographer} \u00b7 planespotters.net` : 'planespotters.net';
+        link.hidden = false;
+      } catch (error) {
+        /* no photo: the facts stay */
+      }
+    }
+
+    load();
+    window.addEventListener('planenoise-theme', load);
+  </script>
+</body>
+</html>

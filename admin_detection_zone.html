@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Detection Zone - Aircraft Noise</title>
+    <link rel="stylesheet" href="/static/css/theme.css?v=9">
+    <script src="/static/js/themes.js?v=3"></script>
+    <script src="/static/js/theme.js?v=10"></script>
+    <link rel="stylesheet" href="/static/css/admin.css?v=7">
+    <link rel="stylesheet" href="/static/vendor/leaflet/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--theme-gradient);
+            color: white;
+            padding: 12px 0;
+            box-shadow: 0 4px 20px var(--theme-shadow);
+            border-bottom: none !important;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .zone-editor h2 {
+            color: var(--theme-text);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        /* Anti-aliasing for smooth polygon edges */
+        .smooth-polygon {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            shape-rendering: geometricPrecision;
+        }
+
+        .smooth-polygon path {
+            vector-effect: non-scaling-stroke;
+        }
+
+        .zone-editor {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .map-container {
+            height: 500px;
+            border: 2px solid var(--theme-border);
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .zone-point {
+            cursor: move !important;
+        }
+        
+        /* Leaflet moves markers with transforms; a transition on them makes every
+           zoom and pan slide the markers into place late. Hover feedback uses a glow. */
+        .zone-point:hover {
+            filter: drop-shadow(0 0 4px var(--theme-accent));
+        }
+        
+        .leaflet-marker-icon {
+            cursor: move !important;
+        }
+        .leaflet-container, .leaflet-container * {
+            transition: none !important;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary {
+            background: var(--theme-accent);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: var(--theme-bg-tertiary);
+            color: var(--theme-text-primary);
+            border: 1px solid var(--theme-border);
+        }
+        
+        .btn-danger {
+            background: var(--theme-error);
+            color: white;
+        }
+        
+        .zone-info {
+            background: var(--theme-bg-secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .status {
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+        }
+        
+        .status.success {
+            background: var(--theme-success);
+            color: white;
+        }
+        
+        .status.error {
+            background: var(--theme-error);
+            color: white;
+        }
+        
+        .status.info {
+            background: var(--theme-info);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div>
+                <h1>🗺️ Custom Detection Zone</h1>
+                <div class="subtitle">Configure custom polygon detection area</div>
+            </div>
+            <div class="header-actions">
+                <a href="/admin/dashboard" class="btn btn-secondary">← Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="zone-editor">
+        <h2>Detection Zone Editor</h2>
+        <p>Draw a custom detection zone by clicking on the map. Drag points to adjust the shape.</p>
+        
+        <div class="inner-circle-info" style="background: var(--theme-bg-secondary); padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid var(--theme-accent);">
+            <h4 style="color: var(--theme-accent); margin-bottom: 8px;">Noise slant range</h4>
+            <p style="margin: 0; color: var(--theme-text-secondary);">
+                <strong id="innerRadiusValue">Loading...</strong> km through the air, plus 0.2 km.
+                <br><small>A decibel uses √(ground km² + height km²). This polygon does not replace that line.</small>
+            </p>
+        </div>
+        
+        <div class="controls">
+            <button id="startDrawing" class="btn btn-primary">Start Drawing</button>
+            <button id="clearZone" class="btn btn-danger">Clear Zone</button>
+            <button id="saveZone" class="btn btn-primary">Save Zone</button>
+            <button id="loadZone" class="btn btn-secondary">Load Current Zone</button>
+            <button id="resetToCircle" class="btn btn-secondary">Reset to Circle</button>
+        </div>
+        
+        <div id="map" class="map-container"></div>
+        
+        <div class="zone-info">
+            <h3>Zone Information</h3>
+            <div id="zoneStats">
+                <p>No zone defined. Click "Start Drawing" to begin.</p>
+            </div>
+        </div>
+        
+        <div id="status"></div>
+    </div>
+
+    <script src="/static/vendor/leaflet/leaflet.js"></script>
+    <script>
+        let map;
+        let drawingLayer;
+        let currentZone = null;
+        let isDrawing = false;
+        
+        // Default sensor location (Netherlands)
+        const SENSOR_LAT = 0;  // replaced by the saved position once loaded
+        const SENSOR_LON = 0;
+        
+        // Initialize map
+        function initMap() {
+            map = L.map('map').setView([SENSOR_LAT, SENSOR_LON], 11);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            // The standard Leaflet pin for the sensor, from the vendored images.
+            L.Icon.Default.imagePath = '/static/vendor/leaflet/images/';
+            const sensorMarker = L.marker([SENSOR_LAT, SENSOR_LON], { title: 'Noise sensor', keyboard: false }).addTo(map);
+            sensorMarker.bindPopup('Noise sensor');
+            
+            // Initialize drawing layer
+            drawingLayer = L.layerGroup().addTo(map);
+        }
+        
+        // Start drawing mode
+        function startDrawing() {
+            isDrawing = true;
+            map.on('click', addPoint);
+            showStatus('Click on the map to add points to your detection zone', 'info');
+        }
+        
+        // Add point to zone
+        function addPoint(e) {
+            if (!isDrawing) return;
+            
+            const lat = e.latlng.lat;
+            const lon = e.latlng.lng;
+            
+            if (!currentZone) {
+                currentZone = [];
+            }
+            
+            currentZone.push([lat, lon]);
+            
+            // Redraw the zone
+            redrawZone();
+            updateZoneStats();
+        }
+        
+        // Redraw the zone polygon
+        function redrawZone() {
+            drawingLayer.clearLayers();
+            
+            if (currentZone && currentZone.length >= 3) {
+                // Create polygon
+                const polygon = L.polygon(currentZone, {
+                    color: '#3388ff',
+                    fillColor: '#3388ff',
+                    fillOpacity: 0.2,
+                    weight: 2,
+                    smoothFactor: 2.0,
+                    lineCap: 'round',
+                    lineJoin: 'round',
+                    dashArray: null,
+                    className: 'smooth-polygon'
+                }).addTo(drawingLayer);
+                
+                // Add draggable markers for each point
+                currentZone.forEach((point, index) => {
+                    const marker = L.marker(point, {
+                        icon: L.divIcon({
+                            className: 'zone-point',
+                            html: `<div style="background: #3388ff; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; cursor: move;"></div>`,
+                            iconSize: [12, 12]
+                        }),
+                        draggable: true
+                    }).addTo(drawingLayer);
+                    
+                    marker.on('drag', function(e) {
+                        const newPos = e.target.getLatLng();
+                        currentZone[index] = [newPos.lat, newPos.lng];
+                        
+                        // Update polygon without recreating markers
+                        if (currentZone.length >= 3) {
+                            // Find and update the polygon
+                            drawingLayer.eachLayer(function(layer) {
+                                if (layer instanceof L.Polygon) {
+                                    layer.setLatLngs(currentZone);
+                                }
+                            });
+                        }
+                        updateZoneStats();
+                    });
+                    
+                    marker.on('dragend', function(e) {
+                        const newPos = e.target.getLatLng();
+                        showStatus(`Moved point ${index + 1} to: ${newPos.lat.toFixed(6)}°N, ${newPos.lng.toFixed(6)}°E`, 'info');
+                    });
+                });
+            } else if (currentZone && currentZone.length > 0) {
+                // Show points as draggable markers
+                currentZone.forEach((point, index) => {
+                    const marker = L.marker(point, {
+                        icon: L.divIcon({
+                            className: 'zone-point',
+                            html: `<div style="background: #ff6b6b; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; cursor: move;"></div>`,
+                            iconSize: [12, 12]
+                        }),
+                        draggable: true
+                    }).addTo(drawingLayer);
+                    
+                    marker.on('drag', function(e) {
+                        const newPos = e.target.getLatLng();
+                        currentZone[index] = [newPos.lat, newPos.lng];
+                        updateZoneStats();
+                    });
+                    
+                    marker.on('dragend', function(e) {
+                        const newPos = e.target.getLatLng();
+                        showStatus(`Moved point ${index + 1} to: ${newPos.lat.toFixed(6)}°N, ${newPos.lng.toFixed(6)}°E`, 'info');
+                    });
+                });
+            }
+        }
+        
+        // Update zone statistics
+        function updateZoneStats() {
+            const statsDiv = document.getElementById('zoneStats');
+            
+            if (!currentZone || currentZone.length === 0) {
+                statsDiv.innerHTML = '<p>No zone defined. Click "Start Drawing" to begin.</p>';
+                return;
+            }
+            
+            if (currentZone.length < 3) {
+                statsDiv.innerHTML = `<p>Zone has ${currentZone.length} points. Need at least 3 points to create a polygon.</p>`;
+                return;
+            }
+            
+            // Calculate area (approximate)
+            const area = calculatePolygonArea(currentZone);
+            const areaKm2 = (area / 1000000).toFixed(2); // Convert to km²
+            
+            statsDiv.innerHTML = `
+                <p><strong>Zone Status:</strong> ${currentZone.length} points</p>
+                <p><strong>Approximate Area:</strong> ${areaKm2} km²</p>
+                <p><strong>Points:</strong></p>
+                <ul>
+                    ${currentZone.map((point, i) => `<li>Point ${i+1}: ${point[0].toFixed(6)}°N, ${point[1].toFixed(6)}°E</li>`).join('')}
+                </ul>
+            `;
+        }
+        
+        // Calculate polygon area using spherical geometry (proper for lat/lon coordinates)
+        function calculatePolygonArea(points) {
+            if (points.length < 3) return 0;
+            
+            // Convert degrees to radians
+            const toRad = (deg) => deg * Math.PI / 180;
+            
+            // Earth's radius in meters
+            const R = 6371000;
+            
+            let area = 0;
+            for (let i = 0; i < points.length; i++) {
+                const j = (i + 1) % points.length;
+                const lat1 = toRad(points[i][0]);
+                const lon1 = toRad(points[i][1]);
+                const lat2 = toRad(points[j][0]);
+                const lon2 = toRad(points[j][1]);
+                
+                area += (lon2 - lon1) * (2 + Math.sin(lat1) + Math.sin(lat2));
+            }
+            
+            area = Math.abs(area) * R * R / 2;
+            return area; // Returns area in square meters
+        }
+        
+        // Clear zone
+        function clearZone() {
+            currentZone = null;
+            drawingLayer.clearLayers();
+            updateZoneStats();
+            showStatus('Zone cleared', 'info');
+        }
+        
+        // Save zone to server
+        async function saveZone() {
+            if (!currentZone || currentZone.length < 3) {
+                showStatus('Please create a zone with at least 3 points first', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/admin/save_detection_zone', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        zone_type: 'polygon',
+                        points: currentZone
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showStatus('Zone saved successfully!', 'success');
+                } else {
+                    showStatus(`Error saving zone: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`Error saving zone: ${error.message}`, 'error');
+            }
+        }
+        
+        // Load current zone
+        async function loadZone() {
+            try {
+                const response = await fetch('/api/admin/get_detection_zone');
+                const result = await response.json();
+                
+                if (response.ok && result.zone_type === 'polygon') {
+                    currentZone = result.points;
+                    redrawZone();
+                    updateZoneStats();
+                    showStatus('Zone loaded successfully!', 'success');
+                } else {
+                    showStatus('No custom zone found. Using default circular zone.', 'info');
+                }
+            } catch (error) {
+                showStatus(`Error loading zone: ${error.message}`, 'error');
+            }
+        }
+        
+        // Reset to circular zone
+        async function resetToCircle() {
+            try {
+                const response = await fetch('/api/admin/reset_detection_zone', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    currentZone = null;
+                    drawingLayer.clearLayers();
+                    updateZoneStats();
+                    showStatus('Reset to circular zone successfully!', 'success');
+                } else {
+                    showStatus(`Error resetting zone: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`Error resetting zone: ${error.message}`, 'error');
+            }
+        }
+        
+        // Show status message
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+            setTimeout(() => {
+                statusDiv.innerHTML = '';
+            }, 5000);
+        }
+        
+        // Event listeners
+        document.getElementById('startDrawing').addEventListener('click', startDrawing);
+        document.getElementById('clearZone').addEventListener('click', clearZone);
+        document.getElementById('saveZone').addEventListener('click', saveZone);
+        document.getElementById('loadZone').addEventListener('click', loadZone);
+        document.getElementById('resetToCircle').addEventListener('click', resetToCircle);
+        
+        // Load inner circle radius
+        async function loadInnerRadius() {
+            try {
+                const response = await fetch('/api/admin/settings');
+                if (response.ok) {
+                    const settings = await response.json();
+                    const radius = settings.noise_assoc_inner_km || '2.5';
+                    document.getElementById('innerRadiusValue').textContent = radius;
+                }
+            } catch (error) {
+                console.error('Failed to load inner radius:', error);
+                document.getElementById('innerRadiusValue').textContent = '2.5';
+            }
+        }
+
+        // Initialize
+        initMap();
+        loadZone(); // Load existing zone on page load
+        loadInnerRadius(); // Load inner circle radius
+    </script>
+<script src="/static/js/admin-shell.js?v=9"></script>
+</body>
+</html>
