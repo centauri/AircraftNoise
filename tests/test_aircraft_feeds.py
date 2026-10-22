@@ -369,6 +369,28 @@ class AircraftFeedTests(unittest.TestCase):
         self.assertEqual(proxy_server.speed_kmh_from_feed(180, "airplanes_live"), 333)
         self.assertEqual(proxy_server.speed_kmh_from_feed(180, "adsb_fi"), 333)
 
+    def test_hub_feed_sends_the_station_key_and_a_blurred_position(self):
+        seen = []
+
+        def fake_get(url, headers=None, timeout=None):
+            seen.append((url, headers or {}))
+            return _Response(200, {"ac": [{"hex": "ABC123", "flight": "KLM41B", "lat": 52.52, "lon": 4.72, "alt_baro": 3000, "gs": 150, "track": 42}], "source": "airplanes.live"})
+
+        proxy_server.requests.get = fake_get
+        self.db.set_admin_setting("sensor_lat", "52.51537"); self.db.set_admin_setting("sensor_lon", "4.72063")
+        self.assertEqual(proxy_server.get_aircraft_data_hub(), [], "without a shared station the hub cannot be asked")
+        self.db.set_admin_setting("community_last_id", "83769f0de12cfe11")
+        self.db.set_admin_setting("api_secret.community_station_key", "k" * 40)
+        rows = proxy_server.get_aircraft_data_hub()
+        self.assertEqual(rows[0]["source"], "hub")
+        url, headers = seen[-1]
+        self.assertTrue(url.startswith("https://data.aircraftnoise.eu/api/v1/hub/point/52.52/4.72/"), url)
+        self.assertIn("?station=83769f0de12cfe11", url)
+        self.assertEqual(headers.get("X-Station-Key"), "k" * 40)
+        self.assertNotIn("52.51537", url, "the exact microphone position never leaves the station")
+        from feeds import feed_by_id
+        self.assertEqual(feed_by_id("aircraft_hub")["config"]["auth_required"], True)
+
     def test_adsb_fi_and_adsb_lol_use_the_same_shape_with_their_own_urls(self):
         seen = []
 

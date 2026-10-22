@@ -4755,24 +4755,30 @@ def speed_kmh_from_feed(vel, source):
         return None
     if source == 'opensky':
         return int(round(v * 3.6))
-    if source in ('flightaware', 'airplanes_live', 'adsb_fi', 'adsb_lol'):
+    if source in ('flightaware', 'airplanes_live', 'adsb_fi', 'adsb_lol', 'hub'):
         return int(round(v * 1.852))
     # Unknown feed: small numbers are m/s, larger ones are already km/h.
     return int(round(v * 3.6)) if v < 200 else int(round(v))
 
 
-def _readsb_point_feed(feed_id, source, default_base, auth_header=None):
+def _readsb_point_feed(feed_id, source, default_base, auth_header=None, blur_deg=0.0, query=''):
     """Aircraft around the sensor from a readsb-style /point API: airplanes.live,
-    adsb.fi and adsb.lol all answer in the ADS-B Exchange v2 shape (feet, knots)."""
+    adsb.fi and adsb.lol all answer in the ADS-B Exchange v2 shape (feet, knots).
+    With blur_deg the asked position is rounded to that grid and the circle
+    widened to cover the difference, so the other side never learns the exact
+    microphone; the zone test afterwards uses the real one."""
     try:
         settings = db.get_all_admin_settings()
         radius_km = float(settings.get('radius_km', 8.0))
+        lat, lon = sensor_position()
+        if blur_deg:
+            lat, lon = round(lat / blur_deg) * blur_deg, round(lon / blur_deg) * blur_deg
+            radius_km += blur_deg * 111.0  # the rounding can move the centre by up to half a cell each way
         radius_nm = max(1, int(math.ceil(radius_km / 1.852)))  # these APIs take nautical miles
         cfg = get_api_config(feed_id) or {}
         base_url = (cfg.get('base_url') or default_base).rstrip('/')
         template = (cfg.get('endpoints') or {}).get('point') or '/point/{lat}/{lon}/{radius}'
-        lat, lon = sensor_position()
-        url = base_url + template.format(lat=lat, lon=lon, radius=radius_nm)
+        url = base_url + template.format(lat=lat, lon=lon, radius=radius_nm) + query
         headers = {'User-Agent': 'plane-noise-dashboard/1.0 (+https://aircraftnoise.eu)'}
         if auth_header:
             headers.update(auth_header)
@@ -4819,6 +4825,19 @@ def get_aircraft_data_airplanes_live():
                               {"auth": key} if key else None)
 
 
+def get_aircraft_data_hub():
+    """The data service's feed hub: one fetch per region, shared. Authenticates
+    with the station id and key the community sharing already has."""
+    station = str(db.get_admin_setting('community_last_id', '') or '')
+    station_key = str(db.get_admin_setting('api_secret.community_station_key', '') or '')
+    if not station or not station_key:
+        logging.info("Hub feed: share the station first (Settings → Community), the hub uses its id and key")
+        _mark_feed('aircraft_hub', True)
+        return []
+    return _readsb_point_feed('aircraft_hub', 'hub', 'https://data.aircraftnoise.eu/api/v1/hub',
+                              {"X-Station-Key": station_key}, blur_deg=0.02, query='?station=' + station)
+
+
 def get_aircraft_data_adsb_fi():
     """adsb.fi open data, v3 radius endpoint. One request a second, credit in the footer."""
     return _readsb_point_feed('aircraft_adsb_fi', 'adsb_fi', 'https://opendata.adsb.fi/api/v3')
@@ -4833,6 +4852,7 @@ AIRCRAFT_FETCHERS.update({
     'opensky': get_aircraft_data_opensky,
     'airplanes_live': get_aircraft_data_airplanes_live,
     'adsb_fi': get_aircraft_data_adsb_fi,
+    'hub': get_aircraft_data_hub,
     'adsb_lol': get_aircraft_data_adsb_lol,
     'flightaware': get_flightaware_aircraft_data,
 })
