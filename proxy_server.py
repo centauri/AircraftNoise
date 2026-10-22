@@ -6219,21 +6219,23 @@ def get_detection_zone():
     """Get current detection zone configuration"""
     try:
         inner_zone_type = db.get_admin_setting('inner_zone_type', 'circle')
+        lat, lon = sensor_position()
         if inner_zone_type == 'polygon':
             points_json = db.get_admin_setting('detection_zone_points', '[]')
             points = json.loads(points_json) if points_json else []
             return jsonify({
                 'zone_type': 'polygon',
-                'points': points
+                'points': points,
+                'sensor': [lat, lon]
             })
         else:
             # Return circular zone info
             radius_km = float(db.get_admin_setting('radius_km', '8.0'))
-            lat, lon = sensor_position()
             return jsonify({
                 'zone_type': 'circle',
                 'center': [lat, lon],
-                'radius_km': radius_km
+                'radius_km': radius_km,
+                'sensor': [lat, lon]
             })
     except Exception as e:
         return jsonify({'error': str(e)}), 500

@@ -216,13 +216,12 @@
         let currentZone = null;
         let isDrawing = false;
         
-        // Default sensor location (Netherlands)
-        const SENSOR_LAT = 0;  // replaced by the saved position once loaded
-        const SENSOR_LON = 0;
+        // The sensor position comes with the zone; until then the map waits at 0,0 without tiles drawn around nothing.
+        let sensorMarker = null;
         
         // Initialize map
         function initMap() {
-            map = L.map('map').setView([SENSOR_LAT, SENSOR_LON], 11);
+            map = L.map('map').setView([0, 0], 2);
             
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors'
@@ -230,7 +229,7 @@
             
             // The standard Leaflet pin for the sensor, from the vendored images.
             L.Icon.Default.imagePath = '/static/vendor/leaflet/images/';
-            const sensorMarker = L.marker([SENSOR_LAT, SENSOR_LON], { title: 'Noise sensor', keyboard: false }).addTo(map);
+            sensorMarker = L.marker([0, 0], { title: 'Noise sensor', keyboard: false }).addTo(map);
             sensorMarker.bindPopup('Noise sensor');
             
             // Initialize drawing layer
@@ -435,6 +434,11 @@
             try {
                 const response = await fetch('/api/admin/get_detection_zone');
                 const result = await response.json();
+                // Centre on the sensor first, whatever the zone is.
+                if (response.ok && Array.isArray(result.sensor) && (result.sensor[0] || result.sensor[1])) {
+                    sensorMarker.setLatLng(result.sensor);
+                    map.setView(result.sensor, 11);
+                }
                 
                 if (response.ok && result.zone_type === 'polygon') {
                     currentZone = result.points;
