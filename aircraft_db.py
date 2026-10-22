@@ -37,9 +37,14 @@ def split_type_name(long_name):
 
 
 def parse_rows(text):
-    """Rows of the tar1090 CSV: hex;registration;typecode;flags;type name;built;operator;..."""
-    out = []
-    for line in text.splitlines():
+    """Rows of the tar1090 CSV as a list; see iter_rows for the streaming form."""
+    return list(iter_rows(text.splitlines()))
+
+
+def iter_rows(lines):
+    """Rows of the tar1090 CSV one at a time: hex;registration;typecode;flags;type name;built;operator;...
+    A generator, so 600,000 aircraft never sit in memory as dicts at once."""
+    for line in lines:
         parts = line.split(";")
         if len(parts) < 3:
             continue
@@ -56,7 +61,7 @@ def parse_rows(text):
         if not (registration or typecode or type_name):
             continue
         manufacturer, model = split_type_name(type_name)
-        out.append({
+        yield {
             "icao24": icao,
             "registration": registration,
             "typecode": typecode,
@@ -65,18 +70,19 @@ def parse_rows(text):
             "model": model or typecode,
             "operator": (operator.title() if operator.isupper() else operator) or None,
             "built": built or None,
-        })
-    return out
+        }
 
 
 last_fetch = {"bytes": None, "source_modified": None}
 
 
 def fetch_registry(timeout=180):
-    """Download and parse the whole database. Size and publication date land in last_fetch."""
+    """Download the whole database and yield its rows while decompressing, so
+    only the 8 MB download is held in memory. Size and publication date land
+    in last_fetch."""
     r = requests.get(TAR1090_DB_URL, headers={"User-Agent": USER_AGENT}, timeout=timeout)
     r.raise_for_status()
     last_fetch["bytes"] = len(r.content)
     last_fetch["source_modified"] = r.headers.get("Last-Modified")
-    text = gzip.GzipFile(fileobj=io.BytesIO(r.content)).read().decode("utf-8", "replace")
-    return parse_rows(text)
+    stream = io.TextIOWrapper(gzip.GzipFile(fileobj=io.BytesIO(r.content)), encoding="utf-8", errors="replace")
+    return iter_rows(stream)

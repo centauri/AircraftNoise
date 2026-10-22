@@ -1019,17 +1019,25 @@ class PlaneNoiseDB:
             return len(updates)
 
     # ---- aircraft registry ---------------------------------------------------
-    def replace_aircraft_registry(self, rows: List[Dict]) -> int:
-        """Load the whole registry in one transaction."""
+    def replace_aircraft_registry(self, rows) -> int:
+        """Load the whole registry in one transaction. rows may be a list or a
+        generator; it is consumed once and counted as it goes."""
+        count = [0]
+
+        def counted():
+            for row in rows:
+                count[0] += 1
+                yield row
+
         with sqlite3.connect(self.db_path) as conn:
             conn.execute('DELETE FROM aircraft_registry')
             conn.executemany('''
                 INSERT OR REPLACE INTO aircraft_registry
                     (icao24, registration, typecode, type_name, manufacturer, model, operator, built)
                 VALUES (:icao24, :registration, :typecode, :type_name, :manufacturer, :model, :operator, :built)
-            ''', rows)
+            ''', counted())
             conn.commit()
-            return len(rows)
+            return count[0]
 
     def registry_size(self) -> int:
         with sqlite3.connect(self.db_path) as conn:

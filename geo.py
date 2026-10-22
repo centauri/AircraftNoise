@@ -49,8 +49,9 @@ def ip_key(ip):
 
 
 def parse_rows(text):
-    """start,end,country lines of the DB-IP CSV into (start, end, cc) keys."""
-    for line in text.splitlines():
+    """start,end,country lines of the DB-IP CSV into (start, end, cc) keys.
+    Takes the whole text or any iterable of lines."""
+    for line in (text.splitlines() if isinstance(text, str) else text):
         parts = line.strip().split(",")
         if len(parts) != 3:
             continue
@@ -165,19 +166,28 @@ class Geo:
                 break
         if not content:
             raise RuntimeError("DB-IP has no country table for {0}".format(" or ".join(months)))
-        text = gzip.GzipFile(fileobj=io.BytesIO(content)).read().decode("utf-8", "replace")
-        rows = list(parse_rows(text))
-        if len(rows) < 1000:
-            raise RuntimeError("The country table looks empty")
+        # Streamed: the gzip is decoded line by line and the rows go straight
+        # into the table, so 710,000 ranges never sit in memory at once.
+        stream = io.TextIOWrapper(gzip.GzipFile(fileobj=io.BytesIO(content)), encoding="utf-8", errors="replace")
+        count = [0]
+
+        def counted():
+            for row in parse_rows(stream):
+                count[0] += 1
+                yield row
+
         tmp = self.path + ".tmp"
         if os.path.exists(tmp):
             os.unlink(tmp)
         with sqlite3.connect(tmp) as conn:
             conn.execute("CREATE TABLE ranges (start BLOB PRIMARY KEY, end BLOB NOT NULL, cc TEXT NOT NULL)")
             conn.execute("CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
-            conn.executemany("INSERT OR REPLACE INTO ranges (start, end, cc) VALUES (?, ?, ?)", rows)
+            conn.executemany("INSERT OR REPLACE INTO ranges (start, end, cc) VALUES (?, ?, ?)", counted())
             conn.executemany("INSERT INTO meta (key, value) VALUES (?, ?)", [
                 ("month", month), ("updated_at", now.replace(microsecond=0).isoformat()), ("bytes", str(len(content)))])
+        if count[0] < 1000:
+            os.unlink(tmp)
+            raise RuntimeError("The country table looks empty")
         os.replace(tmp, self.path)
-        logging.info("Country table refreshed: %d ranges for %s", len(rows), month)
-        return {"rows": len(rows), "month": month, "bytes": len(content)}
+        logging.info("Country table refreshed: %d ranges for %s", count[0], month)
+        return {"rows": count[0], "month": month, "bytes": len(content)}
