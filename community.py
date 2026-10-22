@@ -52,6 +52,13 @@ def aggregator_url(settings=None):
     return canonical_url(settings.get("community_aggregator_url") or "") or DEFAULT_AGGREGATOR
 
 
+def enabled(settings=None):
+    """Sharing is on unless the owner switched it off: the point of a station is
+    that its measurements count. A fresh install shares from its first pass."""
+    settings = settings if settings is not None else db.get_all_admin_settings()
+    return _truthy(settings.get("community_enabled", "true"))
+
+
 def _truthy(value):
     return str(value or "").strip().lower() in ("1", "true", "yes", "on")
 
@@ -127,9 +134,8 @@ def station_id(settings, url=None):
     adopted = str(settings.get("community_last_id") or "").strip()
     if not adopted:
         url = canonical_url(url or settings.get("community_public_url"))
-        if not url:
-            return ""
-        adopted = monitor_id(url)
+        # Without a public address the id is simply drawn once; it is kept for life either way.
+        adopted = monitor_id(url) if url else secrets.token_hex(8)
     db.set_admin_setting("community_station_id", adopted)
     settings["community_station_id"] = adopted
     return adopted
@@ -169,8 +175,6 @@ def build_record(settings):
     """The public record, or (None, reason). Sensor id is never copied in."""
     settings = settings or {}
     url = canonical_url(settings.get("community_public_url"))
-    if not url:
-        return None, "missing_url"
     try:
         lat = float(settings.get("sensor_lat"))
         lon = float(settings.get("sensor_lon"))
@@ -187,7 +191,7 @@ def build_record(settings):
     except (TypeError, ValueError):
         blur_m = BLUR_METRES
     blurred_lat, blurred_lon = anonymize(lat, lon, station, radius_m=blur_m)
-    public = is_public_address(url)
+    public = bool(url) and is_public_address(url)
     record = {
         "id": station,
         "name": name,
@@ -524,7 +528,7 @@ def claim_station(code):
     station key. The code comes from the account page there."""
     settings = db.get_all_admin_settings()
     station = str(settings.get("community_last_id") or "")
-    if not _truthy(settings.get("community_enabled")) or not station:
+    if not enabled(settings) or not station:
         return {"ok": False, "error": "not_shared", "message": "Share the station first; then claim it."}
     code = str(code or "").strip().upper()
     if not code:
@@ -576,7 +580,7 @@ def share_passes(settings=None, force=False):
     overlap. Idempotent at the service, so the overlap costs nothing, brings late
     peak corrections along, and an outage loses nothing up to a week."""
     settings = settings or db.get_all_admin_settings()
-    if not _truthy(settings.get("community_enabled")):
+    if not enabled(settings):
         return {"ok": False, "error": "disabled"}
     if not force and not _truthy(settings.get("community_share_passes", "true")):
         return {"ok": False, "error": "passes_off"}
@@ -657,7 +661,7 @@ def backfill_start():
     """Start, or resume, sending the whole history in the background."""
     global _backfill_thread
     settings = db.get_all_admin_settings()
-    if not _truthy(settings.get("community_enabled")):
+    if not enabled(settings):
         return {"ok": False, "error": "disabled"}
     if not str(settings.get("community_last_id") or ""):
         return {"ok": False, "error": "no_station", "message": "Share the station first; the history follows the same id."}
@@ -767,7 +771,7 @@ def admin_status():
     settings = db.get_all_admin_settings()
     record, reason = build_record(settings)
     return {
-        "enabled": _truthy(settings.get("community_enabled")),
+        "enabled": enabled(settings),
         "share_passes": _truthy(settings.get("community_share_passes", "true")),
         "public_url": settings.get("community_public_url") or "",
         "aggregator_url": aggregator_url(settings),
@@ -816,7 +820,7 @@ def sync_if_due():
     except Exception:
         logging.exception("Community sync could not read settings")
         return
-    if not _truthy(settings.get("community_enabled")):
+    if not enabled(settings):
         return
     record, _reason = build_record(settings)
     if not record:

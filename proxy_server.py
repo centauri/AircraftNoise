@@ -3583,7 +3583,7 @@ def api_admin_community_backfill():
 @app.post('/api/admin/community/update')
 @require_admin_auth
 def api_admin_community_update():
-    if not community._truthy(db.get_admin_setting('community_enabled', 'false')):
+    if not community.enabled():
         return jsonify({"ok": False, "error": "disabled"}), 400
     result = community.share_now()
     if result.get("ok") and result.get("aggregator") == "sent":

@@ -370,3 +370,18 @@ class CommunityRecordTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SharingDefaultTests(unittest.TestCase):
+    def test_sharing_is_on_unless_switched_off(self):
+        self.assertTrue(community.enabled({}))
+        self.assertTrue(community.enabled({"community_enabled": "true"}))
+        self.assertFalse(community.enabled({"community_enabled": "false"}))
+
+    def test_station_without_public_address_still_gets_a_record(self):
+        settings = {"sensor_lat": "52.5154", "sensor_lon": "4.7206", "site_place_name": "Somewhere", "community_station_id": "0123456789abcdef"}
+        record, reason = community.build_record(settings)
+        self.assertIsNone(reason)
+        self.assertIsNone(record["url"])
+        self.assertTrue(record["local_only"])
+        self.assertEqual(record["id"], "0123456789abcdef")

@@ -581,7 +581,7 @@
 
         <div class="card" data-group="public" data-title="Community monitors">
             <h2>Community monitors</h2>
-            <p class="small" style="color: var(--theme-text-muted); margin-bottom: 1rem;">Share this station with the worldwide database at <a href="https://data.aircraftnoise.eu/" target="_blank" rel="noopener">data.aircraftnoise.eu</a> and on every install's community page. The shared point is the public decoy position, moved by the privacy radius (200 m by default). The sensor id, the raw noise samples and the exact coordinates stay on this server. Sharing is off until you switch it on here. A new station is recorded at once but joins the public map and totals only after a week of steady reports, or straight away when you claim it below.</p>
+            <p class="small" style="color: var(--theme-text-muted); margin-bottom: 1rem;">Share this station with the worldwide database at <a href="https://data.aircraftnoise.eu/" target="_blank" rel="noopener">data.aircraftnoise.eu</a> and on every install's community page. The shared point is the public decoy position, moved by the privacy radius (200 m by default). The sensor id, the raw noise samples and the exact coordinates stay on this server. Sharing is on from the first start: that is what a station is for. Untick it here to keep this station to yourself; nothing more is sent, and what was shared stays under the station's id without any link to you. A new station is recorded at once but joins the public map and totals only after a week of steady reports, or straight away when you claim it below.</p>
             <form id="communityForm">
                 <div class="form-group">
                     <label><input type="checkbox" id="communityEnabled"> Share this station</label>
@@ -2768,7 +2768,7 @@
             const preview = document.getElementById('communityPreview');
             if (!status || !status.preview) {
                 const reason = status && status.preview_error;
-                if (reason === 'missing_url') preview.textContent = 'Add the public URL to see what would be shared.';
+                if (reason === 'missing_url') preview.textContent = 'Set the sensor position and the place name to see what would be shared.';
                 else if (reason === 'missing_location') preview.textContent = 'Set the sensor latitude and longitude first.';
                 else if (reason === 'missing_name') preview.textContent = 'Set a place name first.';
                 else preview.textContent = '';
@@ -2841,7 +2841,7 @@
             if (!response.ok) {
                 if (body.error === 'invalid_url') showError('Enter a public URL starting with http:// or https://.');
                 else if (body.error === 'invalid_station_key') showError('A station key is 32 to 128 printable characters.');
-                else if (body.error === 'missing_url') showError('Enter the public URL before sharing.');
+                else if (body.error === 'missing_location' || body.error === 'missing_name') showError('Set the sensor position and the place name first.');
                 else if (body.error === 'missing_location') showError('Set the sensor latitude and longitude first.');
                 else showError(body.message || 'Could not save community settings.');
                 return;
