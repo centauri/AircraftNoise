@@ -581,7 +581,7 @@
 
         <div class="card" data-group="public" data-title="Community monitors">
             <h2>Community monitors</h2>
-            <p class="small" style="color: var(--theme-text-muted); margin-bottom: 1rem;">Share this station with the worldwide database at <a href="https://data.aircraftnoise.eu/" target="_blank" rel="noopener">data.aircraftnoise.eu</a> and on every install's community page. The shared point is the public decoy position, moved by the privacy radius (200 m by default). The sensor id, the raw noise samples and the exact coordinates stay on this server.</p>
+            <p class="small" style="color: var(--theme-text-muted); margin-bottom: 1rem;">Share this station with the worldwide database at <a href="https://data.aircraftnoise.eu/" target="_blank" rel="noopener">data.aircraftnoise.eu</a> and on every install's community page. The shared point is the public decoy position, moved by the privacy radius (200 m by default). The sensor id, the raw noise samples and the exact coordinates stay on this server. Sharing is off until you switch it on here. A new station is recorded at once but joins the public map and totals only after a week of steady reports, or straight away when you claim it below.</p>
             <form id="communityForm">
                 <div class="form-group">
                     <label><input type="checkbox" id="communityEnabled"> Share this station</label>
@@ -620,7 +620,7 @@
                 </div>
             </form>
             <h3 style="margin-top: 1.25rem;">Claim this station</h3>
-            <p class="small" style="color: var(--theme-text-muted);">An account at <a href="https://data.aircraftnoise.eu/account" target="_blank" rel="noopener">data.aircraftnoise.eu</a> lets you rotate the key, unlink the station, search every stored pass, or ask for the station's data to be removed. Make a claim code there and enter it here; the install sends it with its station key.</p>
+            <p class="small" style="color: var(--theme-text-muted);">An account at <a href="https://data.aircraftnoise.eu/account" target="_blank" rel="noopener">data.aircraftnoise.eu</a> lets you rotate the key, unlink the station, search every stored pass, or ask for the station's data to be removed. Claiming also puts a new station on the public map at once, without waiting the week. Make a claim code there and enter it here; the install sends it with its station key.</p>
             <div class="form-group">
                 <label for="communityClaimCode">Claim code</label>
                 <input type="text" id="communityClaimCode" spellcheck="false" autocomplete="off" placeholder="8 characters from the account page" maxlength="12">
@@ -2804,9 +2804,12 @@
             else passes.textContent = 'No passes sent yet.';
             document.getElementById('communityStationKey').value = '';
             renderBackfill(status.backfill || {});
-            document.getElementById('communityClaimStatus').textContent = status.claimed_at
+            var claimLine = status.claimed_at
                 ? 'Claimed on ' + new Date(status.claimed_at).toLocaleString() + '.'
                 : (status.enabled ? 'Not claimed yet.' : '');
+            if (status.enabled && status.verified === 'false') claimLine += ' Not on the public map yet: that follows after a week of steady reports, or at once when you claim the station.';
+            else if (status.enabled && status.verified === 'true') claimLine += ' On the public map of the data service.';
+            document.getElementById('communityClaimStatus').textContent = claimLine;
             renderCommunityPreview(status);
         }
 

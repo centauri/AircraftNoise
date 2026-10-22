@@ -428,6 +428,13 @@ def post_remote(url, body, api_key=None):
         logging.info("Community post failed: %s", exc)
         return "failed"
     if response.ok:
+        if isinstance(body, dict) and "monitor" in body:
+            try:
+                answer = response.json() or {}
+            except Exception:
+                answer = {}
+            if "verified" in answer:
+                db.set_admin_setting("community_verified", "true" if answer.get("verified") else "false")
         return "sent"
     if response.status_code == 403:
         logging.warning("Community: this station id is registered with another key at %s", target)
@@ -466,6 +473,8 @@ def share_now():
 
 def _share_message(aggregator):
     if aggregator == "sent":
+        if db.get_admin_setting("community_verified", "") == "false":
+            return "This station was sent and its passes follow within ten minutes. It joins the public map and totals after a week of steady reports, or at once when you claim it below."
         return "This station was sent. It is on the shared map now; its passes follow within ten minutes."
     if aggregator == "rejected":
         return "Saved on this server. The data service knows this address under another key; contact aircraftnoise.eu to claim it."
@@ -770,6 +779,7 @@ def admin_status():
         "passes_last_count": int(settings.get("community_passes_last_count") or 0),
         "passes_last_error": settings.get("community_passes_last_error") or "",
         "claimed_at": settings.get("community_claimed_at") or "",
+        "verified": settings.get("community_verified") or "",
         "preview": record,
         "preview_error": reason,
     }
