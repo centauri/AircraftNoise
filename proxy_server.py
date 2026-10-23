@@ -31,6 +31,7 @@ from feeds import (
 )
 import analytics
 import community
+import localize
 import geo
 import guard
 from datetime import timedelta, datetime, timezone
@@ -3381,41 +3382,50 @@ def _render_public_index():
     path = os.path.join(os.path.dirname(__file__), "index.html")
     with open(path, encoding="utf-8") as handle:
         page = _with_setup_banner(_apply_station_mark(_fill_station_url(handle.read()).replace("<!--PUBLIC_HEADER-->", _public_header("home"), 1)))
+    # The title and description name the place in the language of its country,
+    # with the words a resident searches for; a station note adds its title.
+    where = public_place()
+    lang, phrase, lead = localize.local_seo(where["place_name"], where["country"])
     notes = public_station_notes()
+    title = phrase
+    if notes and notes[0]["title"].strip() and notes[0]["title"].strip().lower() != where["place_name"].strip().lower():
+        title = f"{phrase} · {notes[0]['title'].strip()}"
+    safe_title = escape(title)
+    page = page.replace('<html lang="en"', f'<html lang="{lang}"', 1)
+    page = page.replace('<meta name="language" content="en" />', f'<meta name="language" content="{lang}" />', 1)
+    page = page.replace('"inLanguage": "en"', f'"inLanguage": "{lang}"', 1)
+    page = page.replace(
+        "<title>Aircraft Noise — real noise, measured on local sensors</title>",
+        f"<title>{safe_title} — Aircraft Noise</title>",
+        1,
+    )
+    page = page.replace(
+        'content="Aircraft Noise measures real aircraft noise on local sensors and matches it to the flights overhead."',
+        f'content="{escape(lead)}"',
+        1,
+    )
+    page = page.replace(
+        'content="Real aircraft noise, measured on local sensors and matched to the flights overhead."',
+        f'content="{escape(lead)}"',
+    )
+    page = page.replace('content="Netherlands"', f'content="{escape(where["place_name"])}"', 1)
+    page = page.replace(
+        '"name": "Aircraft Noise",\n    "description": "Real aircraft noise, measured on local sensors and matched to the flights overhead."',
+        '"name": ' + json.dumps(f"{title} — Aircraft Noise") + ",\n    " + '"description": ' + json.dumps(lead),
+        1,
+    )
+    page = page.replace(
+        'property="og:title" content="Aircraft Noise — real noise, measured on local sensors"',
+        f'property="og:title" content="{safe_title} — Aircraft Noise"',
+        1,
+    )
+    page = page.replace(
+        'name="twitter:title" content="Aircraft Noise — measured on local sensors"',
+        f'name="twitter:title" content="{safe_title} — Aircraft Noise"',
+        1,
+    )
     if notes:
-        title = notes[0]["title"]
-        body = notes[0]["body"]
-        safe_title = escape(title)
-        safe_body = escape(body)
-        lead = f"{title}. {body}".strip(" .")
-        if len(lead) > 180:
-            lead = lead[:177].rstrip() + "..."
-        page = page.replace(
-            "<title>Aircraft Noise — real noise, measured on local sensors</title>",
-            f"<title>{safe_title} — Aircraft Noise</title>",
-            1,
-        )
-        page = page.replace(
-            'content="Aircraft Noise measures real aircraft noise on local sensors.',
-            f'content="{escape(lead)} ',
-            1,
-        )
-        page = page.replace(
-            'content="Real aircraft noise, measured on local sensors and matched to the flights overhead."',
-            f'content="{escape(lead)}"',
-            1,
-        )
-        page = page.replace('content="Netherlands"', f'content="{safe_title}"', 1)
-        page = page.replace(
-            '"name": "Aircraft Noise",\n    "description": "Real aircraft noise, measured on local sensors and matched to the flights overhead."',
-            '"name": ' + json.dumps(f"{title} — Aircraft Noise") + ",\n    " + '"description": ' + json.dumps(lead),
-            1,
-        )
-        page = page.replace(
-            'property="og:title" content="Aircraft Noise — real noise, measured on local sensors"',
-            f'property="og:title" content="{safe_title} — Aircraft Noise"',
-            1,
-        )
+        safe_body = escape(notes[0]["body"])
         page = re.sub(
             r'<div id="mapStation" class="map-station" hidden>\s*<h2 id="mapStationTitle"></h2>\s*<p id="mapStationBody"></p>\s*</div>',
             '<div id="mapStation" class="map-station"><h2 id="mapStationTitle">' + safe_title + '</h2><p id="mapStationBody">' + safe_body + '</p></div>',

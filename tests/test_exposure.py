@@ -236,3 +236,14 @@ class MailServerSettingsTests(unittest.TestCase):
             self.assertEqual(self.n.mail_config()["host"], "page.example.net", "a value on the page wins over the environment")
         finally:
             os.environ.pop("MAIL_SERVER"); os.environ.pop("MAIL_DEFAULT_SENDER")
+
+
+class LocalSeoTests(unittest.TestCase):
+    def test_words_follow_the_country(self):
+        import localize
+        self.assertEqual(localize.local_seo("Uitgeest", "nl")[:2], ("nl", "Vliegtuiggeluid in Uitgeest"))
+        self.assertEqual(localize.local_seo("Köln", "DE")[1], "Fluglärm in Köln")
+        self.assertEqual(localize.local_seo("Palma", "es")[0], "es")
+        self.assertEqual(localize.local_seo("Somewhere", "zz")[1], "Aircraft noise in Somewhere")
+        self.assertIn("Vliegtuigherrie", localize.local_seo("Uitgeest", "nl")[2])
+
