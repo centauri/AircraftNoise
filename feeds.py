@@ -219,7 +219,7 @@ FEEDS = [
         "kind": "aircraft",
         "fetcher": "hub",
         "name": "Aircraft Noise hub",
-        "summary": "Aircraft positions through the data service, fetched once per region for every station in it. Needs the station shared and the hub switched on for it by the operator. No network limits of your own.",
+        "summary": "Aircraft positions through the data service, fetched once per region for every station in it. Offered only to stations the data service's operator put on the hub. No network limits of your own.",
         "docs": "https://data.aircraftnoise.eu/account/api",
         "tracking_key": "hub",
         "log_usage": True,

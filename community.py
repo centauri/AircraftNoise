@@ -439,6 +439,8 @@ def post_remote(url, body, api_key=None):
                 answer = {}
             if "verified" in answer:
                 db.set_admin_setting("community_verified", "true" if answer.get("verified") else "false")
+            if "hub" in answer:
+                db.set_admin_setting("community_hub", "true" if answer.get("hub") else "false")
         return "sent"
     if response.status_code == 403:
         logging.warning("Community: this station id is registered with another key at %s", target)

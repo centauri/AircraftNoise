@@ -3756,7 +3756,13 @@ def _feed_catalog_payload():
     settings = db.get_all_admin_settings()
     usage = get_api_usage_stats()
     feeds = []
+    # The hub is for stations the data service's operator allowed on it: the
+    # share answer says so. Until then the feed is not offered, unless it is
+    # already switched on here (a hosted station set up before the answer).
+    hub_allowed = str(settings.get("community_hub") or "").lower() == "true" or str(settings.get("multi_api_enable_hub") or "").lower() == "true"
     for feed in FEEDS:
+        if feed["id"] == "aircraft_hub" and not hub_allowed:
+            continue
         config = get_api_config(feed["id"]) or feed["config"]
         usage_row = usage.get(feed["tracking_key"], {})
         feeds.append({
@@ -4228,6 +4234,8 @@ def setup_options():
     for feed in FEEDS:
         if feed["kind"] not in ("aircraft", "noise"):
             continue
+        if feed["id"] == "aircraft_hub" and str(settings.get("community_hub") or "").lower() != "true":
+            continue  # the hub is offered once the data service's operator allows the station on it
         config = get_api_config(feed["id"]) or feed["config"]
         feeds.append({
             "id": feed["id"], "kind": feed["kind"], "name": feed["name"], "summary": feed["summary"],

@@ -62,7 +62,7 @@ class SetupWalkthroughTests(unittest.TestCase):
         opts = self.client.get("/api/setup/options").get_json()
         self.assertIn("nl", opts["countries"])
         self.assertIn("Europe/Amsterdam", opts["timezones"])
-        self.assertEqual({f["id"] for f in opts["feeds"] if f["kind"] == "aircraft"}, {"aircraft", "aircraft_hub", "aircraft_airplanes_live", "aircraft_adsb_fi", "aircraft_adsb_lol", "aircraft_flightaware"})
+        self.assertEqual({f["id"] for f in opts["feeds"] if f["kind"] == "aircraft"}, {"aircraft", "aircraft_airplanes_live", "aircraft_adsb_fi", "aircraft_adsb_lol", "aircraft_flightaware"})
         self.assertEqual(self.client.post("/api/setup/advance", json={"to": "skipped"}).get_json()["state"], "skipped")
         self.assertEqual(self.client.get("/admin/dashboard").status_code, 200)
         self.assertEqual(self.client.post("/api/setup/advance", json={"to": "done"}).get_json()["state"], "done")
