@@ -246,4 +246,7 @@ class LocalSeoTests(unittest.TestCase):
         self.assertEqual(localize.local_seo("Palma", "es")[0], "es")
         self.assertEqual(localize.local_seo("Somewhere", "zz")[1], "Aircraft noise in Somewhere")
         self.assertIn("Vliegtuigherrie", localize.local_seo("Uitgeest", "nl")[2])
+        self.assertEqual(localize.local_seo("Gdańsk", "pl")[1], "Hałas lotniczy w Gdańsk")
+        for country, lang in localize.COUNTRY_LANGUAGE.items():
+            self.assertIn(lang, localize.PHRASES, country)
 
