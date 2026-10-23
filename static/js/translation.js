@@ -4,7 +4,8 @@
 class TranslationSystem {
   constructor() {
     this.currentLanguage = 'en';
-    this.supportedLanguages = ['en', 'nl'];
+    // Every dictionary in translations.js; English is always first and the fallback.
+    this.supportedLanguages = ['en'].concat(Object.keys(window.Translations || {}).filter(function (k) { return k !== 'en'; }));
     this.translations = window.Translations || {};
     
     // Initialize after a short delay to ensure other scripts have loaded
