@@ -54,8 +54,12 @@ class TranslationSystem {
     } else {
       // Check localStorage
       const storedLang = localStorage.getItem('plane_noise_language');
+      const serverLang = document.documentElement.dataset.lang;
       if (storedLang && this.supportedLanguages.includes(storedLang)) {
         this.currentLanguage = storedLang;
+      } else if (serverLang && this.supportedLanguages.includes(serverLang)) {
+        // The owner's choice for this station, written into the page by the server
+        this.currentLanguage = serverLang;
       } else {
         // Check browser language
         const browserLang = navigator.language.split('-')[0];
@@ -109,6 +113,9 @@ class TranslationSystem {
   updateMetaTags() {
     const t = this.translations[this.currentLanguage];
     if (!t) return;
+    // The server wrote a title and description that name the place in the
+    // station's language; those stay, whatever the visitor's interface language.
+    if (document.documentElement.dataset.seo === 'server') return;
 
     if (document.body && document.body.dataset.page === "community") {
       document.title = t.community_title || document.title;
@@ -178,6 +185,7 @@ class TranslationSystem {
     
     const script = document.querySelector('script[type="application/ld+json"]');
     if (script) {
+      if (document.documentElement.dataset.seo === 'server') return;
       try {
         const data = JSON.parse(script.textContent);
         data.name = t.structured_name;

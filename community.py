@@ -7,6 +7,7 @@ shows on its community page comes from the same service.
 """
 
 import hashlib
+import localize
 import json
 import logging
 import math
@@ -202,6 +203,7 @@ def build_record(settings):
         "local_only": not public,
         "feed": _feed_label(settings),
         "timezone": str(settings.get("site_timezone") or "UTC").strip() or "UTC",
+        "language": localize.language_for(_country_code(settings), settings.get("site_language")),
         "updated_at": _now_iso(),
     }
     if not record["country_code"]:

@@ -43,9 +43,24 @@ COUNTRY_LANGUAGE = {"nl": "nl", "be": "nl", "de": "de", "at": "de", "ch": "de", 
                     "pt": "pt", "br": "pt", "pl": "pl", "dk": "da", "se": "sv", "no": "no", "fi": "fi", "cz": "cs", "gr": "el", "tr": "tr", "hu": "hu", "ro": "ro"}
 
 
-def local_seo(place, country):
-    """(language, title phrase, description) for a place in a country."""
-    lang = COUNTRY_LANGUAGE.get(str(country or "").lower(), "en")
+# Languages the owner can pick, in the order the settings list them.
+LANGUAGE_NAMES = [("nl", "Nederlands"), ("de", "Deutsch"), ("en", "English"), ("fr", "Français"), ("es", "Español"), ("it", "Italiano"),
+                  ("pt", "Português"), ("pl", "Polski"), ("da", "Dansk"), ("sv", "Svenska"), ("no", "Norsk"), ("fi", "Suomi"),
+                  ("cs", "Čeština"), ("el", "Ελληνικά"), ("tr", "Türkçe"), ("hu", "Magyar"), ("ro", "Română")]
+
+
+def language_for(country, preferred=None):
+    """The owner's choice when it is one we have words for, else the country's."""
+    preferred = str(preferred or "").strip().lower()
+    if preferred in PHRASES:
+        return preferred
+    return COUNTRY_LANGUAGE.get(str(country or "").lower(), "en")
+
+
+def local_seo(place, country, preferred=None):
+    """(language, title phrase, description) for a place: the owner's language
+    when set, else the language of the country."""
+    lang = language_for(country, preferred)
     code, phrase, description = PHRASES[lang]
     place = str(place or "").strip() or "your street"
     return code, phrase.format(place=place), description.format(place=place)

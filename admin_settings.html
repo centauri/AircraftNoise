@@ -439,6 +439,11 @@
                     </select>
                     <small>Flag next to the clock. The visitor’s browser language does not change this.</small>
                 </div>
+                <div class="form-group">
+                    <label for="siteLanguage">Language of the public page</label>
+                    <select id="siteLanguage" name="siteLanguage"><option value="">Follow the country</option><option value="nl">Nederlands</option><option value="de">Deutsch</option><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option><option value="it">Italiano</option><option value="pt">Português</option><option value="pl">Polski</option><option value="da">Dansk</option><option value="sv">Svenska</option><option value="no">Norsk</option><option value="fi">Suomi</option><option value="cs">Čeština</option><option value="el">Ελληνικά</option><option value="tr">Türkçe</option><option value="hu">Magyar</option><option value="ro">Română</option></select>
+                    <small>Sets the words search engines see and the page's default language. Visitors can always switch to English; the full interface exists in English and Dutch, other languages carry the title, description and place words.</small>
+                </div>
 
                 <div class="form-group">
                     <label for="siteTimezone">Timezone</label>
@@ -2575,6 +2580,7 @@
                     if (settings.server_port) document.getElementById('serverPort').value = settings.server_port;
                     document.getElementById('sitePlaceName').value = settings.site_place_name || 'Netherlands';
                     document.getElementById('siteCountry').value = (settings.site_country || 'nl').toLowerCase();
+                    document.getElementById('siteLanguage').value = settings.site_language || '';
                     document.getElementById('siteTimezone').value = settings.site_timezone || 'Europe/Amsterdam';
                     
                     // Load TLS settings
@@ -2621,6 +2627,7 @@
                     force_https: document.getElementById('forceHttps').checked,
                     site_place_name: document.getElementById('sitePlaceName').value.trim(),
                     site_country: document.getElementById('siteCountry').value,
+                    site_language: document.getElementById('siteLanguage').value,
                     site_timezone: document.getElementById('siteTimezone').value.trim(),
                     weather_advice_enabled: document.getElementById('weatherAdviceEnabled').checked ? 'true' : 'false'
                 };

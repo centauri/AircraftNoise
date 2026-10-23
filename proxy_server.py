@@ -3012,6 +3012,9 @@ def update_admin_settings():
             if zone not in pytz.all_timezones_set:
                 return jsonify({"error": "invalid_timezone"}), 400
             settings["site_timezone"] = zone
+        if "site_language" in settings:
+            lang = str(settings["site_language"] or "").strip().lower()
+            settings["site_language"] = lang if lang in localize.PHRASES else ""
         if "site_country" in settings:
             country = str(settings["site_country"]).strip().lower()
             flag = os.path.join(os.path.dirname(__file__), "static", "flags", "4x3", f"{country}.svg")
@@ -3385,13 +3388,15 @@ def _render_public_index():
     # The title and description name the place in the language of its country,
     # with the words a resident searches for; a station note adds its title.
     where = public_place()
-    lang, phrase, lead = localize.local_seo(where["place_name"], where["country"])
+    lang, phrase, lead = localize.local_seo(where["place_name"], where["country"], db.get_admin_setting("site_language", ""))
     notes = public_station_notes()
     title = phrase
     if notes and notes[0]["title"].strip() and notes[0]["title"].strip().lower() != where["place_name"].strip().lower():
         title = f"{phrase} · {notes[0]['title'].strip()}"
     safe_title = escape(title)
-    page = page.replace('<html lang="en"', f'<html lang="{lang}"', 1)
+    # data-lang is the page's default language for the translation script; data-seo
+    # tells it the title and description were written here and are not to be replaced.
+    page = page.replace('<html lang="en"', f'<html lang="{lang}" data-lang="{lang}" data-seo="server"', 1)
     page = page.replace('<meta name="language" content="en" />', f'<meta name="language" content="{lang}" />', 1)
     page = page.replace('"inLanguage": "en"', f'"inLanguage": "{lang}"', 1)
     page = page.replace(
