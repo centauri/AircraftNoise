@@ -1027,12 +1027,17 @@
 
         <div class="card" data-group="server" data-title="Scraper guard">
             <h2>Scraper guard</h2>
-            <p class="small" style="color: var(--theme-text-muted); margin-bottom: 1rem;">Every address gets a budget of pages and JSON calls per minute and hour; past it the answer is a 429 with Retry-After. An address that keeps going, follows the hidden trap link, reads pages with a script, or keeps collecting refused answers is blocked for 15 minutes, then an hour, 6 hours, a day, a week. Verified search engines get ten times the page budget. The admin pages, logins, the setup and this machine are never judged.</p>
+            <p class="small" style="color: var(--theme-text-muted); margin-bottom: 1rem;">Every address gets a budget of pages and JSON calls per minute and hour; past it the answer is a 429 with Retry-After. An address that keeps going, follows the hidden trap link, reads pages with a script, or keeps collecting refused answers is blocked for 15 minutes, then an hour, 6 hours, a day, a week. Verified search engines get ten times the page budget. The admin pages, logins, the setup, this machine, the addresses below and you while signed in here are never judged.</p>
             <form id="guardForm">
                 <div class="form-group">
                     <label><input type="checkbox" id="guardEnabled" checked> Guard the public pages and JSON</label>
                 </div>
                 <p class="small" id="guardLimits" style="color: var(--theme-text-muted);"></p>
+                <div class="form-group">
+                    <label for="guardAllow">Never block these addresses</label>
+                    <input type="text" id="guardAllow" placeholder="203.0.113.7, 192.168.1.0/24" spellcheck="false" autocomplete="off">
+                    <small>Your own address and the box your stations share, separated by commas. Networks in CIDR form are fine.</small>
+                </div>
                 <div class="btn-group">
                     <button type="submit" class="btn">Save guard settings</button>
                 </div>
@@ -2869,6 +2874,7 @@
             if (!response.ok) return;
             const status = await response.json();
             document.getElementById('guardEnabled').checked = status.enabled !== false;
+            document.getElementById('guardAllow').value = status.allow || '';
             const l = status.limits || {};
             document.getElementById('guardLimits').textContent = `Budgets per address: ${l.pages_per_minute} pages a minute and ${l.pages_per_hour} an hour; ${l.api_per_minute} JSON calls a minute and ${l.api_per_hour} an hour.`;
             const host = document.getElementById('guardBans');
@@ -2890,7 +2896,7 @@
         }
         document.getElementById('guardForm').addEventListener('submit', async function (event) {
             event.preventDefault();
-            const response = await fetch(`${API_BASE}/api/admin/guard`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ enabled: document.getElementById('guardEnabled').checked }) });
+            const response = await fetch(`${API_BASE}/api/admin/guard`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ enabled: document.getElementById('guardEnabled').checked, allow: document.getElementById('guardAllow').value.trim() }) });
             if (response.ok) showSuccess('Guard settings saved.'); else showError('Could not save the guard settings.');
         });
         loadGuard();

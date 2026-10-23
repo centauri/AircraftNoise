@@ -11,6 +11,7 @@ never touched; the watchdog and the admin's own browser keep working.
 Nothing in here imports the server.
 """
 
+import ipaddress
 import logging
 import socket
 import threading
@@ -121,6 +122,8 @@ class Guard:
         self._lock = threading.Lock()
         self._clients = {}
         self._crawlers = {}
+        self._allow_text = None
+        self._allow = []
         if store is not None:
             try:
                 for ip, until, bans in store.load_bans():
@@ -128,6 +131,32 @@ class Guard:
                     c.banned_until, c.bans, c.last_strike = float(until), int(bans), float(until)
             except Exception:
                 logging.exception("Guard could not load the bans")
+
+    # -- the allow list -------------------------------------------------------
+
+    def set_allow(self, text):
+        """Addresses or networks that are never judged: the owner's own, the
+        box the stations share. Comma, space or newline separated; bad entries
+        are skipped. Cheap to call on every request: parsed only on change."""
+        text = str(text or "")
+        if text == self._allow_text:
+            return
+        nets = []
+        for raw in text.replace(",", " ").split():
+            try:
+                nets.append(ipaddress.ip_network(raw.strip(), strict=False))
+            except ValueError:
+                continue
+        self._allow_text, self._allow = text, nets
+
+    def allowed(self, ip):
+        if not self._allow or not ip:
+            return False
+        try:
+            addr = ipaddress.ip_address(ip)
+        except ValueError:
+            return False
+        return any(addr in net for net in self._allow)
 
     def _client(self, ip):
         c = self._clients.get(ip)
@@ -140,7 +169,7 @@ class Guard:
 
     def check(self, ip, kind, user_agent=""):
         """Record one request and decide. kind is from classify()."""
-        if not self.enabled or kind in ("exempt", "static") or not ip or ip in ("127.0.0.1", "::1"):
+        if not self.enabled or kind in ("exempt", "static") or not ip or ip in ("127.0.0.1", "::1") or self.allowed(ip):
             return Verdict()
         now = self.clock()
         crawler = kind == "page" and looks_like_crawler(user_agent) and bool(self.resolve(ip))
@@ -178,6 +207,8 @@ class Guard:
             return Verdict(crawler=crawler)
 
     def miss(self, ip):
+        if self.allowed(ip):
+            return
         """A refused answer (401, 403, 429) the handlers produced."""
         if not self.enabled or not ip or ip in ("127.0.0.1", "::1"):
             return

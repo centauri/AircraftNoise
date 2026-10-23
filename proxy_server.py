@@ -3219,6 +3219,14 @@ def guard_request():
     kind = guard.classify(request.path, request.method, bool(request.headers.get("X-API-Key")))
     if kind == "exempt":
         return None
+    try:
+        scraper_guard.set_allow(db.get_admin_setting("guard_allow", ""))
+    except Exception:
+        pass
+    # The signed-in administrator is never judged: the owner looking at the
+    # public page from the kitchen must not be mistaken for a scraper.
+    if _admin_session_ok():
+        return None
     verdict = scraper_guard.check(guard.client_ip(request.headers, request.remote_addr), kind, request.user_agent.string)
     g.guard_crawler = verdict.crawler
     if verdict.ok:
@@ -3542,6 +3550,7 @@ def api_admin_analytics_drop_legacy():
 def api_admin_guard():
     return jsonify({
         "enabled": (db.get_admin_setting("guard_enabled", "true") or "true").lower() != "false",
+        "allow": db.get_admin_setting("guard_allow", "") or "",
         "bans": scraper_guard.bans(),
         "limits": {"pages_per_minute": guard.PAGES_PER_MINUTE, "pages_per_hour": guard.PAGES_PER_HOUR,
                    "api_per_minute": guard.API_PER_MINUTE, "api_per_hour": guard.API_PER_HOUR},
@@ -3552,6 +3561,9 @@ def api_admin_guard():
 def api_admin_guard_save():
     body = request.get_json(silent=True) or {}
     db.set_admin_setting("guard_enabled", "true" if body.get("enabled", True) else "false")
+    allow = str(body.get("allow") or "")[:2000]
+    db.set_admin_setting("guard_allow", allow)
+    scraper_guard.set_allow(allow)
     return jsonify({"ok": True})
 
 @app.post('/api/admin/guard/unban')

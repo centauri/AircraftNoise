@@ -140,3 +140,19 @@ class GuardHookTests(unittest.TestCase):
         self.assertEqual(forwarded.status_code, 403, "the address behind Cloudflare is the one judged")
         self.server.scraper_guard.unban("203.0.113.9")
         self.assertNotEqual(self.client.get("/", environ_base=remote).status_code, 403)
+
+
+class AllowListTests(unittest.TestCase):
+    def test_allowed_addresses_are_never_judged(self):
+        g = guard.Guard(clock=lambda: 1000.0)
+        g.set_allow("203.0.113.7, 192.168.1.0/24, not-an-address")
+        for _ in range(300):
+            self.assertTrue(g.check("203.0.113.7", "page", "curl/8").ok)
+        self.assertTrue(g.check("192.168.1.44", "trap", "Mozilla/5.0").ok)
+        for _ in range(100):
+            g.miss("203.0.113.7")
+        self.assertTrue(g.check("203.0.113.7", "page", "Mozilla/5.0").ok)
+        self.assertFalse(g.check("198.51.100.9", "trap", "Mozilla/5.0").ok)
+        g.set_allow("")
+        self.assertFalse(g.allowed("203.0.113.7"))
+
