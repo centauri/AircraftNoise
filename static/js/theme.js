@@ -77,25 +77,29 @@ class ThemeManager {
   }
 
   readStored() {
-    var family = "instrument";
-    var appearance = "dark";
+    // The site's own default is written into the page by the server, so the
+    // first paint is right before the policy has been fetched. A visitor's own
+    // choice, when there is one, wins over it.
+    var root = document.documentElement;
+    var family = root.getAttribute("data-site-family") || "instrument";
+    var appearance = root.getAttribute("data-site-appearance") || "dark";
+    var savedFamily = null;
+    var savedAppearance = null;
+    var legacy = null;
     try {
-      var savedFamily = localStorage.getItem("plane-noise-family");
-      var savedAppearance = localStorage.getItem("plane-noise-appearance");
-      var legacy = localStorage.getItem("plane-noise-theme");
-      if (savedFamily) family = savedFamily;
-      else if (legacy === "early") family = "early";
-      else family = "instrument";
-      if (savedAppearance) appearance = savedAppearance;
-      else if (legacy === "light") appearance = "light";
-      else if (legacy === "high-contrast") appearance = "contrast";
-      else if (legacy === "early") appearance = "light";
-      else appearance = "dark";
+      savedFamily = localStorage.getItem("plane-noise-family");
+      savedAppearance = localStorage.getItem("plane-noise-appearance");
+      legacy = localStorage.getItem("plane-noise-theme");
     } catch (error) {}
-    if (!this.find(family)) family = "instrument";
+    if (savedFamily) family = savedFamily;
+    else if (legacy === "early") family = "early";
+    if (savedAppearance) appearance = savedAppearance;
+    else if (legacy === "light") appearance = "light";
+    else if (legacy === "high-contrast") appearance = "contrast";
+    if (!this.find(family)) family = root.getAttribute("data-site-family") || "instrument";
     var known = appearance === "dark" || appearance === "light" || appearance === "contrast" || appearance === "system";
     if (!known) appearance = "dark";
-    return { family: family, appearance: appearance, explicitAppearance: !!savedAppearance && known };
+    return { family: family, appearance: appearance, explicitFamily: !!savedFamily || legacy === "early", explicitAppearance: !!savedAppearance && known };
   }
 
   writeStored(family, appearance) {
@@ -364,7 +368,8 @@ class ThemeManager {
         var family = stored.family;
         var appearance = stored.appearance;
         var allowed = self.allowedFamilies();
-        if (allowed.indexOf(family) === -1) family = policy.theme || allowed[0] || family;
+        // No choice of their own yet: the site theme. A choice the site no longer offers: the site theme.
+        if (!stored.explicitFamily || allowed.indexOf(family) === -1) family = policy.theme || allowed[0] || family;
         var baseline = null;
         try { baseline = localStorage.getItem("plane-noise-appearance-baseline"); } catch (error) {}
         var siteAppearance = policy.appearance || appearance;

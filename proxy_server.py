@@ -3396,7 +3396,8 @@ def _render_public_index():
     safe_title = escape(title)
     # data-lang is the page's default language for the translation script; data-seo
     # tells it the title and description were written here and are not to be replaced.
-    page = page.replace('<html lang="en"', f'<html lang="{lang}" data-lang="{lang}" data-seo="server"', 1)
+    policy = _theme_policy()
+    page = page.replace('<html lang="en"', f'<html lang="{lang}" data-lang="{lang}" data-seo="server" data-site-family="{policy["theme"]}" data-site-appearance="{policy["appearance"]}"', 1)
     page = page.replace('<meta name="language" content="en" />', f'<meta name="language" content="{lang}" />', 1)
     page = page.replace('"inLanguage": "en"', f'"inLanguage": "{lang}"', 1)
     page = page.replace(
@@ -3483,6 +3484,8 @@ def community_page():
     with open(path, encoding="utf-8") as handle:
         page = handle.read()
     page = _apply_station_mark(page.replace("<!--PUBLIC_HEADER-->", _public_header("community"), 1))
+    policy = _theme_policy()
+    page = page.replace('<html lang="en"', f'<html lang="en" data-site-family="{policy["theme"]}" data-site-appearance="{policy["appearance"]}"', 1)
     response = Response(page, mimetype="text/html; charset=utf-8")
     response.headers["Cache-Control"] = "no-cache"
     return response
