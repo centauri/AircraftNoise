@@ -239,7 +239,7 @@
         .form-group select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #ecf0f1;
+            border: 2px solid var(--theme-border);
             border-radius: 8px;
             font-size: 1rem;
             transition: border-color 0.3s ease;
@@ -248,11 +248,11 @@
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--theme-accent);
         }
 
         .close {
-            color: #aaa;
+            color: var(--theme-text-muted);
             float: right;
             font-size: 28px;
             font-weight: bold;
@@ -260,7 +260,7 @@
         }
 
         .close:hover {
-            color: #000;
+            color: var(--theme-text-primary);
         }
 
         @media (max-width: 768px) {
