@@ -588,11 +588,22 @@ button:hover, .btn:hover, a.btn:hover {
   width: 100%;
   margin: 0;
   padding: 6px 8px;
-  background: transparent;
+  background: var(--theme-masthead);
   color: var(--theme-masthead-ink);
   border: 1px solid var(--theme-masthead-line);
   font-family: var(--font-mono);
   font-size: 12px;
+}
+
+.theme-menu-lang select option {
+  background: var(--theme-bg-primary);
+  color: var(--theme-text-primary);
+}
+
+.theme-menu-lang select option:checked,
+.theme-menu-lang select option:hover {
+  background: var(--theme-accent);
+  color: var(--theme-accent-ink);
 }
 
 .leaflet-tile-pane {

@@ -420,7 +420,12 @@ class TranslationSystem {
       const code = link.dataset.lang || (link.getAttribute('href') === '/nl/' ? 'nl' : link.getAttribute('href') === '/' ? 'en' : '');
       if (code && code === this.currentLanguage) link.classList.add('active');
     });
+    const names = { en: "English", nl: "Nederlands", de: "Deutsch", fr: "Français", es: "Español", it: "Italiano", pt: "Português", pl: "Polski", da: "Dansk", sv: "Svenska", no: "Norsk", fi: "Suomi", cs: "Čeština", el: "Ελληνικά", tr: "Türkçe", hu: "Magyar", ro: "Română" };
     document.querySelectorAll('.theme-lang-select').forEach(select => {
+      // A menu drawn before the dictionary loaded lists too few languages: complete it.
+      if (select.options.length !== this.supportedLanguages.length) {
+        select.innerHTML = this.supportedLanguages.map(code => '<option value="' + code + '">' + (names[code] || code) + '</option>').join('');
+      }
       if (select.value !== this.currentLanguage) select.value = this.currentLanguage;
     });
     if (document.querySelector('.lang-link[data-lang]')) return;
