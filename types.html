@@ -3,13 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Noise by aircraft type — Aircraft Noise</title>
+  <title data-translate="types_page_title">Noise by aircraft type — Aircraft Noise</title>
   <meta name="description" content="Aircraft types ranked by the noise they make at this sensor, corrected to one distance." />
   <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/static/css/theme.css?v=9" />
   <script src="/static/js/themes.js?v=3"></script>
   <script src="/static/js/theme.js?v=10"></script>
   <script src="/static/js/sortable.js?v=1" defer></script>
+  <script src="/static/js/translations.js?v=10"></script>
+  <script src="/static/js/translation.js?v=7"></script>
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--theme-bg-primary); color: var(--theme-text-primary); font-family: var(--font-sans); line-height: 1.5; }
@@ -60,50 +62,50 @@
           <span class="site-title-text">Aircraft Noise</span>
         </h1>
         <div class="header-actions">
-          <a href="/" class="header-nav-link">Live</a>
-          <a href="/community" class="header-nav-link">Community</a>
+          <a href="/" class="header-nav-link" data-translate="footer_live">Live</a>
+          <a href="/community" class="header-nav-link" data-translate="community_link">Community</a>
           <div class="theme-controls" id="theme-controls-container"></div>
         </div>
       </div>
-      <div class="subtitle">Noise by aircraft type</div>
+      <div class="subtitle" data-translate="types_subtitle">Noise by aircraft type</div>
     </div>
   </div>
 
   <main>
-    <h2 class="page-title">Which aircraft are loudest here?</h2>
-    <p class="lead" id="lead">Every measured peak is corrected to what it would sound like at the same distance, so types can be compared fairly. Ranked by the median.</p>
+    <h2 class="page-title" data-translate="types_title">Which aircraft are loudest here?</h2>
+    <p class="lead" id="lead" data-translate="types_lead">Every measured peak is corrected to what it would sound like at the same distance, so types can be compared fairly. Ranked by the median.</p>
 
     <div class="card">
       <div class="controls">
         <div class="tabs" role="group" aria-label="Flight phase">
-          <button type="button" data-kind="all" aria-pressed="true">All passes</button>
-          <button type="button" data-kind="arrival" aria-pressed="false">Arrivals</button>
-          <button type="button" data-kind="departure" aria-pressed="false">Departures</button>
+          <button type="button" data-kind="all" aria-pressed="true" data-translate="types_all">All passes</button>
+          <button type="button" data-kind="arrival" aria-pressed="false" data-translate="types_arrivals">Arrivals</button>
+          <button type="button" data-kind="departure" aria-pressed="false" data-translate="types_departures">Departures</button>
         </div>
-        <label>Period
+        <label><span data-translate="types_period">Period</span>
           <select id="days">
-            <option value="30">30 days</option>
-            <option value="90">90 days</option>
-            <option value="365" selected>1 year</option>
-            <option value="3650">All</option>
+            <option value="30" data-translate="types_30d">30 days</option>
+            <option value="90" data-translate="types_90d">90 days</option>
+            <option value="365" selected data-translate="types_1y">1 year</option>
+            <option value="3650" data-translate="types_all_time">All</option>
           </select>
         </label>
-        <label>At least
+        <label><span data-translate="types_at_least">At least</span>
           <select id="minN">
-            <option value="5">5 passes</option>
-            <option value="10" selected>10 passes</option>
-            <option value="25">25 passes</option>
-            <option value="50">50 passes</option>
+            <option value="5" data-translate="types_n_passes" data-param-n="5">5 passes</option>
+            <option value="10" selected data-translate="types_n_passes" data-param-n="10">10 passes</option>
+            <option value="25" data-translate="types_n_passes" data-param-n="25">25 passes</option>
+            <option value="50" data-translate="types_n_passes" data-param-n="50">50 passes</option>
           </select>
         </label>
         <span class="muted" id="summary"></span>
       </div>
-      <div id="tableWrap" class="table-wrap"><div class="empty">Loading…</div></div>
+      <div id="tableWrap" class="table-wrap"><div class="empty" data-translate="loading">Loading…</div></div>
     </div>
 
     <div class="card method">
-      <div class="muted" style="margin-bottom:0.4rem">Method</div>
-      <p id="methodText">Each pass contributes its loudest 10 s LAeq and the straight-line distance to the microphone at that moment. The level is corrected to a reference distance of <code>1,000 m</code> with spherical spreading, <code>20·log10(d / 1000)</code>, plus air absorption of <code>1 dB per km</code>. Arrivals and departures are ranked separately because thrust differs; the combined view mixes both. Medians and the 25–75% range are shown, and a type needs the chosen minimum of passes to appear. Type names are folded into families, so "Boeing 737NG 8K2/W", "B738" and "737-8K2" count as one 737-800. The sensor measures what it hears at this address; another address hears another ranking. Aircraft identities come from the Mictronics aircraft database via tar1090-db; airline names from Wikidata.</p>
+      <div class="muted" style="margin-bottom:0.4rem" data-translate="types_method">Method</div>
+      <p id="methodText" data-translate-html="types_method_text">Each pass contributes its loudest 10 s LAeq and the straight-line distance to the microphone at that moment. The level is corrected to a reference distance of <code>1,000 m</code> with spherical spreading, <code>20·log10(d / 1000)</code>, plus air absorption of <code>1 dB per km</code>. Arrivals and departures are ranked separately because thrust differs; the combined view mixes both. Medians and the 25–75% range are shown, and a type needs the chosen minimum of passes to appear. Type names are folded into families, so "Boeing 737NG 8K2/W", "B738" and "737-8K2" count as one 737-800. The sensor measures what it hears at this address; another address hears another ranking. Aircraft identities come from the Mictronics aircraft database via tar1090-db; airline names from Wikidata.</p>
     </div>
   </main>
 
@@ -114,19 +116,21 @@
       let data = null;
 
       function esc(v) { return String(v == null ? '' : v).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch])); }
+    // Translated strings; English until the dictionaries have loaded.
+    function tr(key, params) { return window.translationSystem ? window.translationSystem.getTranslation(key, params || {}) : key; }
 
       function render() {
         const wrap = $('tableWrap');
         if (!data) return;
         const rows = (data.groups && data.groups[kind]) || [];
-        $('summary').textContent = `${data.passes} measured passes · ${rows.length} types shown`;
-        if (data.place) $('lead').textContent = `Every measured peak at ${data.place} is corrected to what it would sound like at the same distance, so types can be compared fairly. Ranked by the median.`;
-        if (!rows.length) { wrap.innerHTML = '<div class="empty">Not enough passes yet for this view. Lower the minimum, widen the period, or let the recorder run a while longer.</div>'; return; }
+        $('summary').textContent = tr('types_summary', { passes: data.passes, types: rows.length });
+        if (data.place) { const lead = $('lead'); lead.removeAttribute('data-translate'); lead.textContent = tr('types_lead_place', { place: data.place }); }
+        if (!rows.length) { wrap.innerHTML = '<div class="empty">' + esc(tr('types_empty')) + '</div>'; return; }
         const lo = Math.min(...rows.map(r => r.p25_db)) - 2;
         const hi = Math.max(...rows.map(r => r.p75_db)) + 2;
         const pct = (v) => Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100));
         wrap.innerHTML = `<table>
-          <thead><tr><th>#</th><th>Type</th><th>Median at 1,000 m</th><th class="bar-cell">25–75%</th><th>Passes</th><th>Typical distance</th><th>Measured median</th><th>Operators</th></tr></thead>
+          <thead><tr><th>#</th><th>${esc(tr('types_th_type'))}</th><th>${esc(tr('types_th_median'))}</th><th class="bar-cell">${esc(tr('types_th_range'))}</th><th>${esc(tr('types_th_passes'))}</th><th>${esc(tr('types_th_distance'))}</th><th>${esc(tr('types_th_raw'))}</th><th>${esc(tr('types_th_operators'))}</th></tr></thead>
           <tbody>${rows.map((r, i) => `<tr>
             <td class="rank">${i + 1}</td>
             <td><strong>${esc(r.type)}</strong></td>
@@ -140,12 +144,12 @@
       }
 
       async function load() {
-        $('tableWrap').innerHTML = '<div class="empty">Loading…</div>';
+        $('tableWrap').innerHTML = '<div class="empty">' + esc(tr('loading')) + '</div>';
         try {
           const r = await fetch(`/api/stats/aircraft_types?days=${$('days').value}&min_n=${$('minN').value}`, { cache: 'no-cache' });
           data = r.ok ? await r.json() : null;
         } catch (e) { data = null; }
-        if (!data) { $('tableWrap').innerHTML = '<div class="empty">The ranking could not be loaded.</div>'; return; }
+        if (!data) { $('tableWrap').innerHTML = '<div class="empty">' + esc(tr('types_failed')) + '</div>'; return; }
         render();
       }
 
@@ -156,6 +160,7 @@
       }));
       $('days').addEventListener('change', load);
       $('minN').addEventListener('change', load);
+      window.addEventListener('languageChanged', render);
       load();
     })();
   </script>

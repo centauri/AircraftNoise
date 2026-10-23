@@ -215,6 +215,12 @@ class TranslationSystem {
       }
     });
     
+    // Attributes: data-translate-title fills title
+    document.querySelectorAll('[data-translate-title]').forEach(element => {
+      const translation = this.getTranslation(element.getAttribute('data-translate-title'));
+      if (translation) element.setAttribute('title', translation);
+    });
+
     // Update elements with data-translate-html attributes
     document.querySelectorAll('[data-translate-html]').forEach(element => {
       const key = element.getAttribute('data-translate-html');

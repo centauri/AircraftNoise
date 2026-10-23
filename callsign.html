@@ -8,6 +8,8 @@
   <script src="/static/js/themes.js?v=3"></script>
   <script src="/static/js/theme.js?v=11"></script>
   <script src="/static/js/sortable.js?v=1" defer></script>
+  <script src="/static/js/translations.js?v=10"></script>
+  <script src="/static/js/translation.js?v=7"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: var(--theme-bg-primary); color: var(--theme-text-primary); font-family: var(--font-sans); line-height: 1.5; }
@@ -92,16 +94,16 @@
         </h1>
         <div class="header-actions">
           <span class="toolbar-callsign" id="toolbarCallsign"></span>
-          <a id="faLink" class="lang-link" href="#" target="_blank" rel="noopener noreferrer" hidden title="Opens FlightAware in a new tab">FlightAware<svg class="external-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M14 5h5v5M19 5 10 14"/><path fill="none" stroke="currentColor" stroke-width="2" d="M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg><span class="site-title-text"> (opens in a new tab)</span></a>
+          <a id="faLink" class="lang-link" href="#" target="_blank" rel="noopener noreferrer" hidden title="Opens FlightAware in a new tab" data-translate-title="callsign_fa_title">FlightAware<svg class="external-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M14 5h5v5M19 5 10 14"/><path fill="none" stroke="currentColor" stroke-width="2" d="M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg><span class="site-title-text"> (opens in a new tab)</span></a>
           <div class="theme-controls" id="theme-controls-container"></div>
         </div>
       </div>
-      <div class="subtitle" id="subtitle">Callsign statistics</div>
+      <div class="subtitle" id="subtitle" data-translate="callsign_subtitle">Callsign statistics</div>
     </div>
   </div>
 
   <main class="container">
-    <div class="breadcrumbs"><a class="link" href="/">Home</a> › <span id="crumb"></span></div>
+    <div class="breadcrumbs"><a class="link" href="/" data-translate="callsign_home">Home</a> › <span id="crumb"></span></div>
     <h2 class="page-title" id="headerTitle">Callsign</h2>
 
     <div class="card section aircraft-card" id="aircraftCard" hidden>
@@ -116,42 +118,44 @@
     </div>
 
     <div class="grid">
-      <div class="card"><div class="muted">Times seen</div><div class="stat" id="seen">-</div></div>
-      <div class="card"><div class="muted">First seen</div><div class="stat" id="first">-</div></div>
-      <div class="card"><div class="muted">Last seen</div><div class="stat" id="last">-</div></div>
-      <div class="card"><div class="muted">Speed (km/h) min/avg/max</div><div class="stat" id="speed">-</div></div>
-      <div class="card"><div class="muted">Altitude (m) min/avg/max</div><div class="stat" id="alt">-</div></div>
-      <div class="card"><div class="muted">Noise (dB) min/avg/max</div><div class="stat" id="noise">-</div></div>
+      <div class="card"><div class="muted" data-translate="callsign_seen">Times seen</div><div class="stat" id="seen">-</div></div>
+      <div class="card"><div class="muted" data-translate="callsign_first">First seen</div><div class="stat" id="first">-</div></div>
+      <div class="card"><div class="muted" data-translate="callsign_last">Last seen</div><div class="stat" id="last">-</div></div>
+      <div class="card"><div class="muted" data-translate="callsign_speed">Speed (km/h) min/avg/max</div><div class="stat" id="speed">-</div></div>
+      <div class="card"><div class="muted" data-translate="callsign_alt">Altitude (m) min/avg/max</div><div class="stat" id="alt">-</div></div>
+      <div class="card"><div class="muted" data-translate="callsign_noise">Noise (dB) min/avg/max</div><div class="stat" id="noise">-</div></div>
     </div>
 
     <div class="card section">
-      <h3>Activity by hour (0–23)</h3>
+      <h3 data-translate="callsign_by_hour">Activity by hour (0–23)</h3>
       <div id="byHour" class="heat"></div>
       <div class="heat-labels"><span>0</span><span>6</span><span>12</span><span>18</span><span>23</span></div>
       <div class="muted" id="byHourLegend"></div>
     </div>
 
     <div class="card section">
-      <h3>Activity by weekday (0=Sun)</h3>
+      <h3 data-translate="callsign_by_wday">Activity by weekday</h3>
       <div id="byWday" class="heat" style="grid-template-columns: repeat(7, 1fr);"></div>
-      <div class="heat-labels"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+      <div class="heat-labels" id="wdayLabels"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
       <div class="muted" id="byWdayLegend"></div>
     </div>
 
     <div class="card section">
-      <h3>Recent passes</h3>
+      <h3 data-translate="callsign_recent">Recent passes</h3>
       <div class="table-wrap">
         <table class="passes" id="passesTable">
-          <thead><tr><th>When</th><th>Distance</th><th>Altitude</th><th>Peak</th><th>LAmax</th><th>Registration</th><th>Type</th></tr></thead>
-          <tbody id="passesBody"><tr><td colspan="7" class="muted">Loading…</td></tr></tbody>
+          <thead><tr><th data-translate="callsign_th_when">When</th><th data-translate="distance">Distance</th><th data-translate="altitude">Altitude</th><th data-translate="callsign_th_peak">Peak</th><th data-translate="callsign_th_lamax">LAmax</th><th data-translate="callsign_th_reg">Registration</th><th data-translate="callsign_th_type">Type</th></tr></thead>
+          <tbody id="passesBody"><tr><td colspan="7" class="muted" data-translate="loading">Loading…</td></tr></tbody>
         </table>
-        <p style="margin:0.6rem 0 0"><button type="button" id="passesMore" class="btn btn-secondary" style="display:none" onclick="loadPasses(window.__callsign, true)">Show older passes</button></p>
+        <p style="margin:0.6rem 0 0"><button type="button" id="passesMore" class="btn btn-secondary" style="display:none" onclick="loadPasses(window.__callsign, true)" data-translate="callsign_more">Show older passes</button></p>
       </div>
     </div>
   </main>
 
   <script>
     function q(k){ return document.querySelector(k); }
+    // Translated strings; English until the dictionaries have loaded.
+    function tr(key, params) { return window.translationSystem ? window.translationSystem.getTranslation(key, params || {}) : key; }
     function fmtTs(ts){
       if(!ts) return '-';
       const d = new Date(ts * 1000);
@@ -175,8 +179,8 @@
     async function load(){
       const params = new URLSearchParams(location.search);
       const c = params.get('c');
-      const title = c ? c : 'Callsign';
-      document.title = c ? `Callsign ${c} — Aircraft Noise` : 'Callsign — Aircraft Noise';
+      const title = c ? c : tr('callsign_word');
+      document.title = tr('callsign_page_title', { c: c || '' }).replace(/\s+—/, ' —');
       q('#pageTitle').textContent = document.title;
       q('#headerTitle').textContent = title;
       q('#crumb').textContent = c || '';
@@ -204,7 +208,7 @@
         }
       } catch (error) {}
       const res = await fetch(`/api/callsigns/${encodeURIComponent(c)}/stats`);
-      if(!res.ok){ document.querySelector('main').innerHTML = '<div class="card">No data found for this callsign.</div>'; return; }
+      if(!res.ok){ document.querySelector('main').innerHTML = '<div class="card">' + tr('callsign_no_data') + '</div>'; return; }
       const s = await res.json();
       showAircraft(s.aircraft || {});
       window.__callsign = c;
@@ -230,7 +234,7 @@
         div.textContent = n > 0 ? String(n) : '';
         bh.appendChild(div);
       }
-      q('#byHourLegend').textContent = `Max per hour: ${maxH}`;
+      q('#byHourLegend').textContent = tr('callsign_max_hour', { max: maxH });
 
       // Weekday heatmap
       const byW = s.by_wday || {}; const maxW = Math.max(1, ...Object.values(byW).map(Number));
@@ -245,7 +249,9 @@
         div.textContent = n > 0 ? String(n) : '';
         bw.appendChild(div);
       }
-      q('#byWdayLegend').textContent = `Max per weekday: ${maxW}`;
+      q('#byWdayLegend').textContent = tr('callsign_max_wday', { max: maxW });
+      const dayNames = (window.translationSystem && window.translationSystem.translations[window.translationSystem.currentLanguage] || {}).days_short;
+      if (dayNames) q('#wdayLabels').innerHTML = dayNames.map(d => '<span>' + d + '</span>').join('');
     }
     let passesBefore = null;
     async function loadPasses(callsign, older) {
@@ -259,20 +265,20 @@
         const rows = j.passes || [];
         if (moreBtn) moreBtn.style.display = j.more ? '' : 'none';
         if (rows.length) passesBefore = rows[rows.length - 1].ts;
-        if (!rows.length && !older) { body.innerHTML = '<tr><td colspan="7" class="muted">No passes recorded yet.</td></tr>'; return; }
+        if (!rows.length && !older) { body.innerHTML = '<tr><td colspan="7" class="muted">' + tr('callsign_no_passes') + '</td></tr>'; return; }
         const esc = (v) => String(v == null ? '' : v).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
         const num = (v, d, unit) => (typeof v === 'number' ? `${v.toFixed(d)}${unit}` : '–');
         body.innerHTML = (older ? body.innerHTML : '') + rows.map(p => `<tr>
           <td data-sort="${Number(p.ts) || 0}">${esc(fmtTs(p.ts))}</td>
           <td class="num">${num(p.distance_km, 2, ' km')}</td>
           <td class="num">${num(p.altitude_m, 0, ' m')}</td>
-          <td class="num">${num(p.spl_db, 1, ' dB')}${p.spl_peak_ts ? ` <span class="muted" title="peak time">${esc(fmtTs(p.spl_peak_ts).split(' ').pop())}</span>` : ''}</td>
+          <td class="num">${num(p.spl_db, 1, ' dB')}${p.spl_peak_ts ? ` <span class="muted" title="${esc(tr('callsign_peak_time'))}">${esc(fmtTs(p.spl_peak_ts).split(' ').pop())}</span>` : ''}</td>
           <td class="num">${num(p.spl_max_db, 1, ' dB')}</td>
           <td>${esc(p.registration || '–')}</td>
           <td>${esc(p.model || '–')}</td>
         </tr>`).join('');
       } catch (error) {
-        body.innerHTML = '<tr><td colspan="7" class="muted">Passes could not be loaded.</td></tr>';
+        body.innerHTML = '<tr><td colspan="7" class="muted">' + tr('callsign_failed') + '</td></tr>';
       }
     }
 
@@ -284,7 +290,7 @@
       const type = a.manufacturer && a.model ? `${a.manufacturer} ${a.model}` : (a.model || a.manufacturer || '');
       const facts = [a.registration, a.operator, a.icao24 ? a.icao24.toUpperCase() : null].filter(Boolean).join(' · ');
       if (!type && !facts) return;
-      q('#aircraftType').textContent = type || 'Aircraft';
+      q('#aircraftType').textContent = type || tr('callsign_aircraft');
       q('#aircraftFacts').textContent = facts;
       card.hidden = false;
       const params = new URLSearchParams();
@@ -308,6 +314,7 @@
 
     load();
     window.addEventListener('planenoise-theme', load);
+    window.addEventListener('languageChanged', load);
   </script>
 </body>
 </html>
